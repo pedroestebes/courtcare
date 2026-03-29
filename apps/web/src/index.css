@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #effefa;
+  --color-brand-100: #c8fff3;
+  --color-brand-200: #91ffe7;
+  --color-brand-300: #52f5d5;
+  --color-brand-400: #20dfc0;
+  --color-brand-500: #07c3a6;
+  --color-brand-600: #029e88;
+  --color-brand-700: #067e6e;
+  --color-brand-800: #0a6459;
+  --color-brand-900: #0d534a;
+  --color-brand-950: #00332e;
+
+  --color-accent-50: #ecfdf5;
+  --color-accent-100: #d1fae5;
+  --color-accent-200: #a7f3d0;
+  --color-accent-300: #6ee7b7;
+  --color-accent-400: #34d399;
+  --color-accent-500: #10b981;
+  --color-accent-600: #059669;
+  --color-accent-700: #047857;
+  --color-accent-800: #065f46;
+  --color-accent-900: #064e3b;
+  --color-accent-950: #022c22;
+
+  --color-surface: #ffffff;
+  --color-surface-dim: #f8fafa;
+  --color-surface-bright: #f0fdfa;
+}
+
+@layer base {
+  body {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-200);
+    color: var(--color-brand-900);
+  }
+}
+
+@layer components {
+  .gradient-brand {
+    background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent-500));
+  }
+
+  .gradient-brand-text {
+    background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent-500));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-hero {
+    background: linear-gradient(
+      135deg,
+      var(--color-brand-950) 0%,
+      var(--color-brand-800) 50%,
+      var(--color-accent-800) 100%
+    );
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+}
