@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/Button";
 import { UpgradeModal, getWeeklySessionCount, FREE_SESSION_LIMIT } from "@/components/ui/UpgradeModal";
+import { DrillPoseIcon } from "@/components/pose/DrillPoseIcon";
 import { allDrills } from "@/engine/drills/index";
 import { cn } from "@/lib/utils";
 
@@ -119,27 +120,13 @@ export function DrillLibrary() {
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-4">
                     <div className={cn(
-                      "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg",
+                      "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden",
                       drill.category === "warmup" ? "bg-gradient-to-br from-orange-500 to-amber-600"
                         : drill.category === "stretching" ? "bg-gradient-to-br from-cyan-500 to-teal-600"
                         : drill.slug.startsWith("tennis") ? "bg-gradient-to-br from-green-500 to-emerald-600"
                         : "bg-gradient-to-br from-brand-500 to-accent-500"
                     )}>
-                      <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        {drill.category === "warmup" ? (
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
-                        ) : drill.category === "stretching" ? (
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                        ) : drill.category === "serve" ? (
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
-                        ) : drill.category === "fundamentals" ? (
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-                        ) : drill.category === "attack" || drill.category === "overhead" ? (
-                          <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
-                        ) : (
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                        )}
-                      </svg>
+                      <DrillPoseIcon slug={drill.slug} className="w-10 h-10" />
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-white/40 font-medium">
