@@ -85,7 +85,7 @@ Sword Health is a digital health platform that combines AI with clinical experti
 6. **Smash** (intermediate) — full overhead power shot, arm extension
 
 ### Future Sports Expansion
-Tennis, pickleball, squash, boxing, golf, basketball shooting form, yoga, running gait, etc.
+Pickleball, squash, boxing, golf, basketball shooting form, yoga, running gait, etc.
 
 ---
 
@@ -122,7 +122,7 @@ Tennis, pickleball, squash, boxing, golf, basketball shooting form, yoga, runnin
 
 ### Final Decision: **CourtCare**
 - Clean, professional, memorable
-- "Court" = court sports (padel, tennis, pickleball, squash) — room to grow
+- "Court" = court sports (padel, pickleball, squash) — room to grow
 - "Care" = health, wellness, injury prevention — positions in health/life science domain
 - No existing app or company with this name in sports/health/tech
 - Domain-friendly: courtcare.com potential available
@@ -264,7 +264,7 @@ Camera frame
 | More padel drills | High | Wall play, lob, chiquita, serve variations |
 | Video reference overlay | High | Show ideal form side-by-side |
 | AI coaching chat | High | Claude-powered technique advice |
-| Tennis support | Medium | Serve, forehand, backhand, volley |
+| Additional padel drills | Medium | Wall play, chiquita, lob |
 | Pickleball support | Medium | Growing market |
 | Social features | Medium | Share sessions, challenges, leaderboards |
 | Coach portal | Medium | Coaches review athlete sessions remotely |
@@ -284,7 +284,7 @@ No direct competitor combines **real-time pose tracking + sport-specific form an
 |-----------|-------------|-----|
 | Sword Health | PT/rehab with sensors | Not sports training |
 | Onform | Video analysis (async, coach reviews) | Not real-time, no AI feedback |
-| SwingVision | Tennis ball tracking | Not body pose analysis |
+| SwingVision | Ball tracking & video | Not body pose analysis |
 | Playtomic | Court booking & community | No training/coaching |
 | HomeCourt | Basketball shot tracking | Limited to basketball |
 

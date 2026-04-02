@@ -6,7 +6,7 @@ export const warmupLunges: DrillDefinition = {
   category: "warmup",
   difficulty: "beginner",
   description:
-    "Activate your quads, glutes, and hip flexors with alternating forward lunges. This functional warm-up mimics the split-stance movements common in padel and tennis — preparing your legs for quick lateral steps, deep returns, and explosive court coverage.",
+    "Activate your quads, glutes, and hip flexors with alternating forward lunges. This functional warm-up mimics the split-stance movements common in padel — preparing your legs for quick lateral steps, deep returns, and explosive court coverage.",
   shortDescription: "Fire up quads, glutes and hip flexors for court movement.",
   instructions: [
     "Stand tall with feet together, hands on your hips or in front for balance",

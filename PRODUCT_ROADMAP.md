@@ -20,8 +20,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Sports supported | 2 (Padel, Tennis) |
-| Total drills | 9 (6 padel + 3 tennis) |
+| Sports supported | 1 (Padel) |
+| Total activities | 14 (6 drills + 4 warm-ups + 4 cool-downs) |
 | Injury risk factors tracked | 12 |
 | Body zones monitored | 9 joints |
 | Platform | Web (Cloudflare Workers + Pages) |
@@ -64,7 +64,8 @@
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Padel drills (6) | **DONE** | Ready position, volleys, bandeja, vibora, smash |
-| Tennis drills (3) | **DONE** | Serve, forehand, backhand |
+| Warm-up drills (4) | **DONE** | Leg swings, arm circles, lunges, torso rotation |
+| Cool-down stretches (4) | **DONE** | Hamstring, shoulder, quad, hip flexor |
 
 ### Auth & Infrastructure
 | Feature | Status | Notes |
@@ -124,7 +125,7 @@
 |---------|----------|-------|
 | Club partnership portal | **SHOULD HAVE** | Clubs install CourtCare for their members — B2B2C model |
 | Coach dashboard | **SHOULD HAVE** | Coaches see all their athletes' body maps and session data |
-| Federation integration (FPB/ITF) | **SHOULD HAVE** | Partnership with padel/tennis federations for credibility |
+| Federation integration (FPP/FIP) | **SHOULD HAVE** | Partnership with padel federations for credibility |
 | Referral system | **SHOULD HAVE** | "Invite a friend, get 1 month free" |
 | Social sharing (session results) | **SHOULD HAVE** | Share body status and scores on Instagram/WhatsApp |
 

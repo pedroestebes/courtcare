@@ -41,14 +41,6 @@ function getPose(slug: string) {
     case "smash":
       return <Smash />;
 
-    // ── TENNIS ─────────────────────────────────
-    case "tennis-serve":
-      return <TennisServe />;
-    case "tennis-forehand":
-      return <TennisForehand />;
-    case "tennis-backhand":
-      return <TennisBackhand />;
-
     // ── WARM-UP ────────────────────────────────
     case "warmup-leg-swings":
       return <LegSwings />;
@@ -262,93 +254,6 @@ function Smash() {
       <Joint x={11} y={8} /><Joint x={33} y={7} />
       <Joint x={20} y={27} /><Joint x={28} y={27} />
       <Joint x={15} y={35} /><Joint x={33} y={36} />
-    </g>
-  );
-}
-
-// ════════════════════════════════════════════
-// TENNIS POSES
-// ════════════════════════════════════════════
-
-/** Tennis serve — trophy position, toss arm up */
-function TennisServe() {
-  return (
-    <g>
-      <Head cx={24} cy={8} />
-      <Bone x1={24} y1={11.5} x2={24} y2={16} />
-      <Bone x1={17} y1={16} x2={31} y2={16} />
-      <Bone x1={24} y1={16} x2={24} y2={28} />
-      {/* left arm — toss */}
-      <Bone x1={17} y1={16} x2={14} y2={8} />
-      <Bone x1={14} y1={8} x2={13} y2={2} />
-      {/* right arm — racket back */}
-      <Bone x1={31} y1={16} x2={35} y2={10} />
-      <Bone x1={35} y1={10} x2={32} y2={5} />
-      {/* legs — coiled */}
-      <Bone x1={20} y1={28} x2={28} y2={28} />
-      <Bone x1={20} y1={28} x2={17} y2={36} />
-      <Bone x1={17} y1={36} x2={15} y2={44} />
-      <Bone x1={28} y1={28} x2={31} y2={36} />
-      <Bone x1={31} y1={36} x2={33} y2={44} />
-      <Joint x={17} y={16} /><Joint x={31} y={16} />
-      <Joint x={14} y={8} /><Joint x={35} y={10} />
-      <Joint x={20} y={28} /><Joint x={28} y={28} />
-      <Joint x={17} y={36} /><Joint x={31} y={36} />
-    </g>
-  );
-}
-
-/** Tennis forehand — open stance, racket across */
-function TennisForehand() {
-  return (
-    <g>
-      <Head cx={22} cy={9} />
-      <Bone x1={22} y1={12.5} x2={22} y2={16} />
-      <Bone x1={15} y1={16} x2={29} y2={16} />
-      <Bone x1={22} y1={16} x2={22} y2={28} />
-      {/* left arm follows through */}
-      <Bone x1={15} y1={16} x2={10} y2={20} />
-      <Bone x1={10} y1={20} x2={8} y2={25} />
-      {/* right arm — extended swing */}
-      <Bone x1={29} y1={16} x2={37} y2={18} />
-      <Bone x1={37} y1={18} x2={44} y2={15} />
-      {/* legs — open stance */}
-      <Bone x1={18} y1={28} x2={26} y2={28} />
-      <Bone x1={18} y1={28} x2={12} y2={36} />
-      <Bone x1={12} y1={36} x2={10} y2={44} />
-      <Bone x1={26} y1={28} x2={32} y2={36} />
-      <Bone x1={32} y1={36} x2={34} y2={44} />
-      <Joint x={15} y={16} /><Joint x={29} y={16} />
-      <Joint x={10} y={20} /><Joint x={37} y={18} />
-      <Joint x={18} y={28} /><Joint x={26} y={28} />
-      <Joint x={12} y={36} /><Joint x={32} y={36} />
-    </g>
-  );
-}
-
-/** Tennis backhand — two-handed, shoulder turned */
-function TennisBackhand() {
-  return (
-    <g>
-      <Head cx={26} cy={9} />
-      <Bone x1={26} y1={12.5} x2={26} y2={16} />
-      <Bone x1={19} y1={16} x2={33} y2={17} />{/* slight rotation */}
-      <Bone x1={26} y1={16} x2={26} y2={28} />
-      {/* both arms — two-handed backhand across */}
-      <Bone x1={19} y1={16} x2={12} y2={16} />
-      <Bone x1={12} y1={16} x2={6} y2={18} />
-      <Bone x1={33} y1={17} x2={24} y2={15} />
-      <Bone x1={24} y1={15} x2={12} y2={16} />
-      {/* legs */}
-      <Bone x1={22} y1={28} x2={30} y2={28} />
-      <Bone x1={22} y1={28} x2={18} y2={36} />
-      <Bone x1={18} y1={36} x2={16} y2={44} />
-      <Bone x1={30} y1={28} x2={34} y2={36} />
-      <Bone x1={34} y1={36} x2={36} y2={44} />
-      <Joint x={19} y={16} /><Joint x={33} y={17} />
-      <Joint x={12} y={16} /><Joint x={24} y={15} />
-      <Joint x={22} y={28} /><Joint x={30} y={28} />
-      <Joint x={18} y={36} /><Joint x={34} y={36} />
     </g>
   );
 }

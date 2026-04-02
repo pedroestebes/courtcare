@@ -6,7 +6,7 @@ export const smash: DrillDefinition = {
   category: "attack",
   difficulty: "advanced",
   description:
-    "The padel smash is the most powerful shot, used to finish points. It requires a full overhead swing with maximum arm extension, explosive leg drive, and committed follow-through. Unlike tennis, padel smashes are often aimed at the side wall or back glass to make them unreturnable.",
+    "The padel smash is the most powerful shot, used to finish points. It requires a full overhead swing with maximum arm extension, explosive leg drive, and committed follow-through. Padel smashes are often aimed at the side wall or back glass to make them unreturnable.",
   shortDescription: "Full-power overhead to finish the point.",
   instructions: [
     "Turn sideways and position yourself under the ball",

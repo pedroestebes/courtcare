@@ -40,12 +40,12 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     angleKey: "leftShoulder",
   },
 
-  // ELBOW — tennis elbow / golfer's elbow
+  // ELBOW — lateral epicondylitis / golfer's elbow
   {
     joint: "elbow",
     label: "Elbow Hyperextension",
     description:
-      "Arm too straight on contact — risk of tennis elbow (lateral epicondylitis)",
+      "Arm too straight on contact — risk of lateral epicondylitis (elbow strain)",
     dangerAbove: 175,
     rampDegrees: 10,
     angleKey: "rightElbow",

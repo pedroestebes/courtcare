@@ -6,7 +6,7 @@ export const warmupTorsoRotation: DrillDefinition = {
   category: "warmup",
   difficulty: "beginner",
   description:
-    "Activate your obliques, lower back, and thoracic spine with controlled rotational movements. Crucial for padel and tennis where nearly every shot requires trunk rotation — this warm-up prepares your spine for safe, powerful rotation and reduces the risk of lower back strain.",
+    "Activate your obliques, lower back, and thoracic spine with controlled rotational movements. Crucial for padel where nearly every shot requires trunk rotation — this warm-up prepares your spine for safe, powerful rotation and reduces the risk of lower back strain.",
   shortDescription: "Mobilize your spine and core for rotational power.",
   instructions: [
     "Stand with feet shoulder-width apart, knees slightly bent",

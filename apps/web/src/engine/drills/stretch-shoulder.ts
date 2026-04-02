@@ -6,8 +6,8 @@ export const stretchShoulder: DrillDefinition = {
   category: "stretching",
   difficulty: "beginner",
   description:
-    "Relieve shoulder tension and improve posterior deltoid flexibility with this essential cool-down stretch. After intense serving and overhead shots, your rotator cuff muscles need this recovery stretch to prevent impingement and maintain healthy shoulder mechanics.",
-  shortDescription: "Relieve shoulder tension after overhead shots and serves.",
+    "Relieve shoulder tension and improve posterior deltoid flexibility with this essential cool-down stretch. After intense overhead shots like bandejas and smashes, your rotator cuff muscles need this recovery stretch to prevent impingement and maintain healthy shoulder mechanics.",
+  shortDescription: "Relieve shoulder tension after overhead shots.",
   instructions: [
     "Stand tall with feet shoulder-width apart",
     "Bring one arm across your chest at shoulder height",

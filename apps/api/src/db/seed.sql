@@ -63,7 +63,7 @@ INSERT OR REPLACE INTO drills (id, slug, name, sport, category, difficulty, desc
   'padel',
   'overheads',
   'intermediate',
-  'The padel smash is a powerful overhead shot aimed at winning the point outright or forcing a very weak return. Unlike tennis, the padel smash often targets the side glass or is hit with enough power to send the ball over the back wall for a direct winner.',
+  'The padel smash is a powerful overhead shot aimed at winning the point outright or forcing a very weak return. The padel smash often targets the side glass or is hit with enough power to send the ball over the back wall for a direct winner.',
   '["Move quickly under the ball with small adjustment steps","Turn sideways with your non-racket shoulder facing the net","Bend your knees and load your weight onto your back foot","Raise the racket behind your head with your elbow pointing up","Track the ball with your free hand extended upward","Drive upward from your legs and rotate your hips and torso toward the net","Extend your arm fully and make contact at the highest point you can reach","Hit flat through the ball with a strong wrist snap for maximum power","Aim the ball down into the court, targeting the side wall or back glass","Follow through completely and be ready for the ball to come back off the walls"]',
   '{"rightElbow":80,"rightShoulder":170,"leftShoulder":105,"rightKnee":140,"leftKnee":130,"torsoRotation":50,"hipAngle":175,"rightWrist":155}'
 );

@@ -6,7 +6,7 @@ export const warmupArmCircles: DrillDefinition = {
   category: "warmup",
   difficulty: "beginner",
   description:
-    "Warm up your rotator cuffs, deltoids, and upper back with progressive arm circles. This exercise increases synovial fluid in the shoulder joint and prepares the muscles for overhead shots, serves, and volleys — reducing the risk of shoulder impingement.",
+    "Warm up your rotator cuffs, deltoids, and upper back with progressive arm circles. This exercise increases synovial fluid in the shoulder joint and prepares the muscles for overhead shots and volleys — reducing the risk of shoulder impingement.",
   shortDescription: "Wake up your shoulders and rotator cuffs for safe play.",
   instructions: [
     "Stand with feet hip-width apart, arms extended out to the sides at shoulder height",

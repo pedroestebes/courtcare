@@ -13,7 +13,7 @@ const plans = [
       "3 sessions per week",
       "Real-time pose tracking",
       "Basic injury alerts",
-      "2 sports (padel + tennis)",
+      "Padel drills & warm-ups",
       "Session history (last 7 days)",
     ],
     notIncluded: [
@@ -37,7 +37,7 @@ const plans = [
       "Unlimited sessions",
       "Real-time pose tracking",
       "Advanced injury risk engine",
-      "All sports (padel, tennis + more)",
+      "All padel drills, warm-ups & cool-downs",
       "Full session history",
       "AI Coach chat (personalized advice)",
       "Interactive body health map",
@@ -56,7 +56,7 @@ const plans = [
     name: "Club",
     price: "€99",
     period: "/month",
-    description: "For padel & tennis clubs",
+    description: "For padel clubs & academies",
     features: [
       "Everything in Premium",
       "Up to 50 athletes",
@@ -211,11 +211,11 @@ const faqs = [
   },
   {
     q: "How accurate is the injury detection?",
-    a: "CourtCare tracks 33 body landmarks at 30fps using Google's MediaPipe technology. We monitor 12 sport-specific injury risk factors including shoulder impingement, tennis elbow, ACL stress, and spinal compression with clinical-grade joint angle measurements.",
+    a: "CourtCare tracks 33 body landmarks at 30fps using Google's MediaPipe technology. We monitor 12 sport-specific injury risk factors including shoulder impingement, elbow strain, ACL stress, and spinal compression with clinical-grade joint angle measurements.",
   },
   {
     q: "What sports are supported?",
-    a: "Currently padel (6 drills) and tennis (3 drills), with pickleball coming soon. Each sport has specialized injury thresholds calibrated to its unique movement patterns.",
+    a: "CourtCare is built exclusively for padel with 14 activities — 6 padel drills, 4 warm-ups, and 4 cool-down stretches. Each has specialized injury thresholds calibrated to padel's unique movement patterns.",
   },
   {
     q: "Can I use CourtCare during real matches?",

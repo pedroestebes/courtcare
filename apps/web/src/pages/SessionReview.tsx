@@ -109,11 +109,11 @@ const mockSessionData: Record<string, SessionData> = {
     maxInjuryRisk: 48,
     avgFatigueLevel: 35,
     injuryAlerts: [
-      "Elbow hyperextension detected at 1:45 — wrist snap with locked elbow increases tennis elbow risk",
+      "Elbow hyperextension detected at 1:45 — wrist snap with locked elbow increases elbow strain risk",
       "Form dropped 18% in final minutes — consider stopping earlier to maintain safe form",
     ],
     feedbackHighlights: [
-      { text: "Elbow locked during wrist snap — risk of lateral epicondylitis (tennis elbow)", type: "warning" },
+      { text: "Elbow locked during wrist snap — risk of lateral epicondylitis (elbow strain)", type: "warning" },
       { text: "Good torso rotation and hip drive on preparation phase", type: "encouragement" },
       { text: "Fatigue detected — form degraded 18% from baseline", type: "warning" },
       { text: "Keep slight bend in elbow during contact to protect the joint", type: "correction" },

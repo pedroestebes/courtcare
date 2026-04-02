@@ -12,7 +12,7 @@ const features = [
     ),
     title: "Injury Prevention",
     description:
-      "Real-time monitoring of shoulder impingement, tennis elbow, knee strain, and spinal compression. Get instant danger alerts before bad form causes damage.",
+      "Real-time monitoring of shoulder impingement, elbow strain, knee stress, and spinal compression. Get instant danger alerts before bad form causes damage.",
   },
   {
     icon: (
@@ -89,7 +89,7 @@ const injuryTypes = [
       <line x1="28" y1="28" x2="31" y2="40" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
     </svg>
   )},
-  { name: "Elbow", stat: "Tennis elbow prevention", icon: (
+  { name: "Elbow", stat: "Elbow strain prevention", icon: (
     <svg viewBox="0 0 48 48" fill="none" className="w-8 h-8">
       <circle cx="24" cy="8" r="4" stroke="#07c3a6" strokeWidth="1.2" fill="rgba(7,195,166,0.1)" />
       <line x1="24" y1="12" x2="24" y2="15" stroke="#07c3a6" strokeWidth="1.2" opacity="0.3" />
@@ -269,7 +269,7 @@ export function Landing() {
             </h1>
 
             <p className="text-lg sm:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-              AI-powered injury prevention for padel and tennis players. Real-time body tracking detects
+              AI-powered injury prevention for padel players. Real-time body tracking detects
               dangerous form patterns, monitors fatigue, and keeps you safe — using just your camera.
             </p>
 
@@ -433,7 +433,7 @@ export function Landing() {
               {
                 quote: "The fatigue detection is what sold me. It told me to stop before I even felt tired. That's when injuries happen.",
                 name: "Ana S.",
-                role: "Tennis coach",
+                role: "Padel coach",
                 stat: "75% fewer injury complaints from students",
               },
               {
@@ -512,10 +512,10 @@ export function Landing() {
             <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-40">
               {[
                 { name: "Padel Club Lisboa", abbr: "PCL" },
-                { name: "Tennis Academy Porto", abbr: "TAP" },
+                { name: "Padel Academy Porto", abbr: "PAP" },
                 { name: "Madrid Padel Center", abbr: "MPC" },
                 { name: "Barcelona Sports Lab", abbr: "BSL" },
-                { name: "Algarve Tennis Club", abbr: "ATC" },
+                { name: "Algarve Padel Club", abbr: "APC" },
               ].map((partner) => (
                 <div key={partner.abbr} className="flex items-center gap-2 text-white/70">
                   <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center text-xs font-bold text-white/60">
