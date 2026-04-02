@@ -264,10 +264,10 @@ export function Landing() {
           </nav>
 
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5 mb-8">
+            <Link to="/science" className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5 mb-8 hover:bg-white/15 transition-colors">
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-sm text-white/80">Protect Your Body While You Train</span>
-            </div>
+              <span className="text-sm text-white/80">Informed by 15+ peer-reviewed sports medicine studies</span>
+            </Link>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
               Train Smarter.{" "}
