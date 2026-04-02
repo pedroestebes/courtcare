@@ -10,7 +10,7 @@ import { SkeletonOverlay } from "@/components/camera/SkeletonOverlay";
 import { ScoreGauge } from "@/components/pose/ScoreGauge";
 import { FeedbackPanel } from "@/components/pose/FeedbackPanel";
 import { HealthIndicator } from "@/components/pose/HealthIndicator";
-import { AccuracyBadge, calculateAccuracy } from "@/components/pose/AccuracyBadge";
+import { AccuracyBadge } from "@/components/pose/AccuracyBadge";
 import { Button } from "@/components/ui/Button";
 import { incrementSessionCount } from "@/components/ui/UpgradeModal";
 import { useRecordingStore, captureCanvasFrame, CAPTURE_INTERVAL_MS } from "@/stores/recordingStore";
@@ -102,8 +102,16 @@ export function Session() {
   // Keep latest form analysis values in refs for stable interval
   const latestScoreRef = useRef(formAnalysis.smoothedScore);
   const latestFeedbackRef = useRef(formAnalysis.feedback);
+  const latestAccuracyRef = useRef(0);
   latestScoreRef.current = formAnalysis.smoothedScore;
   latestFeedbackRef.current = formAnalysis.feedback;
+  if (poseDetection.landmarks) {
+    const keyIndices = [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
+    const kl = keyIndices.filter((i) => i < poseDetection.landmarks!.length).map((i) => poseDetection.landmarks![i]);
+    if (kl.length > 0) {
+      latestAccuracyRef.current = Math.round(kl.reduce((s, lm) => s + (lm.visibility ?? 0), 0) / kl.length * 100);
+    }
+  }
 
   // Record frames
   useEffect(() => {
@@ -147,12 +155,16 @@ export function Session() {
   const [autoPaused, setAutoPaused] = useState(false);
 
   useEffect(() => {
-    if (status !== "active" || !formAnalysis.healthMetrics) return;
+    if (status !== "active") {
+      dangerStartRef.current = null;
+      return;
+    }
+    if (!formAnalysis.healthMetrics) return;
 
     if (formAnalysis.healthMetrics.overallRisk >= 70) {
       if (dangerStartRef.current === null) {
-        dangerStartRef.current = Date.now();
-      } else if (Date.now() - dangerStartRef.current >= 3000 && !autoPaused) {
+        dangerStartRef.current = performance.now();
+      } else if (performance.now() - dangerStartRef.current >= 3000 && !autoPaused) {
         pause();
         setAutoPaused(true);
       }
@@ -387,7 +399,7 @@ export function Session() {
                   <p className="text-xs text-white/50">Best Score</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-green-400">{calculateAccuracy(poseDetection.landmarks)}%</p>
+                  <p className="text-2xl font-bold text-green-400">{latestAccuracyRef.current}%</p>
                   <p className="text-xs text-white/50">Accuracy</p>
                 </div>
               </div>

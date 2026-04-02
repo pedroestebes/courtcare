@@ -16,8 +16,10 @@ interface RecordingState {
   clear: () => void;
 }
 
-// Capture at 2fps to keep memory usage reasonable (~500KB per session)
+// Capture at 2fps to keep memory usage reasonable
 export const CAPTURE_INTERVAL_MS = 500;
+// Cap at 20 minutes of footage (2fps * 60s * 20min = 2400 frames)
+const MAX_FRAMES = 2400;
 
 export const useRecordingStore = create<RecordingState>((set) => ({
   isRecording: false,
@@ -26,7 +28,9 @@ export const useRecordingStore = create<RecordingState>((set) => ({
   stopRecording: () => set({ isRecording: false }),
   addFrame: (frame) =>
     set((state) => ({
-      frames: [...state.frames, frame],
+      frames: state.frames.length >= MAX_FRAMES
+        ? [...state.frames.slice(1), frame]
+        : [...state.frames, frame],
     })),
   clear: () => set({ isRecording: false, frames: [] }),
 }));

@@ -28,6 +28,10 @@ export function useCamera(options: UseCameraOptions = {}): UseCameraReturn {
   const streamRef = useRef<MediaStream | null>(null);
 
   const stop = useCallback(() => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.srcObject = null;
+    }
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
