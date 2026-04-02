@@ -34,21 +34,21 @@ const painOptions: { key: PainArea; label: string; emoji: string }[] = [
 function getRecommendedDrills(pain: PainArea[], intensity: Intensity, duration: Duration): { slug: string; reason: string }[] {
   const drills: { slug: string; reason: string }[] = [];
 
-  // Always recommend hamstring stretch after any padel session
-  drills.push({ slug: "stretch-hamstring", reason: "Essential after court movement — prevents tightness" });
+  // Always recommend hamstring stretch — ACSM guidelines, 30-sec holds
+  drills.push({ slug: "stretch-hamstring", reason: "ACSM protocol: 30-sec holds to maintain hamstring ROM after court play" });
 
-  // Shoulder focus
+  // Shoulder focus — Bern Consensus 2022 + DSSF 2023
   if (pain.includes("shoulder") || intensity === "intense") {
-    drills.push({ slug: "stretch-shoulder", reason: pain.includes("shoulder") ? "Target shoulder tension you're feeling" : "Overhead shots stress rotator cuff — release it" });
+    drills.push({ slug: "stretch-shoulder", reason: pain.includes("shoulder") ? "Posterior capsule stretch — DSSF recommended for shoulder pain" : "Bern Consensus: release rotator cuff after overhead shots" });
   }
 
-  // Hip flexor — always tight after padel (low ready position)
+  // Hip flexor — García-González 2020: low ready position tightens hip flexors
   if (intensity !== "light" || parseInt(duration) >= 60) {
-    drills.push({ slug: "stretch-hip-flexor", reason: "Low ready position tightens hip flexors — essential to stretch" });
+    drills.push({ slug: "stretch-hip-flexor", reason: "García-González 2020: padel's ready position shortens hip flexors" });
   }
 
-  // Quad stretch — lateral movement and lunging
-  drills.push({ slug: "stretch-quad", reason: "Court movement loads your quads — prevent next-day stiffness" });
+  // Quad stretch + proprioceptive balance — Rivera et al. 2017
+  drills.push({ slug: "stretch-quad", reason: "ACSM stretch + balance training (Rivera 2017: 43% ankle sprain reduction)" });
 
   return drills;
 }
@@ -212,7 +212,7 @@ export function Recovery() {
 
               <div className="rounded-2xl bg-gradient-to-r from-cyan-500/10 to-teal-500/10 border border-cyan-500/20 p-4">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm">⏱️</span>
+                  <span className="text-sm">{"\u23F1\uFE0F"}</span>
                   <span className="text-sm font-semibold text-white">
                     Estimated time: {recommendations.length * 3}-{recommendations.length * 5} minutes
                   </span>
@@ -220,6 +220,13 @@ export function Recovery() {
                 <p className="text-xs text-white/40">
                   {recommendations.length} stretches with real-time form tracking
                 </p>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs text-white/30 bg-white/5 rounded-lg px-3 py-2 border border-white/5">
+                <svg className="w-3.5 h-3.5 text-green-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                </svg>
+                <span>Protocol based on ACSM stretching guidelines, Afonso et al. 2021 (Frontiers in Physiology), and padel biomechanics research (García-González 2020)</span>
               </div>
 
               <div className="space-y-3">

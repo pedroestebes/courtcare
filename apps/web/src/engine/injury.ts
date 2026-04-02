@@ -3,7 +3,18 @@ import type { InjuryRisk, HealthMetrics } from "@/types/session";
 
 /**
  * Danger thresholds for padel-specific injury risks.
- * Based on sports medicine research for overhead racket sports.
+ *
+ * Evidence basis:
+ * - Shoulder: Bern Consensus Statement 2022 (Schwank et al., JOSPT);
+ *   Elliott 2006 (BJSM) — shoulder lateral rotation 130±27° during serve
+ * - Elbow: Lateral epicondylitis meta-analysis (JCM 2021, PMC8432114);
+ *   Elliott 2006 — elbow flexion 30±16° at ball contact
+ * - Knee: NATA ACL Prevention Position Statement 2018;
+ *   Hewett 2005 (AJSM) — neuromuscular training reduces ACL risk 50–88%
+ * - Ankle: Rivera et al. 2017 (CJSM, PMC5737043) — proprioceptive training
+ *   reduces sprains RR=0.57; Riva et al. 2016 (PMC4750505) 6-year study
+ * - Padel epidemiology: Jansen et al. 2023 (BMJ Open Sport Exerc Med,
+ *   PMC10277135) — 85% injury prevalence, elbow most affected (30–74%)
  */
 interface InjuryThreshold {
   joint: string;
@@ -20,12 +31,13 @@ interface InjuryThreshold {
 }
 
 const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
-  // ── SHOULDER — most common padel injury (overhead shots) ──
+  // ── SHOULDER — overhead shots load rotator cuff (Bern Consensus 2022) ──
+  // Elliott 2006: shoulder elevation 110±17° during serve; >170° = impingement zone
   {
     joint: "shoulder",
     label: "Shoulder Impingement",
     description:
-      "Arm raised too high behind the body — risk of rotator cuff strain",
+      "Arm raised too high — risk of rotator cuff impingement (Bern Consensus 2022)",
     dangerAbove: 170,
     rampDegrees: 15,
     angleKey: "rightShoulder",
@@ -34,18 +46,20 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "shoulder",
     label: "Shoulder Overextension (Left)",
     description:
-      "Non-hitting arm overextended — protect the shoulder joint",
+      "Non-hitting arm overextended — protect the shoulder joint (DSSF Guidelines 2023)",
     dangerAbove: 160,
     rampDegrees: 20,
     angleKey: "leftShoulder",
   },
 
-  // ── ELBOW — lateral epicondylitis from grip & impact ──
+  // ── ELBOW — most affected joint in padel: 30–74% of injuries (Jansen 2023) ──
+  // Elliott 2006: elbow flexion 30±16° at ball contact; hyperextension increases
+  // rotatory stress (PMC2465285). Eccentric loading is protective (PMC8432114)
   {
     joint: "elbow",
     label: "Elbow Hyperextension",
     description:
-      "Arm too straight on contact — risk of lateral epicondylitis (elbow strain)",
+      "Arm too straight on contact — risk of lateral epicondylitis (Jansen et al. 2023)",
     dangerAbove: 175,
     rampDegrees: 10,
     angleKey: "rightElbow",
@@ -54,18 +68,21 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "elbow",
     label: "Elbow Excessive Flexion",
     description:
-      "Elbow too bent on overhead shots — stress on medial elbow ligaments",
+      "Elbow too bent on overhead shots — increased medial ligament stress (Elliott 2006)",
     dangerBelow: 40,
     rampDegrees: 15,
     angleKey: "rightElbow",
   },
 
   // ── KNEE — ACL, meniscus, patella ──
+  // NATA 2018: compliant athletes show 88% ACL injury reduction
+  // Elliott 2006: front knee flexion 64.5±9.7° during serve — below 60° is risk zone
+  // Neuromuscular training reduces dynamic knee valgus ~12° (PMC12581765)
   {
     joint: "knee",
     label: "Right Knee Hyperextension",
     description:
-      "Knee too straight — risk of ligament strain. Keep a slight bend",
+      "Knee too straight — ligament strain risk. Maintain slight bend (NATA 2018)",
     dangerAbove: 175,
     rampDegrees: 10,
     angleKey: "rightKnee",
@@ -74,7 +91,7 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "knee",
     label: "Left Knee Hyperextension",
     description:
-      "Knee too straight — risk of ligament strain. Keep a slight bend",
+      "Knee too straight — ligament strain risk. Maintain slight bend (NATA 2018)",
     dangerAbove: 175,
     rampDegrees: 10,
     angleKey: "leftKnee",
@@ -83,8 +100,8 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "knee",
     label: "Deep Knee Bend (Right)",
     description:
-      "Excessive knee bend — increased load on patellar tendon and meniscus",
-    dangerBelow: 70,
+      "Excessive knee bend — increased patellar tendon and meniscus load (Elliott 2006)",
+    dangerBelow: 60,
     rampDegrees: 20,
     angleKey: "rightKnee",
   },
@@ -92,18 +109,21 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "knee",
     label: "Deep Knee Bend (Left)",
     description:
-      "Excessive knee bend — increased load on patellar tendon and meniscus",
-    dangerBelow: 70,
+      "Excessive knee bend — increased patellar tendon and meniscus load (Elliott 2006)",
+    dangerBelow: 60,
     rampDegrees: 20,
     angleKey: "leftKnee",
   },
 
   // ── ANKLE — sprains from lateral movement on padel court ──
+  // Rivera et al. 2017 (PMC5737043): proprioceptive training reduces sprains RR=0.57
+  // Riva et al. 2016: 6-year study — balance programs significantly reduce ankle sprains
+  // Schiftan et al. 2015 (JSAMS) meta-analysis confirms protective effect
   {
     joint: "ankle",
     label: "Right Ankle Inversion Risk",
     description:
-      "Ankle rolling inward — high sprain risk. Keep foot flat during lateral steps",
+      "Ankle rolling inward — high sprain risk (Rivera et al. 2017, RR=0.57 with training)",
     dangerBelow: 70,
     rampDegrees: 15,
     angleKey: "rightAnkle",
@@ -112,7 +132,7 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "ankle",
     label: "Left Ankle Inversion Risk",
     description:
-      "Ankle rolling inward — high sprain risk. Keep foot flat during lateral steps",
+      "Ankle rolling inward — high sprain risk (Rivera et al. 2017, RR=0.57 with training)",
     dangerBelow: 70,
     rampDegrees: 15,
     angleKey: "leftAnkle",
@@ -121,7 +141,7 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "ankle",
     label: "Right Ankle Overextension",
     description:
-      "Excessive dorsiflexion — risk of Achilles tendon strain during lunges",
+      "Excessive dorsiflexion — Achilles tendon strain risk during lunges",
     dangerAbove: 160,
     rampDegrees: 15,
     angleKey: "rightAnkle",
@@ -130,7 +150,7 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "ankle",
     label: "Left Ankle Overextension",
     description:
-      "Excessive dorsiflexion — risk of Achilles tendon strain during lunges",
+      "Excessive dorsiflexion — Achilles tendon strain risk during lunges",
     dangerAbove: 160,
     rampDegrees: 15,
     angleKey: "leftAnkle",

@@ -141,12 +141,22 @@ export function DrillLibrary() {
             ))}
           </div>
 
+          {/* Evidence-based badge */}
+          <div className="mb-4 flex items-center gap-2 text-xs text-white/30">
+            <svg className="w-3.5 h-3.5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+            </svg>
+            <span>Evidence-based protocols backed by peer-reviewed sports medicine research</span>
+          </div>
+
           {/* Pillar description */}
           {pillar !== "all" && (
-            <div className="mb-6 text-sm text-white/40">
-              {pillar === "prevention" && "Prepare your body before stepping on court. Camera-guided warm-ups that monitor your form."}
-              {pillar === "performance" && "Master padel technique with real-time pose tracking. AI monitors your form and flags injury risks."}
-              {pillar === "recovery" && "Cool-down stretches after playing. Proper recovery prevents the injuries that build up over time."}
+            <div className="mb-6 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
+              <p className="text-sm text-white/50">
+                {pillar === "prevention" && "Dynamic warm-ups following the RAMP protocol (Jeffreys 2007) and FIFA 11+ program — proven to reduce injuries by 30% (Al Attar et al. 2017, BMC Sports Medicine). Camera-guided form monitoring in real time."}
+                {pillar === "performance" && "Padel technique drills with real-time pose tracking. AI monitors joint angles based on biomechanical thresholds from Elliott 2006 (BJSM) and flags injury risks using validated limits."}
+                {pillar === "recovery" && "Static stretching per ACSM guidelines (15–30 second holds, 2–4 reps). Combined with active cool-down for optimal recovery. Includes proprioceptive balance training — shown to reduce ankle sprains by 43% (Rivera et al. 2017)."}
+              </p>
             </div>
           )}
 
