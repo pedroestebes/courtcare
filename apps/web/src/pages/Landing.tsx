@@ -217,7 +217,7 @@ export function Landing() {
       { id: "demo-user-001", name: "Pedro Esteves", email: "pedro@courtcare.com" },
       "demo-token-investor-preview"
     );
-    navigate("/dashboard");
+    navigate("/drills");
   };
 
   return (
@@ -277,11 +277,12 @@ export function Landing() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/register">
-                <Button size="lg" className="shadow-xl shadow-brand-500/30 min-w-[200px]">
-                  Protect Your Game
-                </Button>
-              </Link>
+              <button
+                onClick={handleDemoLogin}
+                className="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-gradient-to-r from-brand-500 to-accent-500 text-white text-base font-semibold shadow-xl shadow-brand-500/30 hover:shadow-brand-500/50 transition-all duration-300 hover:scale-105 min-w-[200px]"
+              >
+                Start Training
+              </button>
               <a href="#how-it-works">
                 <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 min-w-[200px]">
                   See How It Works
