@@ -3,151 +3,304 @@ import { useAuthStore } from "@/stores/authStore";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { AppShell } from "@/components/layout/AppShell";
-import { formatDate, formatDuration, scoreColor } from "@/lib/utils";
+import { BodyMap, getPlayReadiness, type BodyZone } from "@/components/health/BodyMap";
+import { CoachChat } from "@/components/health/CoachChat";
+import { ProgressCard } from "@/components/health/ProgressCard";
+import { WarmupCard } from "@/components/health/WarmupCard";
+import { formatDate, formatDuration, scoreColor, cn } from "@/lib/utils";
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Area,
+  AreaChart,
+  ReferenceLine,
 } from "recharts";
 
 const mockStats = {
-  totalSessions: 24,
-  avgScore: 76,
-  bestScore: 94,
-  streak: 5,
+  totalSessions: 14,
+  safeSessions: 8,
+  injuriesPrevented: 9,
+  avgScore: 79,
+  bestScore: 96,
+  streak: 7,
+  injuryFreeStreak: 4,
+  totalTrainingMinutes: 170,
 };
 
 const mockRecent = [
-  { id: "1", drillName: "Forehand Volley", date: "2026-03-27", score: 82, duration: 180 },
-  { id: "2", drillName: "Bandeja", date: "2026-03-26", score: 71, duration: 240 },
-  { id: "3", drillName: "Ready Position", date: "2026-03-25", score: 91, duration: 120 },
-  { id: "4", drillName: "Smash", date: "2026-03-24", score: 68, duration: 300 },
-  { id: "5", drillName: "Backhand Volley", date: "2026-03-23", score: 77, duration: 200 },
+  { id: "1", drillName: "Forehand Volley", date: "2026-03-29", score: 88, duration: 180, safe: true },
+  { id: "2", drillName: "Bandeja", date: "2026-03-28", score: 82, duration: 240, safe: true },
+  { id: "3", drillName: "Smash", date: "2026-03-27", score: 74, duration: 300, safe: false },
+  { id: "4", drillName: "Ready Position", date: "2026-03-26", score: 93, duration: 120, safe: true },
+  { id: "5", drillName: "Vibora", date: "2026-03-25", score: 71, duration: 260, safe: false },
+  { id: "6", drillName: "Backhand Volley", date: "2026-03-24", score: 85, duration: 200, safe: true },
 ];
 
 const mockProgress = [
-  { date: "Mar 18", score: 58 },
-  { date: "Mar 19", score: 62 },
-  { date: "Mar 20", score: 65 },
-  { date: "Mar 21", score: 61 },
-  { date: "Mar 22", score: 70 },
-  { date: "Mar 23", score: 74 },
-  { date: "Mar 24", score: 68 },
-  { date: "Mar 25", score: 78 },
-  { date: "Mar 26", score: 76 },
-  { date: "Mar 27", score: 82 },
+  { date: "Mar 15", score: 52, injuryRisk: 45 },
+  { date: "Mar 16", score: 55, injuryRisk: 42 },
+  { date: "Mar 17", score: 58, injuryRisk: 38 },
+  { date: "Mar 18", score: 61, injuryRisk: 35 },
+  { date: "Mar 19", score: 59, injuryRisk: 40 },
+  { date: "Mar 20", score: 65, injuryRisk: 30 },
+  { date: "Mar 21", score: 68, injuryRisk: 28 },
+  { date: "Mar 22", score: 72, injuryRisk: 22 },
+  { date: "Mar 23", score: 74, injuryRisk: 25 },
+  { date: "Mar 24", score: 78, injuryRisk: 18 },
+  { date: "Mar 25", score: 76, injuryRisk: 32 },
+  { date: "Mar 26", score: 82, injuryRisk: 15 },
+  { date: "Mar 27", score: 79, injuryRisk: 20 },
+  { date: "Mar 28", score: 85, injuryRisk: 12 },
+  { date: "Mar 29", score: 88, injuryRisk: 8 },
 ];
 
-const statCards = [
-  { label: "Total Sessions", value: mockStats.totalSessions, icon: "\uD83C\uDFBE" },
-  { label: "Avg Score", value: mockStats.avgScore, icon: "\uD83C\uDFAF" },
-  { label: "Best Score", value: mockStats.bestScore, icon: "\uD83C\uDFC6" },
-  { label: "Day Streak", value: mockStats.streak, icon: "\uD83D\uDD25" },
+const bodyZones: BodyZone[] = [
+  { area: "Right Shoulder", status: "healthy", detail: "No impingement detected in last 12 sessions", sessions: 12, trend: "improving" },
+  { area: "Left Shoulder", status: "healthy", detail: "Safe range maintained across all drills", sessions: 10, trend: "stable" },
+  { area: "Right Elbow", status: "healthy", detail: "No hyperextension in last 8 sessions", sessions: 8, trend: "improving" },
+  { area: "Left Elbow", status: "healthy", detail: "Within safe flexion range", sessions: 6, trend: "stable" },
+  { area: "Right Knee", status: "healthy", detail: "Good bend on landings — shock absorption improving", sessions: 14, trend: "improving" },
+  { area: "Left Knee", status: "healthy", detail: "No strain detected in recent sessions", sessions: 14, trend: "stable" },
+  { area: "Lower Back", status: "watch", detail: "Slight lean detected on overhead shots — monitor during bandejas and smashes", recovery: "Light training for 10 days", sessions: 6, trend: "improving" },
+  { area: "Right Hip", status: "healthy", detail: "Good hip mobility and rotation", sessions: 8, trend: "stable" },
+  { area: "Left Hip", status: "healthy", detail: "Normal flexion angles across all stances", sessions: 8, trend: "stable" },
 ];
+
+const playReadiness = getPlayReadiness(bodyZones);
+
+const statCards = [
+  { label: "Safe Sessions", value: `${mockStats.safeSessions}/${mockStats.totalSessions}`, icon: "\u2764\uFE0F", sub: `${Math.round((mockStats.safeSessions / mockStats.totalSessions) * 100)}% safe rate` },
+  { label: "Injuries Prevented", value: mockStats.injuriesPrevented, icon: "\uD83D\uDEE1\uFE0F", sub: "dangerous form alerts" },
+  { label: "Injury-Free Streak", value: `${mockStats.injuryFreeStreak} days`, icon: "\uD83D\uDD25", sub: "keep it going!" },
+  { label: "Training Time", value: `${Math.round(mockStats.totalTrainingMinutes / 60)}h ${mockStats.totalTrainingMinutes % 60}m`, icon: "\u23F1\uFE0F", sub: `${mockStats.totalSessions} sessions` },
+];
+
+// Readiness ring color
+const ringColor = playReadiness.status === "play" ? "#22c55e" : playReadiness.status === "caution" ? "#f59e0b" : "#ef4444";
+const ringGlow = playReadiness.status === "play" ? "rgba(34,197,94,0.4)" : playReadiness.status === "caution" ? "rgba(245,158,11,0.4)" : "rgba(239,68,68,0.4)";
 
 export function Dashboard() {
   const user = useAuthStore((s) => s.user);
 
+  // SVG ring calculations
+  const ringRadius = 58;
+  const ringCircumference = 2 * Math.PI * ringRadius;
+  const ringOffset = ringCircumference - (playReadiness.score / 100) * ringCircumference;
+
   return (
     <AppShell>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Welcome back, {user?.name ?? "Player"}
-            </h1>
-            <p className="text-gray-600 mt-1">Here is your training overview.</p>
-          </div>
-          <Link to="/drills">
-            <Button size="lg">Start Training</Button>
-          </Link>
+      {/* Dark Hero Section */}
+      <div className="relative bg-gradient-to-br from-brand-950 via-gray-900 to-brand-950 overflow-hidden">
+        {/* Ambient gradient orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full opacity-20" style={{ background: `radial-gradient(circle, ${ringGlow}, transparent 70%)` }} />
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full opacity-15" style={{ background: "radial-gradient(circle, rgba(7,195,166,0.3), transparent 70%)" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10" style={{ background: "radial-gradient(circle, rgba(16,185,129,0.2), transparent 60%)" }} />
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {statCards.map((stat) => (
-            <Card key={stat.label}>
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{stat.icon}</span>
-                <div>
-                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                  <p className="text-sm text-gray-500">{stat.label}</p>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-10">
+          {/* Welcome bar */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-2xl font-bold text-white">
+                Welcome back, {user?.name ?? "Pedro"}
+              </h1>
+              <p className="text-white/50 mt-1">Your body is in good shape. {mockStats.injuryFreeStreak} days injury-free.</p>
+            </div>
+            <Link to="/drills">
+              <Button size="lg" className="shadow-xl shadow-brand-500/30">Start Safe Training</Button>
+            </Link>
+          </div>
+
+          {/* Hero: Readiness Score + Body Map */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Readiness Ring */}
+            <div className="flex flex-col items-center justify-center py-8">
+              <div className="relative">
+                {/* Glow behind ring */}
+                <div className="absolute inset-0 rounded-full blur-2xl opacity-30" style={{ background: ringGlow }} />
+
+                <svg width="160" height="160" viewBox="0 0 160 160" className="relative">
+                  {/* Background ring */}
+                  <circle cx="80" cy="80" r={ringRadius} stroke="rgba(255,255,255,0.08)" strokeWidth="8" fill="none" />
+                  {/* Progress ring */}
+                  <circle
+                    cx="80" cy="80" r={ringRadius}
+                    stroke={ringColor}
+                    strokeWidth="8"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeDasharray={ringCircumference}
+                    strokeDashoffset={ringOffset}
+                    transform="rotate(-90 80 80)"
+                    style={{ filter: `drop-shadow(0 0 8px ${ringGlow})`, transition: "stroke-dashoffset 1s ease-out" }}
+                  />
+                  {/* Score text */}
+                  <text x="80" y="72" textAnchor="middle" className="text-4xl font-black" fill="white" fontSize="42" fontWeight="900">
+                    {playReadiness.score}
+                  </text>
+                  <text x="80" y="96" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="11" fontWeight="600" letterSpacing="2">
+                    READINESS
+                  </text>
+                </svg>
+              </div>
+
+              <div className="mt-4 text-center">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full backdrop-blur-sm" style={{ background: `${ringGlow}`, border: `1px solid ${ringColor}40` }}>
+                  <span className="text-lg">{playReadiness.icon}</span>
+                  <span className="text-sm font-bold" style={{ color: ringColor }}>
+                    {playReadiness.label}
+                  </span>
+                </div>
+                <p className="text-xs text-white/40 mt-3 max-w-[220px] leading-relaxed">
+                  {playReadiness.description}
+                </p>
+              </div>
+            </div>
+
+            {/* Body Map — dark glassmorphism card */}
+            <div className="lg:col-span-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6">
+              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-4">Your Body Status</h2>
+              <BodyMap zones={bodyZones} darkMode />
+            </div>
+          </div>
+
+          {/* Stats row — glass cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-8">
+            {statCards.map((stat) => (
+              <div key={stat.label} className="rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 px-4 py-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{stat.icon}</span>
+                  <div>
+                    <p className="text-xl font-bold text-white">{stat.value}</p>
+                    <p className="text-xs text-white/50">{stat.label}</p>
+                    <p className="text-xs text-white/30">{stat.sub}</p>
+                  </div>
                 </div>
               </div>
-            </Card>
-          ))}
+            ))}
+          </div>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Progress Chart */}
-          <div className="lg:col-span-2">
-            <Card header="Score Trend">
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={mockProgress}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#9ca3af" />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} stroke="#9ca3af" />
-                    <Tooltip
-                      contentStyle={{
-                        borderRadius: "12px",
-                        border: "1px solid #e5e7eb",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-                      }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="score"
-                      stroke="#07c3a6"
-                      strokeWidth={2.5}
-                      dot={{ r: 4, fill: "#07c3a6", strokeWidth: 0 }}
-                      activeDot={{ r: 6, fill: "#07c3a6" }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+      {/* Chart + Sessions — still dark */}
+      <div className="bg-gradient-to-b from-brand-950 to-gray-900 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Form Score + Injury Risk Chart */}
+          <div className="rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6 mb-8">
+            <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-4">Form Score vs Injury Risk (last 15 days)</h3>
+            <div className="h-48 sm:h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={mockProgress}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} stroke="rgba(255,255,255,0.1)" />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} stroke="rgba(255,255,255,0.1)" />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "12px",
+                      background: "rgba(0,0,0,0.8)",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      color: "white",
+                      backdropFilter: "blur(12px)",
+                    }}
+                    labelStyle={{ color: "rgba(255,255,255,0.6)" }}
+                  />
+                  <ReferenceLine y={40} stroke="#f59e0b" strokeDasharray="4 4" label={{ value: "Risk", position: "right", fontSize: 10, fill: "#f59e0b" }} />
+                  <Area
+                    type="monotone"
+                    dataKey="injuryRisk"
+                    name="Injury Risk"
+                    stroke="#ef4444"
+                    fill="#ef4444"
+                    fillOpacity={0.15}
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="score"
+                    name="Form Score"
+                    stroke="#07c3a6"
+                    strokeWidth={2.5}
+                    dot={{ r: 3, fill: "#07c3a6", strokeWidth: 0 }}
+                    activeDot={{ r: 6, fill: "#07c3a6" }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex items-center gap-6 mt-3 text-xs text-white/40">
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-0.5 bg-[#07c3a6] rounded" />
+                Form Score (improving)
               </div>
-            </Card>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 border-t-2 border-dashed border-red-400" />
+                Injury Risk (decreasing)
+              </div>
+            </div>
           </div>
 
           {/* Recent Sessions */}
-          <div>
-            <Card header="Recent Sessions" noPadding>
-              <div className="divide-y divide-gray-50">
-                {mockRecent.map((session) => (
-                  <Link
-                    key={session.id}
-                    to={`/history/${session.id}`}
-                    className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-50 transition-colors"
-                  >
+          <div className="rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/10">
+              <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Recent Sessions</h3>
+            </div>
+            <div className="divide-y divide-white/5">
+              {mockRecent.map((session) => (
+                <Link
+                  key={session.id}
+                  to={`/history/${session.id}`}
+                  className="flex items-center justify-between px-6 py-4 hover:bg-white/5 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">{session.safe ? "\u2764\uFE0F" : "\u26A0\uFE0F"}</span>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-white">
                         {session.drillName}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-white/40">
                         {formatDate(session.date)} &middot;{" "}
                         {formatDuration(session.duration)}
                       </p>
                     </div>
-                    <span className={`text-sm font-bold ${scoreColor(session.score)}`}>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className={cn(
+                      "text-xs font-semibold px-2.5 py-1 rounded-full",
+                      session.safe ? "bg-green-500/15 text-green-400 border border-green-500/20" : "bg-red-500/15 text-red-400 border border-red-500/20"
+                    )}>
+                      {session.safe ? "Safe" : "Risk"}
+                    </span>
+                    <span className="text-sm font-bold text-white">
                       {session.score}
                     </span>
-                  </Link>
-                ))}
-              </div>
-              <div className="px-6 py-3 border-t border-gray-100">
-                <Link
-                  to="/history"
-                  className="text-sm text-brand-600 font-medium hover:text-brand-700"
-                >
-                  View all sessions
+                  </div>
                 </Link>
-              </div>
-            </Card>
+              ))}
+            </div>
+            <div className="px-6 py-3 border-t border-white/10">
+              <Link
+                to="/history"
+                className="text-sm text-brand-400 font-medium hover:text-brand-300"
+              >
+                View all {mockStats.totalSessions} sessions &rarr;
+              </Link>
+            </div>
+          </div>
+
+          {/* Warm-up + Progress */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <WarmupCard zones={bodyZones} />
+            <ProgressCard />
+          </div>
+
+          {/* AI Coach */}
+          <div className="mt-8">
+            <CoachChat />
           </div>
         </div>
       </div>

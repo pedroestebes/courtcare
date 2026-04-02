@@ -38,6 +38,10 @@ export const sessions = sqliteTable("sessions", {
   endedAt: text("ended_at"),
   overallScore: integer("overall_score"),
   durationSeconds: integer("duration_seconds"),
+  maxInjuryRisk: integer("max_injury_risk"),
+  avgFatigueLevel: integer("avg_fatigue_level"),
+  injuryAlerts: text("injury_alerts", { mode: "json" }).$type<string[]>(),
+  sessionSafe: integer("session_safe", { mode: "boolean" }),
 });
 
 export const sessionFrames = sqliteTable("session_frames", {
@@ -53,4 +57,6 @@ export const sessionFrames = sqliteTable("session_frames", {
     .notNull()
     .$type<Record<string, number>>(),
   feedback: text("feedback", { mode: "json" }).notNull().$type<string[]>(),
+  injuryRisk: integer("injury_risk"),
+  fatigueLevel: integer("fatigue_level"),
 });

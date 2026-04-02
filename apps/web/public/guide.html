@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CourtCare — Quick Start Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #00332e; color: white; }
+  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+
+  .page { max-width: 540px; margin: 0 auto; padding: 48px 32px; }
+
+  /* Logo */
+  .logo { text-align: center; margin-bottom: 48px; }
+  .logo-mark { font-size: 48px; margin-bottom: 8px; }
+  .logo-name { font-size: 32px; font-weight: 900; letter-spacing: -0.5px; }
+  .logo-sub { font-size: 14px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+  /* Journey line */
+  .journey { position: relative; padding-left: 48px; }
+  .journey::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: linear-gradient(to bottom, #07c3a6, #10b981, #07c3a6);
+    opacity: 0.3;
+  }
+
+  .stop { position: relative; margin-bottom: 40px; }
+  .stop:last-child { margin-bottom: 0; }
+
+  .dot {
+    position: absolute;
+    left: -38px;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #07c3a6;
+    border: 3px solid #00332e;
+    box-shadow: 0 0 12px rgba(7,195,166,0.4);
+  }
+
+  .stop-emoji { font-size: 28px; margin-bottom: 6px; }
+  .stop-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .stop-text { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+  .stop-text strong { color: #07c3a6; font-weight: 600; }
+
+  .cred-box {
+    margin-top: 10px;
+    background: rgba(7,195,166,0.08);
+    border: 1px solid rgba(7,195,166,0.15);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #07c3a6;
+    line-height: 1.7;
+  }
+
+  /* Bottom CTA */
+  .cta { text-align: center; margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .cta-link {
+    display: inline-block;
+    background: linear-gradient(135deg, #07c3a6, #10b981);
+    color: white;
+    text-decoration: none;
+    padding: 14px 36px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .cta-small { color: rgba(255,255,255,0.25); font-size: 11px; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="logo">
+    <div class="logo-mark">🛡️</div>
+    <div class="logo-name">CourtCare</div>
+    <div class="logo-sub">Your journey to safer padel starts here</div>
+  </div>
+
+  <div class="journey">
+
+    <div class="stop">
+      <div class="dot"></div>
+      <div class="stop-emoji">🌐</div>
+      <div class="stop-title">Open the app</div>
+      <div class="stop-text">
+        Go to <strong>courtcare-web.pages.dev</strong> on your phone or computer.
+        Tap <strong>"Try Demo"</strong> in the top right.
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="dot"></div>
+      <div class="stop-emoji">🔑</div>
+      <div class="stop-title">Log in</div>
+      <div class="stop-text">Use the demo account to explore with real data.</div>
+      <div class="cred-box">
+        📧 pedro@courtcare.com<br>
+        🔑 demo123
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="dot"></div>
+      <div class="stop-emoji">🧍</div>
+      <div class="stop-title">See your body</div>
+      <div class="stop-text">
+        The dashboard shows your <strong>body health map</strong>.
+        Click any joint. Green = healthy. Amber = watch. Red = rest.
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="dot"></div>
+      <div class="stop-emoji">📊</div>
+      <div class="stop-title">Review past sessions</div>
+      <div class="stop-text">
+        Tap <strong>History</strong>. Try session <strong>#3 (Smash)</strong> — see how
+        CourtCare caught a shoulder injury risk in real time.
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="dot"></div>
+      <div class="stop-emoji">📸</div>
+      <div class="stop-title">Start a live session</div>
+      <div class="stop-text">
+        Tap <strong>Drills</strong> → pick any drill → allow camera.
+        Watch your skeleton appear with live health monitoring.
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="dot"></div>
+      <div class="stop-emoji">✅</div>
+      <div class="stop-title">You're protected</div>
+      <div class="stop-text">
+        CourtCare watches every joint, detects fatigue, and tells you
+        when to stop — before injury happens.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta">
+    <a href="https://courtcare-web.pages.dev" class="cta-link">Open CourtCare →</a>
+    <p class="cta-small">© 2026 CourtCare</p>
+  </div>
+
+</div>
+</body>
+</html>

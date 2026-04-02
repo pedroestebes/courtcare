@@ -1,19 +1,19 @@
 import { Hono } from "hono";
-import { randomUUID } from "node:crypto";
 import { eq, desc, and } from "drizzle-orm";
 import { createSessionSchema, completeSessionSchema } from "@courtcare/shared";
-import { db } from "../db/client.js";
+import { createDb } from "../db/client.js";
 import { sessions, sessionFrames, drills } from "../db/schema.js";
 import { authMiddleware } from "../middleware/auth.js";
+import type { Env, Variables } from "../types.js";
 
-const sessionsRouter = new Hono();
+const sessionsRouter = new Hono<{ Bindings: Env; Variables: Variables }>();
 
 // All session routes require authentication
 sessionsRouter.use("*", authMiddleware);
 
 // POST /sessions — create a new session
 sessionsRouter.post("/", async (c) => {
-  const userId = c.get("userId") as string;
+  const userId = c.get("userId");
   const body = await c.req.json();
   const parsed = createSessionSchema.safeParse(body);
 
@@ -25,8 +25,9 @@ sessionsRouter.post("/", async (c) => {
   }
 
   const { drillId } = parsed.data;
+  const db = createDb(c.env.DB);
 
-  const drill = db
+  const drill = await db
     .select({ id: drills.id, name: drills.name })
     .from(drills)
     .where(eq(drills.id, drillId))
@@ -36,17 +37,15 @@ sessionsRouter.post("/", async (c) => {
     return c.json({ error: "Drill not found" }, 404);
   }
 
-  const id = randomUUID();
+  const id = crypto.randomUUID();
   const now = new Date().toISOString();
 
-  db.insert(sessions)
-    .values({
-      id,
-      userId,
-      drillId,
-      startedAt: now,
-    })
-    .run();
+  await db.insert(sessions).values({
+    id,
+    userId,
+    drillId,
+    startedAt: now,
+  });
 
   return c.json(
     {
@@ -67,9 +66,10 @@ sessionsRouter.post("/", async (c) => {
 
 // GET /sessions — list user's sessions, ordered by date desc
 sessionsRouter.get("/", async (c) => {
-  const userId = c.get("userId") as string;
+  const userId = c.get("userId");
+  const db = createDb(c.env.DB);
 
-  const results = db
+  const results = await db
     .select({
       id: sessions.id,
       userId: sessions.userId,
@@ -91,10 +91,11 @@ sessionsRouter.get("/", async (c) => {
 
 // GET /sessions/:id — get session detail with frames
 sessionsRouter.get("/:id", async (c) => {
-  const userId = c.get("userId") as string;
+  const userId = c.get("userId");
   const sessionId = c.req.param("id");
+  const db = createDb(c.env.DB);
 
-  const session = db
+  const session = await db
     .select({
       id: sessions.id,
       userId: sessions.userId,
@@ -114,7 +115,7 @@ sessionsRouter.get("/:id", async (c) => {
     return c.json({ error: "Session not found" }, 404);
   }
 
-  const frames = db
+  const frames = await db
     .select()
     .from(sessionFrames)
     .where(eq(sessionFrames.sessionId, sessionId))
@@ -125,10 +126,11 @@ sessionsRouter.get("/:id", async (c) => {
 
 // PATCH /sessions/:id/complete — complete a session
 sessionsRouter.patch("/:id/complete", async (c) => {
-  const userId = c.get("userId") as string;
+  const userId = c.get("userId");
   const sessionId = c.req.param("id");
+  const db = createDb(c.env.DB);
 
-  const session = db
+  const session = await db
     .select()
     .from(sessions)
     .where(and(eq(sessions.id, sessionId), eq(sessions.userId, userId)))
@@ -156,33 +158,31 @@ sessionsRouter.patch("/:id/complete", async (c) => {
   const now = new Date().toISOString();
 
   // Update the session
-  db.update(sessions)
+  await db
+    .update(sessions)
     .set({
       endedAt: now,
       overallScore,
       durationSeconds,
     })
-    .where(eq(sessions.id, sessionId))
-    .run();
+    .where(eq(sessions.id, sessionId));
 
   // Insert frames
   if (frames.length > 0) {
     for (const frame of frames) {
-      db.insert(sessionFrames)
-        .values({
-          id: randomUUID(),
-          sessionId,
-          timestampMs: frame.timestampMs,
-          landmarks: frame.landmarks,
-          scores: frame.scores,
-          feedback: frame.feedback,
-        })
-        .run();
+      await db.insert(sessionFrames).values({
+        id: crypto.randomUUID(),
+        sessionId,
+        timestampMs: frame.timestampMs,
+        landmarks: frame.landmarks,
+        scores: frame.scores,
+        feedback: frame.feedback,
+      });
     }
   }
 
   // Fetch the updated session with drill name
-  const updated = db
+  const updated = await db
     .select({
       id: sessions.id,
       userId: sessions.userId,
@@ -201,7 +201,7 @@ sessionsRouter.patch("/:id/complete", async (c) => {
   return c.json({
     session: updated,
     summary: {
-      id: randomUUID(),
+      id: crypto.randomUUID(),
       sessionId,
       avgScore: summary.avgScore,
       bestScore: summary.bestScore,

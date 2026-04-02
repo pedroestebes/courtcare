@@ -28,11 +28,11 @@ export const vibora: DrillDefinition = {
         {
           joint: "rightShoulder",
           min: 110,
-          max: 170,
+          max: 158,
           weight: 1.5,
           label: "Arm Lift",
           correctionBelow: "Get your racket arm higher — load it behind your head",
-          correctionAbove: "Don't overextend — keep the arm controlled",
+          correctionAbove: "Too high — protect your shoulder. Keep it controlled",
         },
         {
           joint: "rightElbow",
@@ -79,11 +79,11 @@ export const vibora: DrillDefinition = {
         {
           joint: "rightElbow",
           min: 140,
-          max: 175,
+          max: 165,
           weight: 1.5,
           label: "Strike Extension",
           correctionBelow: "Extend your arm fully through the strike",
-          correctionAbove: "Slight bend at contact is okay",
+          correctionAbove: "Don't hyperextend — keep a slight bend to protect your elbow",
         },
         {
           joint: "rightWristHeight",
@@ -141,6 +141,20 @@ export const vibora: DrillDefinition = {
       message: "Point at the ball with your free hand for timing.",
       type: "info",
       priority: 5,
+    },
+    {
+      id: "vb-shoulder-danger",
+      check: (scores) => (scores["Arm Lift"] ?? 100) < 30,
+      message: "Shoulder at risk! Reduce arm extension to protect the rotator cuff.",
+      type: "warning",
+      priority: 15,
+    },
+    {
+      id: "vb-elbow-danger",
+      check: (scores) => (scores["Strike Extension"] ?? 100) < 30,
+      message: "Elbow hyperextension detected! Keep a slight bend at contact.",
+      type: "warning",
+      priority: 15,
     },
   ],
   scoreWeights: {

@@ -117,7 +117,9 @@ export interface JointAngles {
 /**
  * Extract all relevant joint angles from a set of pose landmarks.
  */
-export function extractJointAngles(landmarks: Landmark[]): JointAngles {
+export function extractJointAngles(landmarks: Landmark[]): JointAngles | null {
+  if (landmarks.length < 29) return null;
+
   const lShoulder = landmarks[11];
   const rShoulder = landmarks[12];
   const lElbow = landmarks[13];

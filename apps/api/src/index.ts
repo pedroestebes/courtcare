@@ -1,18 +1,22 @@
-import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { corsMiddleware } from "./middleware/cors.js";
 import authRoutes from "./routes/auth.js";
 import drillsRoutes from "./routes/drills.js";
 import sessionsRoutes from "./routes/sessions.js";
+import type { Env, Variables } from "./types.js";
 
-const app = new Hono();
+const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
 // Global middleware
 app.use("*", corsMiddleware);
 
 // Health check
 app.get("/health", (c) => {
-  return c.json({ status: "ok", service: "courtcare-api" });
+  return c.json({
+    status: "ok",
+    service: "courtcare-api",
+    environment: c.env.ENVIRONMENT,
+  });
 });
 
 // Mount routes
@@ -31,8 +35,5 @@ app.onError((err, c) => {
   return c.json({ error: "Internal server error" }, 500);
 });
 
-const port = Number(process.env.PORT ?? 3001);
-
-serve({ fetch: app.fetch, port }, (info) => {
-  console.log(`CourtCare API running on http://localhost:${info.port}`);
-});
+// Export for Cloudflare Workers
+export default app;

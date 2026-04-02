@@ -41,22 +41,22 @@ export function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-brand-950 via-gray-900 to-brand-950 px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
             <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center shadow-lg shadow-brand-500/25">
               <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
               </svg>
             </div>
             <span className="text-xl font-bold gradient-brand-text">CourtCare</span>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
-          <p className="text-gray-600 mt-1">Start training with AI coaching today</p>
+          <h1 className="text-2xl font-bold text-white">Create your account</h1>
+          <p className="text-white/50 mt-1">Start training with AI injury prevention today</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+        <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">
@@ -110,9 +110,9 @@ export function Register() {
           </form>
         </div>
 
-        <p className="text-center mt-6 text-sm text-gray-600">
+        <p className="text-center mt-6 text-sm text-white/50">
           Already have an account?{" "}
-          <Link to="/login" className="text-brand-600 font-medium hover:text-brand-700">
+          <Link to="/login" className="text-brand-400 font-medium hover:text-brand-300">
             Log in
           </Link>
         </p>

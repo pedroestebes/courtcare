@@ -1,12 +1,8 @@
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import { drizzle, type DrizzleD1Database } from "drizzle-orm/d1";
 import * as schema from "./schema.js";
 
-const DB_PATH = process.env.DATABASE_URL ?? "./courtcare.db";
+export type Database = DrizzleD1Database<typeof schema>;
 
-const sqlite = new Database(DB_PATH);
-sqlite.pragma("journal_mode = WAL");
-sqlite.pragma("foreign_keys = ON");
-
-export const db = drizzle(sqlite, { schema });
-export { sqlite };
+export function createDb(d1: D1Database): Database {
+  return drizzle(d1, { schema });
+}

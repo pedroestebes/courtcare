@@ -1,5 +1,5 @@
 import { useParams, Navigate, useNavigate, Link } from "react-router-dom";
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { getDrill } from "@/engine/drills/index";
 import { useCamera } from "@/hooks/useCamera";
 import { usePoseDetection } from "@/hooks/usePoseDetection";
@@ -9,6 +9,7 @@ import { CameraFeed } from "@/components/camera/CameraFeed";
 import { SkeletonOverlay } from "@/components/camera/SkeletonOverlay";
 import { ScoreGauge } from "@/components/pose/ScoreGauge";
 import { FeedbackPanel } from "@/components/pose/FeedbackPanel";
+import { HealthIndicator } from "@/components/pose/HealthIndicator";
 import { Button } from "@/components/ui/Button";
 import { formatDuration, cn } from "@/lib/utils";
 
@@ -91,6 +92,12 @@ export function Session() {
     };
   }, [status, tick]);
 
+  // Keep latest form analysis values in refs for stable interval
+  const latestScoreRef = useRef(formAnalysis.smoothedScore);
+  const latestFeedbackRef = useRef(formAnalysis.feedback);
+  latestScoreRef.current = formAnalysis.smoothedScore;
+  latestFeedbackRef.current = formAnalysis.feedback;
+
   // Record frames
   useEffect(() => {
     if (status !== "active") return;
@@ -98,13 +105,37 @@ export function Session() {
     const frameInterval = setInterval(() => {
       addFrame({
         timestamp: Date.now(),
-        score: formAnalysis.smoothedScore,
-        feedback: formAnalysis.feedback,
+        score: latestScoreRef.current,
+        feedback: latestFeedbackRef.current,
       });
     }, 1000);
 
     return () => clearInterval(frameInterval);
-  }, [status, formAnalysis.smoothedScore, formAnalysis.feedback, addFrame]);
+  }, [status, addFrame]);
+
+  // Auto-pause on danger — if injury risk stays > 70 for 3+ seconds
+  const dangerCountRef = useRef(0);
+  const [autoPaused, setAutoPaused] = useState(false);
+
+  useEffect(() => {
+    if (status !== "active" || !formAnalysis.healthMetrics) return;
+
+    if (formAnalysis.healthMetrics.overallRisk >= 70) {
+      dangerCountRef.current++;
+      if (dangerCountRef.current >= 3 && !autoPaused) {
+        pause();
+        setAutoPaused(true);
+      }
+    } else {
+      dangerCountRef.current = 0;
+    }
+  }, [status, formAnalysis.healthMetrics, pause, autoPaused]);
+
+  const handleResumeDanger = useCallback(() => {
+    setAutoPaused(false);
+    dangerCountRef.current = 0;
+    resume();
+  }, [resume]);
 
   const handlePause = useCallback(() => {
     if (status === "active") pause();
@@ -150,13 +181,13 @@ export function Session() {
             <p className="text-xl font-mono font-bold text-white">
               {formatDuration(elapsedSeconds)}
             </p>
-            <p className="text-[10px] text-white/40 uppercase tracking-wider">Time</p>
+            <p className="text-xs text-white/40 uppercase tracking-wider">Time</p>
           </div>
 
           {/* Reps */}
           <div className="text-center">
             <p className="text-xl font-bold text-white">{totalReps}</p>
-            <p className="text-[10px] text-white/40 uppercase tracking-wider">Reps</p>
+            <p className="text-xs text-white/40 uppercase tracking-wider">Reps</p>
           </div>
 
           {/* FPS */}
@@ -185,16 +216,17 @@ export function Session() {
           score={formAnalysis.smoothedScore}
         />
 
-        {/* Score gauge - top right */}
+        {/* Health indicator (primary) + Score gauge (secondary) - top right */}
         {status === "active" && (
-          <div className="absolute top-4 right-4 z-10">
-            <ScoreGauge score={formAnalysis.smoothedScore} size={110} />
+          <div className="absolute top-4 right-4 z-10 flex flex-col items-end gap-2 max-w-[55vw] sm:max-w-60">
+            <HealthIndicator healthMetrics={formAnalysis.healthMetrics} />
+            <ScoreGauge score={formAnalysis.smoothedScore} size={72} />
           </div>
         )}
 
-        {/* Feedback panel - right side */}
+        {/* Feedback panel - bottom right on mobile, right side on desktop */}
         {status === "active" && (
-          <div className="absolute top-36 right-4 z-10 w-72">
+          <div className="absolute bottom-20 left-4 right-4 sm:left-auto sm:top-56 sm:right-4 sm:bottom-auto z-10 sm:w-72">
             <FeedbackPanel messages={formAnalysis.feedback} />
           </div>
         )}
@@ -205,7 +237,7 @@ export function Session() {
             <div className="space-y-1.5">
               {Object.entries(formAnalysis.scores).slice(0, 5).map(([label, score]) => (
                 <div key={label} className="flex items-center gap-2">
-                  <span className="text-[10px] text-white/60 w-24 truncate">{label}</span>
+                  <span className="text-xs text-white/60 w-24 truncate">{label}</span>
                   <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
                     <div
                       className={cn(
@@ -218,7 +250,7 @@ export function Session() {
                       style={{ width: `${Math.max(0, Math.min(100, score))}%` }}
                     />
                   </div>
-                  <span className="text-[10px] text-white/80 w-8 text-right font-mono">
+                  <span className="text-xs text-white/80 w-8 text-right font-mono">
                     {Math.round(score)}
                   </span>
                 </div>
@@ -239,8 +271,32 @@ export function Session() {
           </div>
         )}
 
-        {/* Paused overlay */}
-        {status === "paused" && (
+        {/* Danger auto-pause overlay */}
+        {status === "paused" && autoPaused && (
+          <div className="absolute inset-0 flex items-center justify-center bg-red-950/80 z-20">
+            <div className="text-center max-w-sm">
+              <div className="w-20 h-20 rounded-full bg-red-500/20 border-2 border-red-500/50 flex items-center justify-center mx-auto mb-4 animate-pulse">
+                <span className="text-4xl">{"\u26D4"}</span>
+              </div>
+              <p className="text-3xl font-bold text-red-400 mb-2">Session Auto-Paused</p>
+              <p className="text-white/60 mb-2">High injury risk detected for 3+ seconds.</p>
+              <p className="text-red-300/80 text-sm mb-6">
+                Your form entered a danger zone. We paused to protect you. Check your technique before continuing.
+              </p>
+              <div className="flex gap-4 justify-center">
+                <Button onClick={handleResumeDanger} size="lg" className="bg-amber-500 hover:bg-amber-600">
+                  I Understand — Resume
+                </Button>
+                <Button variant="outline" onClick={handleStop} size="lg" className="border-white/20 text-white hover:bg-white/10">
+                  End Session
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Regular paused overlay */}
+        {status === "paused" && !autoPaused && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-20">
             <div className="text-center">
               <p className="text-4xl font-bold text-white mb-2">Paused</p>
@@ -265,7 +321,21 @@ export function Session() {
                 <ScoreGauge score={formAnalysis.bestScore} size={140} />
               </div>
               <h2 className="text-3xl font-bold text-white mb-2">Session Complete</h2>
-              <div className="grid grid-cols-3 gap-4 my-8">
+
+              {/* Health status first */}
+              <div className={cn(
+                "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold my-4",
+                formAnalysis.healthMetrics?.sessionSafe
+                  ? "bg-green-500/20 text-green-300 border border-green-400/30"
+                  : "bg-red-500/20 text-red-300 border border-red-400/30"
+              )}>
+                {formAnalysis.healthMetrics?.sessionSafe ? "\u2764\uFE0F" : "\u26A0\uFE0F"}
+                {formAnalysis.healthMetrics?.sessionSafe
+                  ? "Safe Session — No injury risks detected"
+                  : "Injury risks detected — review your form"}
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 my-6">
                 <div>
                   <p className="text-2xl font-bold text-white">{formatDuration(elapsedSeconds)}</p>
                   <p className="text-xs text-white/50">Duration</p>

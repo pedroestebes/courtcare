@@ -27,6 +27,7 @@ export interface DrillDefinition {
   shortDescription: string;
   instructions: string[];
   thumbnailEmoji: string;
+  thumbnailIcon?: string;
   estimatedDuration: number;
   phases: DrillPhase[];
   feedbackRules: FeedbackRule[];

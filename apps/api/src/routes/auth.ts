@@ -1,14 +1,14 @@
 import { Hono } from "hono";
-import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { loginSchema, registerSchema } from "@courtcare/shared";
-import { db } from "../db/client.js";
+import { createDb } from "../db/client.js";
 import { users } from "../db/schema.js";
 import { signToken } from "../lib/jwt.js";
 import { hashPassword, verifyPassword } from "../lib/password.js";
 import { authMiddleware } from "../middleware/auth.js";
+import type { Env, Variables } from "../types.js";
 
-const auth = new Hono();
+const auth = new Hono<{ Bindings: Env; Variables: Variables }>();
 
 auth.post("/register", async (c) => {
   const body = await c.req.json();
@@ -22,8 +22,9 @@ auth.post("/register", async (c) => {
   }
 
   const { displayName, email, password } = parsed.data;
+  const db = createDb(c.env.DB);
 
-  const existing = db
+  const existing = await db
     .select({ id: users.id })
     .from(users)
     .where(eq(users.email, email.toLowerCase()))
@@ -34,20 +35,18 @@ auth.post("/register", async (c) => {
   }
 
   const passwordHash = await hashPassword(password);
-  const id = randomUUID();
+  const id = crypto.randomUUID();
   const now = new Date().toISOString();
 
-  db.insert(users)
-    .values({
-      id,
-      email: email.toLowerCase(),
-      passwordHash,
-      displayName,
-      createdAt: now,
-    })
-    .run();
+  await db.insert(users).values({
+    id,
+    email: email.toLowerCase(),
+    passwordHash,
+    displayName,
+    createdAt: now,
+  });
 
-  const token = await signToken(id);
+  const token = await signToken(id, c.env.JWT_SECRET);
 
   return c.json(
     {
@@ -75,8 +74,9 @@ auth.post("/login", async (c) => {
   }
 
   const { email, password } = parsed.data;
+  const db = createDb(c.env.DB);
 
-  const user = db
+  const user = await db
     .select()
     .from(users)
     .where(eq(users.email, email.toLowerCase()))
@@ -92,7 +92,7 @@ auth.post("/login", async (c) => {
     return c.json({ error: "Invalid email or password" }, 401);
   }
 
-  const token = await signToken(user.id);
+  const token = await signToken(user.id, c.env.JWT_SECRET);
 
   return c.json({
     token,
@@ -106,9 +106,10 @@ auth.post("/login", async (c) => {
 });
 
 auth.get("/me", authMiddleware, async (c) => {
-  const userId = c.get("userId") as string;
+  const userId = c.get("userId");
+  const db = createDb(c.env.DB);
 
-  const user = db
+  const user = await db
     .select({
       id: users.id,
       email: users.email,

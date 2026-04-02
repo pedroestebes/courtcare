@@ -27,11 +27,11 @@ export const bandeja: DrillDefinition = {
         {
           joint: "rightShoulder",
           min: 100,
-          max: 160,
+          max: 155,
           weight: 1.5,
           label: "Racket Arm Lift",
           correctionBelow: "Raise your racket arm higher — elbow above shoulder",
-          correctionAbove: "Arm is too far back — keep it controlled",
+          correctionAbove: "Arm too far back — protect your shoulder, keep it controlled",
         },
         {
           joint: "rightElbow",

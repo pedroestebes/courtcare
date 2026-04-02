@@ -1,14 +1,16 @@
 import { Hono } from "hono";
 import { eq, and, type SQLWrapper } from "drizzle-orm";
-import { db } from "../db/client.js";
+import { createDb } from "../db/client.js";
 import { drills } from "../db/schema.js";
+import type { Env, Variables } from "../types.js";
 
-const drillsRouter = new Hono();
+const drillsRouter = new Hono<{ Bindings: Env; Variables: Variables }>();
 
 drillsRouter.get("/", async (c) => {
   const sport = c.req.query("sport");
   const category = c.req.query("category");
   const difficulty = c.req.query("difficulty");
+  const db = createDb(c.env.DB);
 
   const conditions: SQLWrapper[] = [];
 
@@ -19,23 +21,29 @@ drillsRouter.get("/", async (c) => {
     conditions.push(eq(drills.category, category));
   }
   if (difficulty) {
-    conditions.push(eq(drills.difficulty, difficulty));
+    conditions.push(
+      eq(
+        drills.difficulty,
+        difficulty as "beginner" | "intermediate" | "advanced"
+      )
+    );
   }
 
   const query = db.select().from(drills);
 
   const results =
     conditions.length > 0
-      ? query.where(and(...conditions)).all()
-      : query.all();
+      ? await query.where(and(...conditions)).all()
+      : await query.all();
 
   return c.json({ drills: results });
 });
 
 drillsRouter.get("/:slug", async (c) => {
   const slug = c.req.param("slug");
+  const db = createDb(c.env.DB);
 
-  const drill = db
+  const drill = await db
     .select()
     .from(drills)
     .where(eq(drills.slug, slug))

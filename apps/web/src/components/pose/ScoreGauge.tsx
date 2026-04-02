@@ -48,7 +48,7 @@ export function ScoreGauge({ score, size = 120, className }: ScoreGaugeProps) {
         <span className={cn("text-2xl font-bold", text)}>
           {Math.round(score)}
         </span>
-        <span className="text-[10px] text-white/60 uppercase tracking-wider">
+        <span className="text-xs text-white/60 uppercase tracking-wider">
           Score
         </span>
       </div>

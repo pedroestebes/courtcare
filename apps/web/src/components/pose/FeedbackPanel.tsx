@@ -24,6 +24,16 @@ const typeStyles: Record<FeedbackMessage["type"], { bg: string; border: string; 
     border: "border-blue-400/30",
     icon: "i",
   },
+  warning: {
+    bg: "bg-amber-500/30",
+    border: "border-amber-400/50",
+    icon: "\u26A0",
+  },
+  danger: {
+    bg: "bg-red-600/40",
+    border: "border-red-500/60",
+    icon: "\u2620",
+  },
 };
 
 interface AnimatedMessage {
@@ -42,9 +52,9 @@ export function FeedbackPanel({
     const incoming = messages.slice(0, maxVisible);
 
     setDisplayMessages((prev) => {
-      const existingIds = new Set(prev.map((m) => m.message.text));
+      const existingIds = new Set(prev.map((m) => m.message.id));
       const newMessages = incoming
-        .filter((m) => !existingIds.has(m.text))
+        .filter((m) => !existingIds.has(m.id))
         .map((m) => ({ message: m, visible: false }));
 
       const combined = [...prev, ...newMessages].slice(-maxVisible);

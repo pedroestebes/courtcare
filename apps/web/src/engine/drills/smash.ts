@@ -27,11 +27,11 @@ export const smash: DrillDefinition = {
         {
           joint: "rightShoulder",
           min: 120,
-          max: 175,
+          max: 160,
           weight: 1.5,
           label: "Arm Loaded",
           correctionBelow: "Raise your hitting arm higher — full trophy position",
-          correctionAbove: "Don't overextend behind you",
+          correctionAbove: "Too far back — protect your shoulder",
         },
         {
           joint: "rightElbow",
@@ -77,12 +77,12 @@ export const smash: DrillDefinition = {
       constraints: [
         {
           joint: "rightElbow",
-          min: 155,
-          max: 180,
+          min: 150,
+          max: 168,
           weight: 1.8,
           label: "Arm Extension",
-          correctionBelow: "Fully extend your arm — reach the highest point!",
-          correctionAbove: "Good extension!",
+          correctionBelow: "Extend your arm more — reach the highest point!",
+          correctionAbove: "Don't lock your elbow — keep a micro-bend to prevent hyperextension",
         },
         {
           joint: "rightWristHeight",
@@ -96,11 +96,11 @@ export const smash: DrillDefinition = {
         {
           joint: "rightShoulder",
           min: 140,
-          max: 180,
+          max: 163,
           weight: 1.3,
           label: "Shoulder Lift",
-          correctionBelow: "Drive your shoulder up — maximum height!",
-          correctionAbove: "Good shoulder drive",
+          correctionBelow: "Drive your shoulder up — reach high!",
+          correctionAbove: "Too far — protect your shoulder from impingement",
         },
         {
           joint: "torsoInclination",
@@ -156,6 +156,20 @@ export const smash: DrillDefinition = {
       message: "Track the ball with your free hand for timing.",
       type: "info",
       priority: 4,
+    },
+    {
+      id: "sm-shoulder-danger",
+      check: (scores) => (scores["Shoulder Lift"] ?? 100) < 30 || (scores["Arm Loaded"] ?? 100) < 30,
+      message: "Shoulder at risk! Don't extend your arm too far behind — rotator cuff danger.",
+      type: "warning",
+      priority: 16,
+    },
+    {
+      id: "sm-elbow-danger",
+      check: (scores) => (scores["Arm Extension"] ?? 100) < 30,
+      message: "Elbow hyperextension! Never fully lock the elbow on overhead shots.",
+      type: "warning",
+      priority: 16,
     },
   ],
   scoreWeights: {

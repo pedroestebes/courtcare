@@ -9,7 +9,14 @@
     "dev:api": "turbo dev --filter=@courtcare/api",
     "build": "turbo build",
     "lint": "turbo lint",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "deploy": "turbo deploy",
+    "deploy:api": "turbo deploy --filter=@courtcare/api",
+    "deploy:web": "turbo deploy --filter=@courtcare/web",
+    "db:migrate:local": "pnpm --filter @courtcare/api db:migrate:local",
+    "db:migrate:remote": "pnpm --filter @courtcare/api db:migrate:remote",
+    "db:seed:local": "pnpm --filter @courtcare/api db:seed:local",
+    "db:seed:remote": "pnpm --filter @courtcare/api db:seed:remote"
   },
   "devDependencies": {
     "turbo": "^2.4.0",

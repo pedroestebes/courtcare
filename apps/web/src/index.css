@@ -68,3 +68,63 @@
     border: 1px solid rgba(255, 255, 255, 0.15);
   }
 }
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(7, 195, 166, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(7, 195, 166, 0.3); }
+}
+
+@keyframes glow-button {
+  0%, 100% { box-shadow: 0 4px 20px rgba(7, 195, 166, 0.3); }
+  50% { box-shadow: 0 4px 30px rgba(7, 195, 166, 0.6), 0 0 40px rgba(7, 195, 166, 0.2); }
+}
+
+@keyframes bounce-ball {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(4px, -10px) rotate(15deg); }
+  50% { transform: translate(8px, 0px) rotate(0deg); }
+  75% { transform: translate(4px, -6px) rotate(-10deg); }
+}
+
+@keyframes swing {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(-25deg); }
+  60% { transform: rotate(15deg); }
+}
+
+@layer utilities {
+  .animate-float-slow {
+    animation: float-slow 4s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  .animate-glow-pulse {
+    animation: glow-button 2s ease-in-out infinite;
+  }
+
+  .animate-bounce-ball {
+    animation: bounce-ball 1.5s ease-in-out infinite;
+  }
+
+  .animate-swing {
+    animation: swing 1.5s ease-in-out infinite;
+    transform-origin: bottom right;
+  }
+}
