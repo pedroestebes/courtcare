@@ -8,6 +8,10 @@ export interface BodyZone {
   recovery?: string;
   sessions?: number;
   trend?: "improving" | "stable" | "declining";
+  healthScore?: number; // 0-100
+  recentScores?: number[]; // last 5 session scores for sparkline
+  recommendation?: string;
+  estimatedClearance?: string; // e.g. "Apr 12"
 }
 
 interface BodyMapProps {
@@ -17,9 +21,9 @@ interface BodyMapProps {
 }
 
 const statusColors = {
-  healthy: { stroke: "#22c55e", fill: "#22c55e", bg: "bg-green-50", text: "text-green-700", border: "border-green-200", label: "Healthy" },
-  watch: { stroke: "#f59e0b", fill: "#f59e0b", bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", label: "Watch" },
-  injured: { stroke: "#ef4444", fill: "#ef4444", bg: "bg-red-50", text: "text-red-700", border: "border-red-200", label: "Injured" },
+  healthy: { stroke: "#22c55e", fill: "#22c55e", bg: "bg-green-50", text: "text-green-700", darkText: "text-green-400", border: "border-green-200", label: "Healthy" },
+  watch: { stroke: "#f59e0b", fill: "#f59e0b", bg: "bg-amber-50", text: "text-amber-700", darkText: "text-amber-400", border: "border-amber-200", label: "Watch" },
+  injured: { stroke: "#ef4444", fill: "#ef4444", bg: "bg-red-50", text: "text-red-700", darkText: "text-red-400", border: "border-red-200", label: "Injured" },
 };
 
 function getZone(zones: BodyZone[], area: string): BodyZone | undefined {
@@ -28,6 +32,67 @@ function getZone(zones: BodyZone[], area: string): BodyZone | undefined {
 
 function getStatus(zones: BodyZone[], area: string) {
   return statusColors[getZone(zones, area)?.status ?? "healthy"];
+}
+
+// Mini sparkline SVG for trend visualization
+function Sparkline({ data, color }: { data: number[]; color: string }) {
+  if (!data || data.length < 2) return null;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+  const w = 60;
+  const h = 20;
+  const padding = 2;
+
+  const points = data
+    .map((v, i) => {
+      const x = padding + (i / (data.length - 1)) * (w - padding * 2);
+      const y = h - padding - ((v - min) / range) * (h - padding * 2);
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="inline-block">
+      <polyline
+        points={points}
+        fill="none"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Dot on last point */}
+      {data.length > 0 && (() => {
+        const lastX = padding + ((data.length - 1) / (data.length - 1)) * (w - padding * 2);
+        const lastY = h - padding - ((data[data.length - 1] - min) / range) * (h - padding * 2);
+        return <circle cx={lastX} cy={lastY} r="2" fill={color} />;
+      })()}
+    </svg>
+  );
+}
+
+// Health score progress bar
+function HealthBar({ score, status }: { score: number; status: "healthy" | "watch" | "injured" }) {
+  const barColor = status === "healthy"
+    ? "bg-green-400"
+    : status === "watch"
+      ? "bg-amber-400"
+      : "bg-red-400";
+
+  return (
+    <div className="flex items-center gap-2 w-full">
+      <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+        <div
+          className={cn("h-full rounded-full transition-all duration-700", barColor)}
+          style={{ width: `${score}%` }}
+        />
+      </div>
+      <span className={cn("text-xs font-bold tabular-nums w-7 text-right", statusColors[status].darkText)}>
+        {score}
+      </span>
+    </div>
+  );
 }
 
 interface JointDotProps {
@@ -104,6 +169,12 @@ export function BodyMap({ zones, className, darkMode = false }: BodyMapProps) {
   const spineColor = getStatus(zones, "Lower Back");
   const defaultColor = statusColors.healthy;
 
+  // Overall body health
+  const avgHealth = Math.round(zones.reduce((s, z) => s + (z.healthScore ?? (z.status === "healthy" ? 95 : z.status === "watch" ? 60 : 25)), 0) / zones.length);
+  const healthyCount = zones.filter((z) => z.status === "healthy").length;
+  const watchCount = zones.filter((z) => z.status === "watch").length;
+  const injuredCount = zones.filter((z) => z.status === "injured").length;
+
   return (
     <div className={cn("flex flex-col lg:flex-row gap-6 items-start", className)}>
       {/* Body visualization */}
@@ -171,7 +242,45 @@ export function BodyMap({ zones, className, darkMode = false }: BodyMapProps) {
 
       {/* Joint detail panel */}
       <div className="flex-1 w-full">
-        {/* Selected joint detail */}
+        {/* Overall Body Health Summary */}
+        <div className={cn(
+          "rounded-xl border p-4 mb-4",
+          darkMode ? "bg-white/5 border-white/10" : "bg-gray-50 border-gray-200"
+        )}>
+          <div className="flex items-center justify-between mb-3">
+            <h4 className={cn("text-sm font-semibold", darkMode ? "text-white/70" : "text-gray-700")}>Overall Body Health</h4>
+            <span className={cn("text-2xl font-black tabular-nums", avgHealth >= 85 ? "text-green-400" : avgHealth >= 60 ? "text-amber-400" : "text-red-400")}>
+              {avgHealth}
+              <span className={cn("text-xs font-medium ml-0.5", darkMode ? "text-white/30" : "text-gray-400")}>/100</span>
+            </span>
+          </div>
+          <div className="h-2 bg-white/10 rounded-full overflow-hidden mb-3">
+            <div
+              className={cn("h-full rounded-full transition-all duration-1000", avgHealth >= 85 ? "bg-green-400" : avgHealth >= 60 ? "bg-amber-400" : "bg-red-400")}
+              style={{ width: `${avgHealth}%` }}
+            />
+          </div>
+          <div className="flex items-center gap-4 text-xs">
+            <span className={cn("flex items-center gap-1.5", darkMode ? "text-white/50" : "text-gray-500")}>
+              <span className="w-2 h-2 rounded-full bg-green-400" />
+              {healthyCount} healthy
+            </span>
+            {watchCount > 0 && (
+              <span className={cn("flex items-center gap-1.5", darkMode ? "text-white/50" : "text-gray-500")}>
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
+                {watchCount} watch
+              </span>
+            )}
+            {injuredCount > 0 && (
+              <span className={cn("flex items-center gap-1.5", darkMode ? "text-white/50" : "text-gray-500")}>
+                <span className="w-2 h-2 rounded-full bg-red-400" />
+                {injuredCount} injured
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Selected joint detail — rich panel */}
         {selectedZone && selectedColors && (
           <div className={cn(
             "rounded-xl border p-4 mb-4 transition-all duration-300 animate-fade-in",
@@ -179,27 +288,73 @@ export function BodyMap({ zones, className, darkMode = false }: BodyMapProps) {
               ? "bg-white/5 border-white/10"
               : `${selectedColors.bg} border-2 ${selectedColors.border}`
           )}>
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-3">
               <h4 className={cn("text-sm font-bold", darkMode ? "text-white" : selectedColors.text)}>{selectedZone.area}</h4>
-              <span className={cn(
-                "px-2.5 py-0.5 rounded-full text-xs font-semibold",
-                selectedColors.bg, selectedColors.text
-              )}>
-                {statusColors[selectedZone.status].label}
-              </span>
+              <div className="flex items-center gap-2">
+                {selectedZone.healthScore !== undefined && (
+                  <span className={cn("text-lg font-black tabular-nums", statusColors[selectedZone.status].darkText)}>
+                    {selectedZone.healthScore}
+                  </span>
+                )}
+                <span className={cn(
+                  "px-2.5 py-0.5 rounded-full text-xs font-semibold",
+                  selectedColors.bg, selectedColors.text
+                )}>
+                  {statusColors[selectedZone.status].label}
+                </span>
+              </div>
             </div>
-            <p className={cn("text-sm mb-1", darkMode ? "text-white/60" : "text-gray-600")}>{selectedZone.detail}</p>
+
+            {/* Health bar */}
+            {selectedZone.healthScore !== undefined && (
+              <div className="mb-3">
+                <HealthBar score={selectedZone.healthScore} status={selectedZone.status} />
+              </div>
+            )}
+
+            {/* Trend sparkline */}
+            {selectedZone.recentScores && selectedZone.recentScores.length > 1 && (
+              <div className={cn("flex items-center gap-2 mb-3 px-2 py-1.5 rounded-lg", darkMode ? "bg-white/3" : "bg-white/50")}>
+                <span className={cn("text-xs", darkMode ? "text-white/40" : "text-gray-500")}>Last 5 sessions:</span>
+                <Sparkline data={selectedZone.recentScores} color={statusColors[selectedZone.status].stroke} />
+                {selectedZone.trend && (
+                  <span className={cn("text-xs font-medium ml-auto",
+                    selectedZone.trend === "improving" ? "text-green-400" :
+                    selectedZone.trend === "declining" ? "text-red-400" : "text-white/40"
+                  )}>
+                    {selectedZone.trend === "improving" ? "\u2191 Improving" : selectedZone.trend === "stable" ? "\u2192 Stable" : "\u2193 Declining"}
+                  </span>
+                )}
+              </div>
+            )}
+
+            <p className={cn("text-sm mb-2", darkMode ? "text-white/60" : "text-gray-600")}>{selectedZone.detail}</p>
+
+            {/* Recommendation */}
+            {selectedZone.recommendation && (
+              <div className={cn("rounded-lg px-3 py-2 mb-2", darkMode ? "bg-brand-500/10 border border-brand-500/20" : "bg-blue-50 border border-blue-200")}>
+                <p className={cn("text-xs font-medium", darkMode ? "text-brand-300" : "text-blue-700")}>
+                  {"\uD83D\uDCA1"} {selectedZone.recommendation}
+                </p>
+              </div>
+            )}
+
             {selectedZone.recovery && (
-              <p className="text-xs text-amber-500 font-medium">Recovery: {selectedZone.recovery}</p>
+              <div className={cn("rounded-lg px-3 py-2 mb-2", darkMode ? "bg-amber-500/10 border border-amber-500/20" : "bg-amber-50 border border-amber-200")}>
+                <p className="text-xs text-amber-400 font-medium">
+                  {"\u23F3"} Recovery: {selectedZone.recovery}
+                  {selectedZone.estimatedClearance && (
+                    <span className="text-amber-300 ml-1">— Est. clearance: {selectedZone.estimatedClearance}</span>
+                  )}
+                </p>
+              </div>
             )}
-            {selectedZone.sessions && (
-              <p className={cn("text-xs mt-1", darkMode ? "text-white/30" : "text-gray-400")}>{selectedZone.sessions} sessions tracked</p>
-            )}
-            {selectedZone.trend && (
-              <p className={cn("text-xs mt-0.5", darkMode ? "text-white/40" : "text-gray-500")}>
-                Trend: {selectedZone.trend === "improving" ? "\u2191 Improving" : selectedZone.trend === "stable" ? "\u2192 Stable" : "\u2193 Declining"}
-              </p>
-            )}
+
+            <div className="flex items-center gap-4 mt-2">
+              {selectedZone.sessions && (
+                <p className={cn("text-xs", darkMode ? "text-white/30" : "text-gray-400")}>{selectedZone.sessions} sessions tracked</p>
+              )}
+            </div>
           </div>
         )}
 
@@ -212,38 +367,60 @@ export function BodyMap({ zones, className, darkMode = false }: BodyMapProps) {
           </div>
         )}
 
-        {/* All zones summary */}
-        <div className="space-y-2">
-          {zones.map((zone) => (
-            <button
-              key={zone.area}
-              onClick={() => setSelected(zone.area)}
-              className={cn(
-                "w-full flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all text-left",
-                selected === zone.area
-                  ? darkMode
-                    ? "bg-white/10 border-white/20"
-                    : `${statusColors[zone.status].bg} ${statusColors[zone.status].border}`
-                  : darkMode
-                    ? "border-white/5 hover:border-white/15 hover:bg-white/5"
-                    : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-              )}
-            >
-              <div className="flex items-center gap-2.5">
+        {/* All zones summary — with health bars and trends */}
+        <div className="space-y-1.5">
+          {zones.map((zone) => {
+            const colors = statusColors[zone.status];
+            const score = zone.healthScore ?? (zone.status === "healthy" ? 95 : zone.status === "watch" ? 60 : 25);
+            return (
+              <button
+                key={zone.area}
+                onClick={() => setSelected(zone.area)}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left",
+                  selected === zone.area
+                    ? darkMode
+                      ? "bg-white/10 border-white/20"
+                      : `${colors.bg} ${colors.border}`
+                    : darkMode
+                      ? "border-white/5 hover:border-white/15 hover:bg-white/5"
+                      : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
+                )}
+              >
                 <span
                   className="w-2.5 h-2.5 rounded-full shrink-0"
-                  style={{ backgroundColor: statusColors[zone.status].fill, boxShadow: `0 0 6px ${statusColors[zone.status].fill}60` }}
+                  style={{ backgroundColor: colors.fill, boxShadow: `0 0 6px ${colors.fill}60` }}
                 />
-                <span className={cn("text-sm", darkMode ? "text-white/80" : "text-gray-900")}>{zone.area}</span>
-              </div>
-              <span className={cn(
-                "text-xs font-semibold",
-                statusColors[zone.status].text
-              )}>
-                {statusColors[zone.status].label}
-              </span>
-            </button>
-          ))}
+                <span className={cn("text-sm shrink-0 w-28 sm:w-32", darkMode ? "text-white/80" : "text-gray-900")}>{zone.area}</span>
+
+                {/* Mini health bar */}
+                <div className="flex-1 hidden sm:block">
+                  <div className="h-1 bg-white/8 rounded-full overflow-hidden">
+                    <div
+                      className={cn("h-full rounded-full transition-all duration-500",
+                        zone.status === "healthy" ? "bg-green-400/60" : zone.status === "watch" ? "bg-amber-400/60" : "bg-red-400/60"
+                      )}
+                      style={{ width: `${score}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Trend arrow */}
+                {zone.trend && (
+                  <span className={cn("text-xs shrink-0",
+                    zone.trend === "improving" ? "text-green-400" : zone.trend === "declining" ? "text-red-400" : "text-white/20"
+                  )}>
+                    {zone.trend === "improving" ? "\u2191" : zone.trend === "stable" ? "\u2192" : "\u2193"}
+                  </span>
+                )}
+
+                {/* Score */}
+                <span className={cn("text-xs font-bold tabular-nums shrink-0 w-6 text-right", colors.darkText)}>
+                  {score}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

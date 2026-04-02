@@ -59,15 +59,15 @@ const mockProgress = [
 ];
 
 const bodyZones: BodyZone[] = [
-  { area: "Right Shoulder", status: "healthy", detail: "No impingement detected in last 12 sessions", sessions: 12, trend: "improving" },
-  { area: "Left Shoulder", status: "healthy", detail: "Safe range maintained across all drills", sessions: 10, trend: "stable" },
-  { area: "Right Elbow", status: "healthy", detail: "No hyperextension in last 8 sessions", sessions: 8, trend: "improving" },
-  { area: "Left Elbow", status: "healthy", detail: "Within safe flexion range", sessions: 6, trend: "stable" },
-  { area: "Right Knee", status: "healthy", detail: "Good bend on landings — shock absorption improving", sessions: 14, trend: "improving" },
-  { area: "Left Knee", status: "healthy", detail: "No strain detected in recent sessions", sessions: 14, trend: "stable" },
-  { area: "Lower Back", status: "watch", detail: "Slight lean detected on overhead shots — monitor during bandejas and smashes", recovery: "Light training for 10 days", sessions: 6, trend: "improving" },
-  { area: "Right Hip", status: "healthy", detail: "Good hip mobility and rotation", sessions: 8, trend: "stable" },
-  { area: "Left Hip", status: "healthy", detail: "Normal flexion angles across all stances", sessions: 8, trend: "stable" },
+  { area: "Right Shoulder", status: "healthy", detail: "No impingement detected in last 12 sessions. External rotation stays within 45-90\u00b0 safe zone consistently.", sessions: 12, trend: "improving", healthScore: 96, recentScores: [82, 88, 91, 94, 96], recommendation: "Keep up your rotator cuff warm-ups — they're clearly working." },
+  { area: "Left Shoulder", status: "healthy", detail: "Safe range maintained across all drills. Internal rotation improved since week 1.", sessions: 10, trend: "stable", healthScore: 92, recentScores: [90, 88, 92, 91, 92], recommendation: "Maintain current form. Consider adding light resistance band work." },
+  { area: "Right Elbow", status: "healthy", detail: "No hyperextension in last 8 sessions. Wrist pronation within safe limits during volleys.", sessions: 8, trend: "improving", healthScore: 95, recentScores: [78, 82, 88, 92, 95], recommendation: "Great progress! Tennis elbow risk dropped 62\u219295 in 14 days." },
+  { area: "Left Elbow", status: "healthy", detail: "Within safe flexion range. Mild excessive flexion detected once in session #12 but not repeated.", sessions: 6, trend: "stable", healthScore: 88, recentScores: [85, 82, 88, 86, 88], recommendation: "Monitor backhand technique — keep elbow slightly bent at contact." },
+  { area: "Right Knee", status: "healthy", detail: "Good bend on landings — shock absorption improving. Valgus stress minimal.", sessions: 14, trend: "improving", healthScore: 92, recentScores: [58, 72, 80, 88, 92], recommendation: "Your landing technique is much safer now. Keep practicing soft landings." },
+  { area: "Left Knee", status: "healthy", detail: "No strain detected in recent sessions. Consistent knee bend across all stances.", sessions: 14, trend: "stable", healthScore: 90, recentScores: [86, 88, 89, 90, 90], recommendation: "Stable and healthy. Continue quad strengthening exercises." },
+  { area: "Lower Back", status: "watch", detail: "Slight backward lean detected on overhead shots (bandeja & smash). Lumbar compression stress at 42\u00b0 — safe threshold is 35\u00b0.", recovery: "Light training for 10 days", sessions: 6, trend: "improving", healthScore: 64, recentScores: [45, 48, 55, 58, 64], estimatedClearance: "Apr 12", recommendation: "Focus on core stability: planks and dead bugs 3x/week. Avoid aggressive smashes." },
+  { area: "Right Hip", status: "healthy", detail: "Good hip mobility and rotation. Flexion angles safe during ready position and lunges.", sessions: 8, trend: "stable", healthScore: 91, recentScores: [88, 90, 89, 91, 91], recommendation: "Hip mobility is solid. Add hip circles to your warm-up routine." },
+  { area: "Left Hip", status: "healthy", detail: "Normal flexion angles across all stances. No impingement risk detected.", sessions: 8, trend: "stable", healthScore: 89, recentScores: [86, 87, 88, 89, 89], recommendation: "Healthy range of motion. Clamshell exercises will keep glutes activated." },
 ];
 
 const playReadiness = getPlayReadiness(bodyZones);
