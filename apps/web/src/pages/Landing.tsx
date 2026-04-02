@@ -241,6 +241,11 @@ export function Landing() {
               <span className="text-xl font-bold text-white">CourtCare</span>
             </div>
             <div className="flex items-center gap-3">
+              <Link to="/science">
+                <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10">
+                  Our Science
+                </Button>
+              </Link>
               <Link to="/login">
                 <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10">
                   Log in
@@ -477,6 +482,54 @@ export function Landing() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Evidence-Based Section */}
+      <section className="py-24 bg-gradient-to-b from-gray-900 to-brand-950 relative">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 right-1/4 w-80 h-80 rounded-full opacity-8" style={{ background: "radial-gradient(circle, rgba(34,197,94,0.15), transparent 60%)" }} />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-full px-4 py-1.5 mb-6">
+              <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+              </svg>
+              <span className="text-sm text-green-400 font-medium">Evidence-Based</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Backed by{" "}
+              <span className="gradient-brand-text">sports medicine research</span>
+            </h2>
+            <p className="text-lg text-white/50 max-w-2xl mx-auto">
+              Our protocols are informed by peer-reviewed studies — not guesswork. Here's what drives our technology.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            {[
+              { stat: "30%", label: "Injury reduction with FIFA 11+ warm-up protocol", source: "Al Attar et al. 2017, BMC Sports Med" },
+              { stat: "43%", label: "Ankle sprain reduction with proprioceptive training", source: "Rivera et al. 2017, CJSM" },
+              { stat: "88%", label: "ACL injury reduction with neuromuscular training", source: "NATA Position Statement 2018" },
+              { stat: "0.91", label: "Correlation of MediaPipe vs. gold-standard motion capture", source: "Cabarkapa et al. 2024, Heliyon" },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-5 hover:bg-white/8 transition-all duration-300">
+                <p className="text-3xl font-black text-white mb-2">{item.stat}</p>
+                <p className="text-sm text-white/60 mb-3 leading-relaxed">{item.label}</p>
+                <p className="text-xs text-white/30">{item.source}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link to="/science" className="inline-flex items-center gap-2 text-sm text-brand-400 hover:text-brand-300 font-medium transition-colors group">
+              Read the full research
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
