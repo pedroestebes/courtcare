@@ -20,14 +20,18 @@ const categoryLabels: Record<string, string> = {
   attack: "Attack",
   serve: "Serve",
   groundstroke: "Groundstroke",
+  warmup: "Warm-up",
+  stretching: "Stretching",
 };
 
-type SportFilter = "all" | "padel" | "tennis";
+type SportFilter = "all" | "padel" | "tennis" | "warmup" | "stretching";
 
 const sportFilters: { key: SportFilter; label: string; icon: string; count: number }[] = [
   { key: "all", label: "All Drills", icon: "\uD83C\uDFAF", count: allDrills.length },
-  { key: "padel", label: "Padel", icon: "\uD83C\uDFD3", count: allDrills.filter((d) => !d.slug.startsWith("tennis")).length },
+  { key: "padel", label: "Padel", icon: "\uD83C\uDFD3", count: allDrills.filter((d) => !d.slug.startsWith("tennis") && !d.slug.startsWith("warmup") && !d.slug.startsWith("stretch")).length },
   { key: "tennis", label: "Tennis", icon: "\uD83C\uDFBE", count: allDrills.filter((d) => d.slug.startsWith("tennis")).length },
+  { key: "warmup", label: "Warm-up", icon: "\uD83D\uDD25", count: allDrills.filter((d) => d.slug.startsWith("warmup")).length },
+  { key: "stretching", label: "Cool-down", icon: "\uD83E\uDDD8", count: allDrills.filter((d) => d.slug.startsWith("stretch")).length },
 ];
 
 export function DrillLibrary() {
@@ -40,7 +44,10 @@ export function DrillLibrary() {
   const filteredDrills = allDrills.filter((drill) => {
     if (filter === "all") return true;
     if (filter === "tennis") return drill.slug.startsWith("tennis");
-    return !drill.slug.startsWith("tennis");
+    if (filter === "warmup") return drill.slug.startsWith("warmup");
+    if (filter === "stretching") return drill.slug.startsWith("stretch");
+    // padel = everything that isn't tennis, warmup, or stretching
+    return !drill.slug.startsWith("tennis") && !drill.slug.startsWith("warmup") && !drill.slug.startsWith("stretch");
   });
 
   return (
@@ -50,7 +57,7 @@ export function DrillLibrary() {
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-white">Drill Library</h1>
             <p className="text-white/50 mt-1">
-              Padel & Tennis drills with real-time joint health monitoring. More sports coming soon.
+              Warm-up, drills and cool-down stretches with real-time pose monitoring and injury prevention.
             </p>
           </div>
 
@@ -82,13 +89,13 @@ export function DrillLibrary() {
           )}
 
           {/* Sport Filter Tabs */}
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2 -mb-2 scrollbar-none">
             {sportFilters.map((sf) => (
               <button
                 key={sf.key}
                 onClick={() => setFilter(sf.key)}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border",
+                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border shrink-0",
                   filter === sf.key
                     ? "bg-brand-500/15 text-brand-400 border-brand-500/30 shadow-lg shadow-brand-500/10"
                     : "bg-white/5 text-white/50 border-white/10 hover:bg-white/10 hover:text-white/70"
@@ -113,10 +120,17 @@ export function DrillLibrary() {
                   <div className="flex items-start justify-between mb-4">
                     <div className={cn(
                       "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg",
-                      drill.slug.startsWith("tennis") ? "bg-gradient-to-br from-green-500 to-emerald-600" : "bg-gradient-to-br from-brand-500 to-accent-500"
+                      drill.category === "warmup" ? "bg-gradient-to-br from-orange-500 to-amber-600"
+                        : drill.category === "stretching" ? "bg-gradient-to-br from-cyan-500 to-teal-600"
+                        : drill.slug.startsWith("tennis") ? "bg-gradient-to-br from-green-500 to-emerald-600"
+                        : "bg-gradient-to-br from-brand-500 to-accent-500"
                     )}>
                       <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        {drill.category === "serve" ? (
+                        {drill.category === "warmup" ? (
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
+                        ) : drill.category === "stretching" ? (
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                        ) : drill.category === "serve" ? (
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
                         ) : drill.category === "fundamentals" ? (
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />

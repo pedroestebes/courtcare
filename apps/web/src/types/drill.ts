@@ -1,4 +1,4 @@
-export type DrillCategory = "fundamentals" | "volleys" | "overhead" | "defense" | "attack";
+export type DrillCategory = "fundamentals" | "volleys" | "overhead" | "defense" | "attack" | "warmup" | "stretching";
 
 export type DrillDifficulty = "beginner" | "intermediate" | "advanced";
 

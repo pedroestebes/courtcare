@@ -8,6 +8,16 @@ import { smash } from "./smash";
 import { tennisServe } from "./tennis-serve";
 import { tennisForehand } from "./tennis-forehand";
 import { tennisBackhand } from "./tennis-backhand";
+// Warm-up
+import { warmupLegSwings } from "./warmup-leg-swings";
+import { warmupArmCircles } from "./warmup-arm-circles";
+import { warmupLunges } from "./warmup-lunges";
+import { warmupTorsoRotation } from "./warmup-torso-rotation";
+// Stretching / Cool-down
+import { stretchHamstring } from "./stretch-hamstring";
+import { stretchShoulder } from "./stretch-shoulder";
+import { stretchQuad } from "./stretch-quad";
+import { stretchHipFlexor } from "./stretch-hip-flexor";
 
 export const drillRegistry: Record<string, DrillDefinition> = {
   // Padel
@@ -21,6 +31,16 @@ export const drillRegistry: Record<string, DrillDefinition> = {
   "tennis-serve": tennisServe,
   "tennis-forehand": tennisForehand,
   "tennis-backhand": tennisBackhand,
+  // Warm-up
+  "warmup-leg-swings": warmupLegSwings,
+  "warmup-arm-circles": warmupArmCircles,
+  "warmup-lunges": warmupLunges,
+  "warmup-torso-rotation": warmupTorsoRotation,
+  // Stretching / Cool-down
+  "stretch-hamstring": stretchHamstring,
+  "stretch-shoulder": stretchShoulder,
+  "stretch-quad": stretchQuad,
+  "stretch-hip-flexor": stretchHipFlexor,
 };
 
 export const allDrills: DrillDefinition[] = Object.values(drillRegistry);
