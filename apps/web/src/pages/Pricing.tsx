@@ -211,11 +211,11 @@ const faqs = [
   },
   {
     q: "How accurate is the injury detection?",
-    a: "CourtCare tracks 33 body landmarks at 30fps using Google's MediaPipe technology. We monitor 12 sport-specific injury risk factors including shoulder impingement, elbow strain, ACL stress, and spinal compression with clinical-grade joint angle measurements.",
+    a: "CourtCare tracks 33 body landmarks at 30fps using Google's MediaPipe technology (validated at r=0.91 vs. gold-standard motion capture). We monitor 12 sport-specific injury risk factors across shoulder, elbow, knee, and ankle — informed by peer-reviewed biomechanics research.",
   },
   {
     q: "What sports are supported?",
-    a: "CourtCare is built exclusively for padel with 14 activities — 6 padel drills, 4 warm-ups, and 4 cool-down stretches. Each has specialized injury thresholds calibrated to padel's unique movement patterns.",
+    a: "CourtCare is built exclusively for padel with 12 activities — 4 padel technique drills, 4 warm-ups (RAMP protocol), and 4 cool-down stretches (ACSM guidelines). Each has specialized injury thresholds informed by sports medicine research.",
   },
   {
     q: "Can I use CourtCare during real matches?",

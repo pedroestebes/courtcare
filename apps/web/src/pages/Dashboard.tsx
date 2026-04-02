@@ -21,48 +21,47 @@ import {
   ReferenceLine,
 } from "recharts";
 
-// Compute real stats from session history, with demo defaults
-const _history = getSessionHistory();
-const _hasReal = _history.length > 0;
-const mockStats = _hasReal
-  ? {
-      totalSessions: _history.length,
-      safeSessions: _history.filter((s) => s.safe).length,
-      injuriesPrevented: _history.filter((s) => !s.safe).length,
-      avgScore: Math.round(_history.reduce((a, s) => a + s.averageScore, 0) / _history.length),
-      bestScore: Math.max(..._history.map((s) => s.bestScore)),
-      streak: _history.length,
-      injuryFreeStreak: _history.findIndex((s) => !s.safe) === -1 ? _history.length : _history.findIndex((s) => !s.safe),
-      totalTrainingMinutes: Math.round(_history.reduce((a, s) => a + s.durationSeconds, 0) / 60),
-    }
-  : {
-      totalSessions: 14,
-      safeSessions: 8,
-      injuriesPrevented: 9,
-      avgScore: 79,
-      bestScore: 96,
-      streak: 7,
-      injuryFreeStreak: 4,
-      totalTrainingMinutes: 170,
-    };
-
-// Use real session history, fall back to example data if empty
-const realHistory = getSessionHistory();
-const recentSessions = realHistory.length > 0
-  ? realHistory.slice(0, 6).map((s) => ({
-      id: s.id,
-      drillName: s.drillName,
-      date: s.startedAt.split("T")[0],
-      score: s.averageScore,
-      duration: s.durationSeconds,
-      safe: s.safe,
-    }))
-  : [
-      { id: "1", drillName: "Forehand Volley", date: "2026-03-29", score: 88, duration: 180, safe: true },
-      { id: "2", drillName: "Bandeja", date: "2026-03-28", score: 82, duration: 240, safe: true },
-      { id: "3", drillName: "Ready Position", date: "2026-03-27", score: 93, duration: 120, safe: true },
-      { id: "4", drillName: "Backhand Volley", date: "2026-03-26", score: 85, duration: 200, safe: true },
-    ];
+function computeStats() {
+  const _history = getSessionHistory();
+  const _hasReal = _history.length > 0;
+  const stats = _hasReal
+    ? {
+        totalSessions: _history.length,
+        safeSessions: _history.filter((s) => s.safe).length,
+        injuriesPrevented: _history.filter((s) => !s.safe).length,
+        avgScore: Math.round(_history.reduce((a, s) => a + s.averageScore, 0) / _history.length),
+        bestScore: Math.max(..._history.map((s) => s.bestScore)),
+        streak: _history.length,
+        injuryFreeStreak: _history.findIndex((s) => !s.safe) === -1 ? _history.length : _history.findIndex((s) => !s.safe),
+        totalTrainingMinutes: Math.round(_history.reduce((a, s) => a + s.durationSeconds, 0) / 60),
+      }
+    : {
+        totalSessions: 14,
+        safeSessions: 8,
+        injuriesPrevented: 9,
+        avgScore: 79,
+        bestScore: 96,
+        streak: 7,
+        injuryFreeStreak: 4,
+        totalTrainingMinutes: 170,
+      };
+  const recent = _hasReal
+    ? _history.slice(0, 6).map((s) => ({
+        id: s.id,
+        drillName: s.drillName,
+        date: s.startedAt.split("T")[0],
+        score: s.averageScore,
+        duration: s.durationSeconds,
+        safe: s.safe,
+      }))
+    : [
+        { id: "1", drillName: "Forehand Volley", date: "2026-03-29", score: 88, duration: 180, safe: true },
+        { id: "2", drillName: "Bandeja", date: "2026-03-28", score: 82, duration: 240, safe: true },
+        { id: "3", drillName: "Ready Position", date: "2026-03-27", score: 93, duration: 120, safe: true },
+        { id: "4", drillName: "Backhand Volley", date: "2026-03-26", score: 85, duration: 200, safe: true },
+      ];
+  return { stats, recent };
+}
 
 const mockProgress = [
   { date: "Mar 15", score: 52, injuryRisk: 45 },
@@ -89,19 +88,12 @@ const bodyZones: BodyZone[] = [
   { area: "Left Elbow", status: "healthy", detail: "Within safe flexion range. Mild excessive flexion detected once in session #12 but not repeated.", sessions: 6, trend: "stable", healthScore: 88, recentScores: [85, 82, 88, 86, 88], recommendation: "Monitor backhand technique — keep elbow slightly bent at contact." },
   { area: "Right Knee", status: "healthy", detail: "Good bend on landings — shock absorption improving. Valgus stress minimal.", sessions: 14, trend: "improving", healthScore: 92, recentScores: [58, 72, 80, 88, 92], recommendation: "Your landing technique is much safer now. Keep practicing soft landings." },
   { area: "Left Knee", status: "healthy", detail: "No strain detected in recent sessions. Consistent knee bend across all stances.", sessions: 14, trend: "stable", healthScore: 90, recentScores: [86, 88, 89, 90, 90], recommendation: "Stable and healthy. Continue quad strengthening exercises." },
-  { area: "Lower Back", status: "watch", detail: "Slight backward lean detected on overhead shots (bandeja & smash). Lumbar compression stress at 42\u00b0 — safe threshold is 35\u00b0.", recovery: "Light training for 10 days", sessions: 6, trend: "improving", healthScore: 64, recentScores: [45, 48, 55, 58, 64], estimatedClearance: "Apr 12", recommendation: "Focus on core stability: planks and dead bugs 3x/week. Avoid aggressive smashes." },
+  { area: "Lower Back", status: "watch", detail: "Slight backward lean detected on overhead shots (bandeja). Lumbar compression stress at 42\u00b0 — safe threshold is 35\u00b0.", recovery: "Light training for 10 days", sessions: 6, trend: "improving", healthScore: 64, recentScores: [45, 48, 55, 58, 64], estimatedClearance: "Apr 12", recommendation: "Focus on core stability: planks and dead bugs 3x/week. Control overhead shot form." },
   { area: "Right Hip", status: "healthy", detail: "Good hip mobility and rotation. Flexion angles safe during ready position and lunges.", sessions: 8, trend: "stable", healthScore: 91, recentScores: [88, 90, 89, 91, 91], recommendation: "Hip mobility is solid. Add hip circles to your warm-up routine." },
   { area: "Left Hip", status: "healthy", detail: "Normal flexion angles across all stances. No impingement risk detected.", sessions: 8, trend: "stable", healthScore: 89, recentScores: [86, 87, 88, 89, 89], recommendation: "Healthy range of motion. Clamshell exercises will keep glutes activated." },
 ];
 
 const playReadiness = getPlayReadiness(bodyZones);
-
-const statCards = [
-  { label: "Safe Sessions", value: `${mockStats.safeSessions}/${mockStats.totalSessions}`, icon: "\u2764\uFE0F", sub: `${Math.round((mockStats.safeSessions / mockStats.totalSessions) * 100)}% safe rate` },
-  { label: "Injuries Prevented", value: mockStats.injuriesPrevented, icon: "\uD83D\uDEE1\uFE0F", sub: "dangerous form alerts" },
-  { label: "Injury-Free Streak", value: `${mockStats.injuryFreeStreak} days`, icon: "\uD83D\uDD25", sub: "keep it going!" },
-  { label: "Training Time", value: `${Math.round(mockStats.totalTrainingMinutes / 60)}h ${mockStats.totalTrainingMinutes % 60}m`, icon: "\u23F1\uFE0F", sub: `${mockStats.totalSessions} sessions` },
-];
 
 // Readiness ring color
 const ringColor = playReadiness.status === "play" ? "#22c55e" : playReadiness.status === "caution" ? "#f59e0b" : "#ef4444";
@@ -109,6 +101,14 @@ const ringGlow = playReadiness.status === "play" ? "rgba(34,197,94,0.4)" : playR
 
 export function Dashboard() {
   const user = useAuthStore((s) => s.user);
+  const { stats: mockStats, recent: recentSessions } = computeStats();
+
+  const statCards = [
+    { label: "Safe Sessions", value: `${mockStats.safeSessions}/${mockStats.totalSessions}`, icon: "\u2764\uFE0F", sub: `${Math.round((mockStats.safeSessions / mockStats.totalSessions) * 100)}% safe rate` },
+    { label: "Injuries Prevented", value: mockStats.injuriesPrevented, icon: "\uD83D\uDEE1\uFE0F", sub: "dangerous form alerts" },
+    { label: "Injury-Free Streak", value: `${mockStats.injuryFreeStreak} days`, icon: "\uD83D\uDD25", sub: "keep it going!" },
+    { label: "Training Time", value: `${Math.round(mockStats.totalTrainingMinutes / 60)}h ${mockStats.totalTrainingMinutes % 60}m`, icon: "\u23F1\uFE0F", sub: `${mockStats.totalSessions} sessions` },
+  ];
 
   // SVG ring calculations
   const ringRadius = 58;

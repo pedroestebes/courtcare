@@ -89,7 +89,7 @@ const injuryTypes = [
       <line x1="28" y1="28" x2="31" y2="40" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
     </svg>
   )},
-  { name: "Elbow", stat: "Elbow strain prevention", icon: (
+  { name: "Elbow", stat: "Strain prevention", icon: (
     <svg viewBox="0 0 48 48" fill="none" className="w-8 h-8">
       <circle cx="24" cy="8" r="4" stroke="#07c3a6" strokeWidth="1.2" fill="rgba(7,195,166,0.1)" />
       <line x1="24" y1="12" x2="24" y2="15" stroke="#07c3a6" strokeWidth="1.2" opacity="0.3" />
@@ -132,26 +132,27 @@ const injuryTypes = [
       <line x1="30" y1="12" x2="35" y2="20" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
     </svg>
   )},
-  { name: "Spine", stat: "Disc compression alert", icon: (
+  { name: "Hip", stat: "Mobility tracking", icon: (
     <svg viewBox="0 0 48 48" fill="none" className="w-8 h-8">
       <circle cx="24" cy="6" r="3.5" stroke="#07c3a6" strokeWidth="1" fill="rgba(7,195,166,0.1)" />
-      <line x1="24" y1="9.5" x2="24" y2="12" stroke="#07c3a6" strokeWidth="1.2" />
+      <line x1="24" y1="9.5" x2="24" y2="12" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
       <line x1="18" y1="12" x2="30" y2="12" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
-      {/* Highlighted spine */}
-      <line x1="24" y1="12" x2="24" y2="28" stroke="#07c3a6" strokeWidth="2" />
-      {/* Vertebrae dots */}
-      <circle cx="24" cy="14" r="1.5" fill="#07c3a6" fillOpacity="0.5" />
-      <circle cx="24" cy="17.5" r="1.5" fill="#07c3a6" fillOpacity="0.5" />
-      <circle cx="24" cy="21" r="1.5" fill="#07c3a6" fillOpacity="0.5" />
-      <circle cx="24" cy="24.5" r="1.5" fill="#07c3a6" fillOpacity="0.5" />
-      {/* Spine glow */}
-      <line x1="24" y1="12" x2="24" y2="28" stroke="#07c3a6" strokeWidth="6" opacity="0.15" />
+      <line x1="24" y1="12" x2="24" y2="22" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
+      {/* Hip bar */}
+      <line x1="18" y1="22" x2="30" y2="22" stroke="#07c3a6" strokeWidth="1.5" />
+      {/* Highlighted hips */}
+      <circle cx="18" cy="22" r="3.5" fill="#07c3a6" fillOpacity="0.3" stroke="#07c3a6" strokeWidth="1.5" />
+      <circle cx="30" cy="22" r="3.5" fill="#07c3a6" fillOpacity="0.3" stroke="#07c3a6" strokeWidth="1.5" />
+      <circle cx="18" cy="22" r="5.5" stroke="#07c3a6" strokeWidth="0.6" opacity="0.4" strokeDasharray="2 1.5" />
+      <circle cx="30" cy="22" r="5.5" stroke="#07c3a6" strokeWidth="0.6" opacity="0.4" strokeDasharray="2 1.5" />
+      {/* Legs */}
+      <line x1="18" y1="22" x2="15" y2="34" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
+      <line x1="30" y1="22" x2="33" y2="34" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
+      <line x1="15" y1="34" x2="14" y2="44" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
+      <line x1="33" y1="34" x2="34" y2="44" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
       {/* Arms faded */}
       <line x1="18" y1="12" x2="13" y2="20" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
       <line x1="30" y1="12" x2="35" y2="20" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
-      {/* Legs faded */}
-      <line x1="20" y1="28" x2="17" y2="40" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
-      <line x1="28" y1="28" x2="31" y2="40" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
     </svg>
   )},
   { name: "Ankle", stat: "Sprain prevention", icon: (

@@ -188,11 +188,15 @@ export function Recovery() {
               </div>
               <div className="flex gap-3 pt-2">
                 <button onClick={() => setStep(2)} className="text-sm text-white/40 hover:text-white/60">
-                  ← Back
+                  {"\u2190"} Back
                 </button>
-                {painAreas.length > 0 && (
+                {painAreas.length > 0 ? (
                   <Button size="sm" onClick={() => setStep(4)}>
                     See my recovery plan
+                  </Button>
+                ) : (
+                  <Button size="sm" variant="outline" onClick={() => { setPainAreas(["none"]); setStep(4); }} className="border-white/20 text-white/60">
+                    Skip — I feel fine
                   </Button>
                 )}
               </div>

@@ -4,39 +4,33 @@ import { formatDate, formatTime, formatDuration } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { getSessionHistory } from "@/stores/sessionStore";
 
-const realHistory = getSessionHistory();
-const sessions = realHistory.length > 0
-  ? realHistory.map((s) => ({
-      id: s.id,
-      drillName: s.drillName,
-      startedAt: s.startedAt,
-      duration: s.durationSeconds,
-      averageScore: s.averageScore,
-      totalReps: s.totalReps,
-      sessionSafe: s.safe,
-    }))
-  : [
-      { id: "1", drillName: "Forehand Volley", startedAt: "2026-03-29T09:15:00Z", duration: 180, averageScore: 88, totalReps: 14, sessionSafe: true },
-      { id: "2", drillName: "Bandeja", startedAt: "2026-03-28T17:30:00Z", duration: 240, averageScore: 82, totalReps: 10, sessionSafe: true },
-      { id: "3", drillName: "Ready Position", startedAt: "2026-03-27T10:00:00Z", duration: 120, averageScore: 93, totalReps: 18, sessionSafe: true },
-      { id: "4", drillName: "Backhand Volley", startedAt: "2026-03-26T11:20:00Z", duration: 200, averageScore: 85, totalReps: 12, sessionSafe: true },
-    ];
-
-const safeCount = sessions.filter((s) => s.sessionSafe).length;
-const riskCount = sessions.filter((s) => !s.sessionSafe).length;
-const avgScore = sessions.length > 0 ? Math.round(sessions.reduce((sum, s) => sum + s.averageScore, 0) / sessions.length) : 0;
-const totalTrainingMins = Math.round(sessions.reduce((sum, s) => sum + s.duration, 0) / 60);
-const totalReps = sessions.reduce((sum, s) => sum + s.totalReps, 0);
-
-const summaryCards = [
-  { label: "Total Sessions", value: sessions.length, icon: "\uD83C\uDFAF", color: "text-brand-400" },
-  { label: "Safe Rate", value: sessions.length > 0 ? `${Math.round((safeCount / sessions.length) * 100)}%` : "—", icon: "\u2764\uFE0F", color: "text-green-400" },
-  { label: "Avg Score", value: avgScore || "—", icon: "\uD83D\uDCC8", color: "text-amber-400" },
-  { label: "Training Time", value: `${totalTrainingMins}m`, icon: "\u23F1\uFE0F", color: "text-purple-400" },
-  { label: "Total Reps", value: totalReps, icon: "\uD83D\uDD01", color: "text-blue-400" },
-];
-
 export function SessionHistory() {
+  const realHistory = getSessionHistory();
+  const sessions = realHistory.length > 0
+    ? realHistory.map((s) => ({
+        id: s.id,
+        drillName: s.drillName,
+        startedAt: s.startedAt,
+        duration: s.durationSeconds,
+        averageScore: s.averageScore,
+        totalReps: s.totalReps,
+        sessionSafe: s.safe,
+      }))
+    : [];
+
+  const safeCount = sessions.filter((s) => s.sessionSafe).length;
+  const riskCount = sessions.filter((s) => !s.sessionSafe).length;
+  const avgScore = sessions.length > 0 ? Math.round(sessions.reduce((sum, s) => sum + s.averageScore, 0) / sessions.length) : 0;
+  const totalTrainingMins = Math.round(sessions.reduce((sum, s) => sum + s.duration, 0) / 60);
+  const totalReps = sessions.reduce((sum, s) => sum + s.totalReps, 0);
+
+  const summaryCards = [
+    { label: "Total Sessions", value: sessions.length, icon: "\uD83C\uDFAF", color: "text-brand-400" },
+    { label: "Safe Rate", value: sessions.length > 0 ? `${Math.round((safeCount / sessions.length) * 100)}%` : "\u2014", icon: "\u2764\uFE0F", color: "text-green-400" },
+    { label: "Avg Score", value: avgScore || "\u2014", icon: "\uD83D\uDCC8", color: "text-amber-400" },
+    { label: "Training Time", value: `${totalTrainingMins}m`, icon: "\u23F1\uFE0F", color: "text-purple-400" },
+    { label: "Total Reps", value: totalReps, icon: "\uD83D\uDD01", color: "text-blue-400" },
+  ];
   return (
     <AppShell>
       <div className="min-h-screen bg-gradient-to-b from-brand-950 via-gray-900 to-brand-950">
