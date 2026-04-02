@@ -5,9 +5,6 @@ import { backhandVolley } from "./backhand-volley";
 import { bandeja } from "./bandeja";
 import { vibora } from "./vibora";
 import { smash } from "./smash";
-import { tennisServe } from "./tennis-serve";
-import { tennisForehand } from "./tennis-forehand";
-import { tennisBackhand } from "./tennis-backhand";
 // Warm-up
 import { warmupLegSwings } from "./warmup-leg-swings";
 import { warmupArmCircles } from "./warmup-arm-circles";
@@ -27,10 +24,6 @@ export const drillRegistry: Record<string, DrillDefinition> = {
   bandeja: bandeja,
   vibora: vibora,
   smash: smash,
-  // Tennis
-  "tennis-serve": tennisServe,
-  "tennis-forehand": tennisForehand,
-  "tennis-backhand": tennisBackhand,
   // Warm-up
   "warmup-leg-swings": warmupLegSwings,
   "warmup-arm-circles": warmupArmCircles,

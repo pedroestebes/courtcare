@@ -19,24 +19,21 @@ const categoryLabels: Record<string, string> = {
   overhead: "Overhead",
   defense: "Defense",
   attack: "Attack",
-  serve: "Serve",
-  groundstroke: "Groundstroke",
   warmup: "Warm-up",
   stretching: "Stretching",
 };
 
-type SportFilter = "all" | "padel" | "tennis" | "warmup" | "stretching";
+type DrillFilter = "all" | "padel" | "warmup" | "stretching";
 
-const sportFilters: { key: SportFilter; label: string; icon: string; count: number }[] = [
+const sportFilters: { key: DrillFilter; label: string; icon: string; count: number }[] = [
   { key: "all", label: "All Drills", icon: "\uD83C\uDFAF", count: allDrills.length },
-  { key: "padel", label: "Padel", icon: "\uD83C\uDFD3", count: allDrills.filter((d) => !d.slug.startsWith("tennis") && !d.slug.startsWith("warmup") && !d.slug.startsWith("stretch")).length },
-  { key: "tennis", label: "Tennis", icon: "\uD83C\uDFBE", count: allDrills.filter((d) => d.slug.startsWith("tennis")).length },
+  { key: "padel", label: "Padel", icon: "\uD83C\uDFD3", count: allDrills.filter((d) => !d.slug.startsWith("warmup") && !d.slug.startsWith("stretch")).length },
   { key: "warmup", label: "Warm-up", icon: "\uD83D\uDD25", count: allDrills.filter((d) => d.slug.startsWith("warmup")).length },
   { key: "stretching", label: "Cool-down", icon: "\uD83E\uDDD8", count: allDrills.filter((d) => d.slug.startsWith("stretch")).length },
 ];
 
 export function DrillLibrary() {
-  const [filter, setFilter] = useState<SportFilter>("all");
+  const [filter, setFilter] = useState<DrillFilter>("all");
   const [showUpgrade, setShowUpgrade] = useState(false);
   const sessionsUsed = getWeeklySessionCount();
   const nearLimit = sessionsUsed >= FREE_SESSION_LIMIT - 1;
@@ -44,11 +41,9 @@ export function DrillLibrary() {
 
   const filteredDrills = allDrills.filter((drill) => {
     if (filter === "all") return true;
-    if (filter === "tennis") return drill.slug.startsWith("tennis");
     if (filter === "warmup") return drill.slug.startsWith("warmup");
     if (filter === "stretching") return drill.slug.startsWith("stretch");
-    // padel = everything that isn't tennis, warmup, or stretching
-    return !drill.slug.startsWith("tennis") && !drill.slug.startsWith("warmup") && !drill.slug.startsWith("stretch");
+    return !drill.slug.startsWith("warmup") && !drill.slug.startsWith("stretch");
   });
 
   return (
@@ -123,7 +118,6 @@ export function DrillLibrary() {
                       "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden",
                       drill.category === "warmup" ? "bg-gradient-to-br from-orange-500 to-amber-600"
                         : drill.category === "stretching" ? "bg-gradient-to-br from-cyan-500 to-teal-600"
-                        : drill.slug.startsWith("tennis") ? "bg-gradient-to-br from-green-500 to-emerald-600"
                         : "bg-gradient-to-br from-brand-500 to-accent-500"
                     )}>
                       <DrillPoseIcon slug={drill.slug} className="w-10 h-10" />

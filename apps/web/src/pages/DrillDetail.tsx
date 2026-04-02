@@ -11,8 +11,6 @@ const categoryLabels: Record<string, string> = {
   overhead: "Overhead",
   defense: "Defense",
   attack: "Attack",
-  serve: "Serve",
-  groundstroke: "Groundstroke",
   warmup: "Warm-up",
   stretching: "Stretching",
 };
@@ -50,7 +48,6 @@ export function DrillDetail() {
               "w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shrink-0 overflow-hidden",
               drill.category === "warmup" ? "bg-gradient-to-br from-orange-500 to-amber-600"
                 : drill.category === "stretching" ? "bg-gradient-to-br from-cyan-500 to-teal-600"
-                : drill.slug.startsWith("tennis") ? "bg-gradient-to-br from-green-500 to-emerald-600"
                 : "bg-gradient-to-br from-brand-500 to-accent-500"
             )}>
               <DrillPoseIcon slug={drill.slug} className="w-14 h-14" />
