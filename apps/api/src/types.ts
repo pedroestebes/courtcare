@@ -9,6 +9,7 @@ export interface Env {
 
   // Secrets (set via wrangler secret)
   JWT_SECRET: string;
+  ANTHROPIC_API_KEY?: string;
 }
 
 // Context variables set by middleware

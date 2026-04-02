@@ -2,6 +2,8 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { Card } from "@/components/ui/Card";
 import { ScoreGauge } from "@/components/pose/ScoreGauge";
+import { SessionReplay } from "@/components/pose/SessionReplay";
+import { useRecordingStore } from "@/stores/recordingStore";
 import { formatDate, formatTime, formatDuration, scoreColor, cn } from "@/lib/utils";
 import {
   LineChart,
@@ -328,6 +330,7 @@ const typeStyles: Record<string, { bg: string; icon: string }> = {
 export function SessionReview() {
   const { id } = useParams<{ id: string }>();
   const session = id ? mockSessionData[id] : undefined;
+  const recordedFrames = useRecordingStore((s) => s.frames);
 
   // For mock: create a generic session if the ID isn't in our mock data
   const data: SessionData = session ?? {
@@ -415,6 +418,11 @@ export function SessionReview() {
               </div>
             ))}
           </div>
+
+          {/* Session Replay */}
+          {recordedFrames.length > 0 && (
+            <SessionReplay frames={recordedFrames} className="mb-8" />
+          )}
 
           {/* Detection Accuracy Stats */}
           {!data.sessionSafe && (

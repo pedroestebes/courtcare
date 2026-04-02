@@ -3,6 +3,7 @@ import { corsMiddleware } from "./middleware/cors.js";
 import authRoutes from "./routes/auth.js";
 import drillsRoutes from "./routes/drills.js";
 import sessionsRoutes from "./routes/sessions.js";
+import aiRoutes from "./routes/ai.js";
 import type { Env, Variables } from "./types.js";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
@@ -23,6 +24,7 @@ app.get("/health", (c) => {
 app.route("/auth", authRoutes);
 app.route("/drills", drillsRoutes);
 app.route("/sessions", sessionsRoutes);
+app.route("/ai", aiRoutes);
 
 // 404 fallback
 app.notFound((c) => {

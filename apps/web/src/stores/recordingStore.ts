@@ -1,0 +1,45 @@
+import { create } from "zustand";
+
+interface RecordedFrame {
+  timestamp: number;
+  imageDataUrl: string; // canvas snapshot as data URL (low quality JPEG)
+  score: number;
+  injuryRisk: number;
+}
+
+interface RecordingState {
+  isRecording: boolean;
+  frames: RecordedFrame[];
+  startRecording: () => void;
+  stopRecording: () => void;
+  addFrame: (frame: RecordedFrame) => void;
+  clear: () => void;
+}
+
+// Capture at 2fps to keep memory usage reasonable (~500KB per session)
+export const CAPTURE_INTERVAL_MS = 500;
+
+export const useRecordingStore = create<RecordingState>((set) => ({
+  isRecording: false,
+  frames: [],
+  startRecording: () => set({ isRecording: true, frames: [] }),
+  stopRecording: () => set({ isRecording: false }),
+  addFrame: (frame) =>
+    set((state) => ({
+      frames: [...state.frames, frame],
+    })),
+  clear: () => set({ isRecording: false, frames: [] }),
+}));
+
+/**
+ * Captures a low-quality snapshot from a canvas element.
+ */
+export function captureCanvasFrame(canvas: HTMLCanvasElement | null): string | null {
+  if (!canvas) return null;
+  try {
+    // Low quality JPEG to keep size small (~5-10KB per frame)
+    return canvas.toDataURL("image/jpeg", 0.3);
+  } catch {
+    return null;
+  }
+}

@@ -10,7 +10,10 @@ import { SkeletonOverlay } from "@/components/camera/SkeletonOverlay";
 import { ScoreGauge } from "@/components/pose/ScoreGauge";
 import { FeedbackPanel } from "@/components/pose/FeedbackPanel";
 import { HealthIndicator } from "@/components/pose/HealthIndicator";
+import { AccuracyBadge, calculateAccuracy } from "@/components/pose/AccuracyBadge";
 import { Button } from "@/components/ui/Button";
+import { incrementSessionCount } from "@/components/ui/UpgradeModal";
+import { useRecordingStore, captureCanvasFrame, CAPTURE_INTERVAL_MS } from "@/stores/recordingStore";
 import { formatDuration, cn } from "@/lib/utils";
 
 export function Session() {
@@ -35,6 +38,7 @@ export function Session() {
   } = useSessionStore();
 
   const camera = useCamera();
+  const recording = useRecordingStore();
   const poseDetection = usePoseDetection({
     enabled: status === "active" && camera.isActive,
     videoRef: camera.videoRef,
@@ -54,10 +58,13 @@ export function Session() {
 
     camera.start().then(() => {
       startSession(drill.slug);
+      incrementSessionCount();
+      recording.startRecording();
     });
 
     return () => {
       camera.stop();
+      recording.stopRecording();
       reset();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,6 +119,28 @@ export function Session() {
 
     return () => clearInterval(frameInterval);
   }, [status, addFrame]);
+
+  // Capture video frames for replay
+  const latestHealthRef = useRef(formAnalysis.healthMetrics);
+  latestHealthRef.current = formAnalysis.healthMetrics;
+
+  useEffect(() => {
+    if (status !== "active" || !recording.isRecording) return;
+
+    const captureInterval = setInterval(() => {
+      const imageDataUrl = captureCanvasFrame(camera.canvasRef.current);
+      if (imageDataUrl) {
+        recording.addFrame({
+          timestamp: Date.now(),
+          imageDataUrl,
+          score: latestScoreRef.current,
+          injuryRisk: latestHealthRef.current?.overallRisk ?? 0,
+        });
+      }
+    }, CAPTURE_INTERVAL_MS);
+
+    return () => clearInterval(captureInterval);
+  }, [status, recording.isRecording, camera.canvasRef, recording.addFrame]);
 
   // Auto-pause on danger — if injury risk stays > 70 for 3+ seconds
   const dangerCountRef = useRef(0);
@@ -190,10 +219,17 @@ export function Session() {
             <p className="text-xs text-white/40 uppercase tracking-wider">Reps</p>
           </div>
 
-          {/* FPS */}
+          {/* Recording + Accuracy + FPS */}
           {poseDetection.isReady && (
-            <div className="text-center">
-              <p className="text-sm font-mono text-white/50">{poseDetection.fps} fps</p>
+            <div className="flex items-center gap-2">
+              {recording.isRecording && (
+                <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-red-500/20 border border-red-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-xs text-red-400 font-medium">REC</span>
+                </div>
+              )}
+              <AccuracyBadge landmarks={(poseDetection.landmarks?.[0] ?? null) as Array<{ visibility: number }> | null} compact />
+              <span className="text-sm font-mono text-white/50">{poseDetection.fps}fps</span>
             </div>
           )}
         </div>
@@ -335,7 +371,7 @@ export function Session() {
                   : "Injury risks detected — review your form"}
               </div>
 
-              <div className="grid grid-cols-3 gap-4 my-6">
+              <div className="grid grid-cols-4 gap-4 my-6">
                 <div>
                   <p className="text-2xl font-bold text-white">{formatDuration(elapsedSeconds)}</p>
                   <p className="text-xs text-white/50">Duration</p>
@@ -348,7 +384,21 @@ export function Session() {
                   <p className="text-2xl font-bold text-white">{Math.round(formAnalysis.bestScore)}</p>
                   <p className="text-xs text-white/50">Best Score</p>
                 </div>
+                <div>
+                  <p className="text-2xl font-bold text-green-400">{calculateAccuracy((poseDetection.landmarks?.[0] ?? null) as Array<{ visibility: number }> | null)}%</p>
+                  <p className="text-xs text-white/50">Accuracy</p>
+                </div>
               </div>
+              {/* Recording info */}
+              {recording.frames.length > 0 && (
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <span className="w-2 h-2 rounded-full bg-red-400" />
+                  <span className="text-xs text-white/40">
+                    {recording.frames.length} frames recorded {"\u2022"} Replay available in session review
+                  </span>
+                </div>
+              )}
+
               <div className="flex gap-4 justify-center">
                 <Button onClick={handleFinish} size="lg">
                   Back to Drills

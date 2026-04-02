@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/Button";
+import { UpgradeModal, getWeeklySessionCount, FREE_SESSION_LIMIT } from "@/components/ui/UpgradeModal";
 import { allDrills } from "@/engine/drills/index";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +32,10 @@ const sportFilters: { key: SportFilter; label: string; icon: string; count: numb
 
 export function DrillLibrary() {
   const [filter, setFilter] = useState<SportFilter>("all");
+  const [showUpgrade, setShowUpgrade] = useState(false);
+  const sessionsUsed = getWeeklySessionCount();
+  const nearLimit = sessionsUsed >= FREE_SESSION_LIMIT - 1;
+  const atLimit = sessionsUsed >= FREE_SESSION_LIMIT;
 
   const filteredDrills = allDrills.filter((drill) => {
     if (filter === "all") return true;
@@ -48,6 +53,33 @@ export function DrillLibrary() {
               Padel & Tennis drills with real-time joint health monitoring. More sports coming soon.
             </p>
           </div>
+
+          {/* Free tier usage banner */}
+          {nearLimit && (
+            <div className={cn(
+              "rounded-xl border px-4 py-3 mb-6 flex items-center justify-between",
+              atLimit
+                ? "bg-red-500/10 border-red-500/20"
+                : "bg-amber-500/10 border-amber-500/20"
+            )}>
+              <div className="flex items-center gap-3">
+                <span className="text-lg">{atLimit ? "\uD83D\uDD12" : "\u26A0\uFE0F"}</span>
+                <div>
+                  <p className={cn("text-sm font-medium", atLimit ? "text-red-400" : "text-amber-400")}>
+                    {atLimit
+                      ? "Free session limit reached"
+                      : `${FREE_SESSION_LIMIT - sessionsUsed} session${FREE_SESSION_LIMIT - sessionsUsed === 1 ? "" : "s"} left this week`}
+                  </p>
+                  <p className="text-xs text-white/40">
+                    {sessionsUsed}/{FREE_SESSION_LIMIT} free sessions used {"\u2022"} Resets Monday
+                  </p>
+                </div>
+              </div>
+              <Link to="/pricing">
+                <Button size="sm" className="shrink-0">Upgrade</Button>
+              </Link>
+            </div>
+          )}
 
           {/* Sport Filter Tabs */}
           <div className="flex items-center gap-2 mb-6">
@@ -158,17 +190,31 @@ export function DrillLibrary() {
                       Details
                     </Button>
                   </Link>
-                  <Link to={`/session/${drill.slug}`} className="flex-1">
-                    <Button size="sm" className="w-full">
-                      Start
-                    </Button>
-                  </Link>
+                  {atLimit ? (
+                    <div className="flex-1">
+                      <Button size="sm" className="w-full opacity-80" onClick={() => setShowUpgrade(true)}>
+                        {"\uD83D\uDD12"} Upgrade
+                      </Button>
+                    </div>
+                  ) : (
+                    <Link to={`/session/${drill.slug}`} className="flex-1">
+                      <Button size="sm" className="w-full">
+                        Start
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        sessionsUsed={sessionsUsed}
+        maxFree={FREE_SESSION_LIMIT}
+      />
     </AppShell>
   );
 }
