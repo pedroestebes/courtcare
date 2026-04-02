@@ -4,6 +4,18 @@ import { Button } from "@/components/ui/Button";
 import { getDrill } from "@/engine/drills/index";
 import { cn } from "@/lib/utils";
 
+const categoryLabels: Record<string, string> = {
+  fundamentals: "Fundamentals",
+  volleys: "Volleys",
+  overhead: "Overhead",
+  defense: "Defense",
+  attack: "Attack",
+  serve: "Serve",
+  groundstroke: "Groundstroke",
+  warmup: "Warm-up",
+  stretching: "Stretching",
+};
+
 const difficultyColors: Record<string, string> = {
   beginner: "bg-green-500/15 text-green-400 border-green-500/20",
   intermediate: "bg-amber-500/15 text-amber-400 border-amber-500/20",
@@ -35,10 +47,19 @@ export function DrillDetail() {
           <div className="flex items-start gap-4 mb-8">
             <div className={cn(
               "w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shrink-0",
-              drill.slug.startsWith("tennis") ? "bg-gradient-to-br from-green-500 to-emerald-600" : "bg-gradient-to-br from-brand-500 to-accent-500"
+              drill.category === "warmup" ? "bg-gradient-to-br from-orange-500 to-amber-600"
+                : drill.category === "stretching" ? "bg-gradient-to-br from-cyan-500 to-teal-600"
+                : drill.slug.startsWith("tennis") ? "bg-gradient-to-br from-green-500 to-emerald-600"
+                : "bg-gradient-to-br from-brand-500 to-accent-500"
             )}>
               <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                {drill.category === "warmup" ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
+                ) : drill.category === "stretching" ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                )}
               </svg>
             </div>
             <div className="flex-1">
@@ -106,7 +127,7 @@ export function DrillDetail() {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-white/40">Category</p>
-                    <p className="font-medium text-white capitalize">{drill.category}</p>
+                    <p className="font-medium text-white">{categoryLabels[drill.category] ?? drill.category}</p>
                   </div>
                   <div>
                     <p className="text-white/40">Duration</p>
