@@ -34,7 +34,11 @@ export function calculateAngle(a: Landmark, b: Landmark, c: Landmark): number {
   const ba = subtract(a, b);
   const bc = subtract(c, b);
 
-  const cosAngle = dot(ba, bc) / (magnitude(ba) * magnitude(bc) + 1e-8);
+  const magBA = magnitude(ba);
+  const magBC = magnitude(bc);
+  if (magBA < 1e-6 || magBC < 1e-6) return 0;
+
+  const cosAngle = dot(ba, bc) / (magBA * magBC);
   const clampedCos = Math.max(-1, Math.min(1, cosAngle));
 
   return (Math.acos(clampedCos) * 180) / Math.PI;

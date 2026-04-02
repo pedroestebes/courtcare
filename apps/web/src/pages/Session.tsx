@@ -143,26 +143,27 @@ export function Session() {
   }, [status, recording.isRecording, camera.canvasRef, recording.addFrame]);
 
   // Auto-pause on danger — if injury risk stays > 70 for 3+ seconds
-  const dangerCountRef = useRef(0);
+  const dangerStartRef = useRef<number | null>(null);
   const [autoPaused, setAutoPaused] = useState(false);
 
   useEffect(() => {
     if (status !== "active" || !formAnalysis.healthMetrics) return;
 
     if (formAnalysis.healthMetrics.overallRisk >= 70) {
-      dangerCountRef.current++;
-      if (dangerCountRef.current >= 3 && !autoPaused) {
+      if (dangerStartRef.current === null) {
+        dangerStartRef.current = Date.now();
+      } else if (Date.now() - dangerStartRef.current >= 3000 && !autoPaused) {
         pause();
         setAutoPaused(true);
       }
     } else {
-      dangerCountRef.current = 0;
+      dangerStartRef.current = null;
     }
   }, [status, formAnalysis.healthMetrics, pause, autoPaused]);
 
   const handleResumeDanger = useCallback(() => {
     setAutoPaused(false);
-    dangerCountRef.current = 0;
+    dangerStartRef.current = null;
     resume();
   }, [resume]);
 
@@ -229,7 +230,7 @@ export function Session() {
                   <span className="text-xs text-red-400 font-medium">REC</span>
                 </div>
               )}
-              <AccuracyBadge landmarks={(poseDetection.landmarks?.[0] ?? null) as Array<{ visibility: number }> | null} compact />
+              <AccuracyBadge landmarks={poseDetection.landmarks} compact />
               <span className="text-sm font-mono text-white/50">{poseDetection.fps}fps</span>
             </div>
           )}
@@ -386,7 +387,7 @@ export function Session() {
                   <p className="text-xs text-white/50">Best Score</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-green-400">{calculateAccuracy((poseDetection.landmarks?.[0] ?? null) as Array<{ visibility: number }> | null)}%</p>
+                  <p className="text-2xl font-bold text-green-400">{calculateAccuracy(poseDetection.landmarks)}%</p>
                   <p className="text-xs text-white/50">Accuracy</p>
                 </div>
               </div>

@@ -34,10 +34,10 @@ export function SkeletonOverlay({ canvas, landmarks, score = 75 }: SkeletonOverl
     ctx.lineCap = "round";
 
     for (const [startIdx, endIdx] of POSE_CONNECTIONS) {
+      if (startIdx >= landmarks.length || endIdx >= landmarks.length) continue;
       const start = landmarks[startIdx];
       const end = landmarks[endIdx];
-
-      if (start.visibility < 0.4 || end.visibility < 0.4) continue;
+      if (!start || !end || start.visibility < 0.4 || end.visibility < 0.4) continue;
 
       ctx.beginPath();
       ctx.moveTo(start.x * w, start.y * h);

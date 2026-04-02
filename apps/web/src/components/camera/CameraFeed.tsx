@@ -23,7 +23,10 @@ export function CameraFeed({
     if (!video || !stream) return;
 
     video.srcObject = stream;
-    video.play().catch(() => {});
+    video.setAttribute("playsinline", "true");
+    video.play().catch((err) => {
+      console.warn("Video play failed:", err.message);
+    });
 
     return () => {
       video.srcObject = null;

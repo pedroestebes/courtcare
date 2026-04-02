@@ -47,7 +47,12 @@ export function scoreConstraints(
   let totalScore = 0;
 
   for (const c of constraints) {
-    const value = angles[c.joint] as number;
+    const value = angles[c.joint] as number | undefined;
+    if (value === undefined || !Number.isFinite(value)) {
+      scores[c.label] = 0;
+      totalWeight += c.weight;
+      continue;
+    }
     let score: number;
 
     if (value >= c.min && value <= c.max) {
