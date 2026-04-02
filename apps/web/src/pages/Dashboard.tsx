@@ -171,8 +171,8 @@ export function Dashboard() {
 
           {/* Stats row — glass cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-8">
-            {statCards.map((stat) => (
-              <div key={stat.label} className="rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 px-4 py-4">
+            {statCards.map((stat, i) => (
+              <div key={stat.label} className={`rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 px-4 py-4 animate-slide-up stagger-${i + 1}`}>
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">{stat.icon}</span>
                   <div>
@@ -183,6 +183,44 @@ export function Dashboard() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Weekly Training Goal */}
+          <div className="mt-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6 animate-slide-up stagger-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Weekly Goal</h3>
+                <p className="text-xs text-white/30 mt-0.5">5 sessions this week — keep it up!</p>
+              </div>
+              <span className="text-sm font-bold text-brand-400">5 / 7 sessions</span>
+            </div>
+            <div className="relative h-3 bg-white/5 rounded-full overflow-hidden mb-3">
+              <div
+                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-brand-500 to-accent-500 transition-all duration-1000"
+                style={{ width: "71%" }}
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, i) => {
+                const completed = i < 5;
+                const isToday = i === 4;
+                return (
+                  <div key={day} className="flex-1 text-center">
+                    <div className={cn(
+                      "w-8 h-8 mx-auto rounded-full flex items-center justify-center text-xs font-medium border transition-all",
+                      completed
+                        ? "bg-brand-500/20 border-brand-500/30 text-brand-400"
+                        : isToday
+                          ? "bg-white/10 border-white/20 text-white/60 ring-2 ring-brand-500/30"
+                          : "bg-white/3 border-white/5 text-white/20"
+                    )}>
+                      {completed ? "\u2713" : day.charAt(0)}
+                    </div>
+                    <p className={cn("text-xs mt-1", isToday ? "text-white/60 font-medium" : "text-white/20")}>{day}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

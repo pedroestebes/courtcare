@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/Button";
@@ -20,7 +21,23 @@ const categoryLabels: Record<string, string> = {
   groundstroke: "Groundstroke",
 };
 
+type SportFilter = "all" | "padel" | "tennis";
+
+const sportFilters: { key: SportFilter; label: string; icon: string; count: number }[] = [
+  { key: "all", label: "All Drills", icon: "\uD83C\uDFAF", count: allDrills.length },
+  { key: "padel", label: "Padel", icon: "\uD83C\uDFD3", count: allDrills.filter((d) => !d.slug.startsWith("tennis")).length },
+  { key: "tennis", label: "Tennis", icon: "\uD83C\uDFBE", count: allDrills.filter((d) => d.slug.startsWith("tennis")).length },
+];
+
 export function DrillLibrary() {
+  const [filter, setFilter] = useState<SportFilter>("all");
+
+  const filteredDrills = allDrills.filter((drill) => {
+    if (filter === "all") return true;
+    if (filter === "tennis") return drill.slug.startsWith("tennis");
+    return !drill.slug.startsWith("tennis");
+  });
+
   return (
     <AppShell>
       <div className="min-h-screen bg-gradient-to-b from-brand-950 via-gray-900 to-brand-950">
@@ -32,8 +49,33 @@ export function DrillLibrary() {
             </p>
           </div>
 
+          {/* Sport Filter Tabs */}
+          <div className="flex items-center gap-2 mb-6">
+            {sportFilters.map((sf) => (
+              <button
+                key={sf.key}
+                onClick={() => setFilter(sf.key)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border",
+                  filter === sf.key
+                    ? "bg-brand-500/15 text-brand-400 border-brand-500/30 shadow-lg shadow-brand-500/10"
+                    : "bg-white/5 text-white/50 border-white/10 hover:bg-white/10 hover:text-white/70"
+                )}
+              >
+                <span>{sf.icon}</span>
+                <span>{sf.label}</span>
+                <span className={cn(
+                  "text-xs px-1.5 py-0.5 rounded-full",
+                  filter === sf.key ? "bg-brand-500/20 text-brand-300" : "bg-white/10 text-white/30"
+                )}>
+                  {sf.count}
+                </span>
+              </button>
+            ))}
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allDrills.map((drill) => (
+            {filteredDrills.map((drill) => (
               <div key={drill.slug} className="flex flex-col rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6 hover:bg-white/8 hover:border-white/20 transition-all duration-300 group">
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-4">

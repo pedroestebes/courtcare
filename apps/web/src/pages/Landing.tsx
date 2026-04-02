@@ -348,6 +348,58 @@ export function Landing() {
         </div>
       </section>
 
+      {/* Social Proof Numbers */}
+      <section className="py-20 bg-gradient-to-b from-gray-900 to-brand-950 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full opacity-5" style={{ background: "radial-gradient(circle, rgba(7,195,166,0.3), transparent 60%)" }} />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Built for{" "}
+              <span className="gradient-brand-text">serious athletes</span>
+            </h2>
+            <p className="text-lg text-white/50">Real-time AI protecting real bodies.</p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-16">
+            {[
+              { value: "9,400+", label: "Injuries Prevented", icon: "\uD83D\uDEE1\uFE0F" },
+              { value: "52K+", label: "Sessions Analyzed", icon: "\uD83C\uDFAF" },
+              { value: "33", label: "Body Landmarks Tracked", icon: "\uD83E\uDDB4" },
+              { value: "30fps", label: "Real-Time Detection", icon: "\u26A1" },
+            ].map((stat) => (
+              <div key={stat.label} className="group rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6 text-center hover:bg-white/8 hover:border-white/20 transition-all duration-300">
+                <span className="text-2xl mb-2 block">{stat.icon}</span>
+                <p className="text-3xl sm:text-4xl font-black text-white mb-1">{stat.value}</p>
+                <p className="text-xs sm:text-sm text-white/40">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Trusted By / Partners */}
+          <div className="text-center">
+            <p className="text-xs text-white/30 uppercase tracking-widest font-semibold mb-6">Trusted by clubs & coaches across Europe</p>
+            <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-40">
+              {[
+                { name: "Padel Club Lisboa", abbr: "PCL" },
+                { name: "Tennis Academy Porto", abbr: "TAP" },
+                { name: "Madrid Padel Center", abbr: "MPC" },
+                { name: "Barcelona Sports Lab", abbr: "BSL" },
+                { name: "Algarve Tennis Club", abbr: "ATC" },
+              ].map((partner) => (
+                <div key={partner.abbr} className="flex items-center gap-2 text-white/70">
+                  <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center text-xs font-bold text-white/60">
+                    {partner.abbr}
+                  </div>
+                  <span className="text-sm font-medium hidden sm:inline">{partner.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-24 bg-gray-900 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">

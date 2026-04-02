@@ -23,6 +23,17 @@ const mockSessions = [
 
 const safeCount = mockSessions.filter((s) => s.sessionSafe).length;
 const riskCount = mockSessions.filter((s) => !s.sessionSafe).length;
+const avgScore = Math.round(mockSessions.reduce((sum, s) => sum + s.averageScore, 0) / mockSessions.length);
+const totalTrainingMins = Math.round(mockSessions.reduce((sum, s) => sum + s.duration, 0) / 60);
+const totalReps = mockSessions.reduce((sum, s) => sum + s.totalReps, 0);
+
+const summaryCards = [
+  { label: "Total Sessions", value: mockSessions.length, icon: "\uD83C\uDFAF", color: "text-brand-400" },
+  { label: "Safe Rate", value: `${Math.round((safeCount / mockSessions.length) * 100)}%`, icon: "\u2764\uFE0F", color: "text-green-400" },
+  { label: "Avg Score", value: avgScore, icon: "\uD83D\uDCC8", color: "text-amber-400" },
+  { label: "Training Time", value: `${totalTrainingMins}m`, icon: "\u23F1\uFE0F", color: "text-purple-400" },
+  { label: "Total Reps", value: totalReps, icon: "\uD83D\uDD01", color: "text-blue-400" },
+];
 
 export function SessionHistory() {
   return (
@@ -41,6 +52,17 @@ export function SessionHistory() {
               <span className="text-green-400 font-medium">{safeCount} safe</span> &middot;{" "}
               <span className="text-red-400 font-medium">{riskCount} with risks detected</span>
             </p>
+          </div>
+
+          {/* Summary Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+            {summaryCards.map((card, i) => (
+              <div key={card.label} className={`rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 px-4 py-3 text-center animate-scale-in stagger-${i + 1}`}>
+                <span className="text-lg block">{card.icon}</span>
+                <p className={cn("text-lg font-bold", card.color)}>{card.value}</p>
+                <p className="text-xs text-white/30">{card.label}</p>
+              </div>
+            ))}
           </div>
 
           <div className="rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden">

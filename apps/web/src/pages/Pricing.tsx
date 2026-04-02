@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -175,7 +176,91 @@ export function Pricing() {
         <p className="text-center text-xs text-white/30 mt-8">
           All plans include a 14-day free trial. No credit card required. Cancel anytime.
         </p>
+
+        {/* FAQ Section */}
+        <div className="mt-24">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-4">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-center text-white/40 mb-10 max-w-lg mx-auto">
+            Everything you need to know about CourtCare.
+          </p>
+
+          <FAQSection />
+        </div>
+
+        {/* Money-back guarantee */}
+        <div className="mt-16 text-center">
+          <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-white/5 border border-white/10">
+            <span className="text-3xl">{"\uD83D\uDEE1\uFE0F"}</span>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-white">30-Day Money-Back Guarantee</p>
+              <p className="text-xs text-white/40">Not satisfied? Full refund, no questions asked.</p>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+  );
+}
+
+const faqs = [
+  {
+    q: "Do I need any special equipment?",
+    a: "No. CourtCare uses your phone or laptop camera — no wearables, sensors, or special equipment needed. Just position your device so it can see your full body and start training.",
+  },
+  {
+    q: "How accurate is the injury detection?",
+    a: "CourtCare tracks 33 body landmarks at 30fps using Google's MediaPipe technology. We monitor 12 sport-specific injury risk factors including shoulder impingement, tennis elbow, ACL stress, and spinal compression with clinical-grade joint angle measurements.",
+  },
+  {
+    q: "What sports are supported?",
+    a: "Currently padel (6 drills) and tennis (3 drills), with pickleball coming soon. Each sport has specialized injury thresholds calibrated to its unique movement patterns.",
+  },
+  {
+    q: "Can I use CourtCare during real matches?",
+    a: "CourtCare is designed for training and practice sessions where you can position your camera. For matches, use the Health Dashboard before playing to check your body readiness and get a personalized warm-up.",
+  },
+  {
+    q: "How does the AI Coach work?",
+    a: "The AI Coach analyzes your session history, body map data, and injury risk patterns to provide personalized advice. It can recommend training plans, warm-ups, and tell you when it's safe to play.",
+  },
+  {
+    q: "Is my data private?",
+    a: "Yes. All pose detection happens locally in your browser — no video is ever uploaded to our servers. Only anonymized session metrics (scores, joint angles) are stored for your progress tracking.",
+  },
+];
+
+function FAQSection() {
+  const [open, setOpen] = useState<number | null>(null);
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-2">
+      {faqs.map((faq, i) => (
+        <button
+          key={i}
+          onClick={() => setOpen(open === i ? null : i)}
+          className="w-full text-left rounded-xl bg-white/5 border border-white/10 hover:bg-white/8 transition-colors"
+        >
+          <div className="flex items-center justify-between px-5 py-4">
+            <span className="text-sm font-medium text-white pr-4">{faq.q}</span>
+            <svg
+              className={cn("w-5 h-5 text-white/40 shrink-0 transition-transform duration-200", open === i && "rotate-180")}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </div>
+          {open === i && (
+            <div className="px-5 pb-4">
+              <p className="text-sm text-white/50 leading-relaxed">{faq.a}</p>
+            </div>
+          )}
+        </button>
+      ))}
     </div>
   );
 }
