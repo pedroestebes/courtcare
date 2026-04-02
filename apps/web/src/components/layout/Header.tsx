@@ -92,6 +92,8 @@ export function Header() {
               <button
                 className="md:hidden p-2 rounded-lg text-white/50 hover:bg-white/10"
                 onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label="Toggle navigation menu"
+                aria-expanded={mobileOpen}
               >
                 <svg
                   className="w-5 h-5"

@@ -82,7 +82,7 @@ export function Login() {
         <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">
+              <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl px-4 py-3 text-sm">
                 {error}
               </div>
             )}
@@ -115,6 +115,7 @@ export function Login() {
           {/* Demo credentials helper */}
           <div className="mt-5 pt-5 border-t border-white/10">
             <button
+              type="button"
               onClick={fillDemoCredentials}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-500/10 hover:bg-brand-500/20 border border-brand-500/20 transition-colors group"
             >

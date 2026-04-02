@@ -11,13 +11,13 @@ export function Card({ header, children, noPadding, className, ...props }: CardP
   return (
     <div
       className={cn(
-        "bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200",
+        "rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/8 transition-colors duration-200",
         className
       )}
       {...props}
     >
       {header && (
-        <div className="px-6 py-4 border-b border-gray-100 font-semibold text-gray-800">
+        <div className="px-6 py-4 border-b border-white/10 font-semibold text-white">
           {header}
         </div>
       )}

@@ -55,7 +55,7 @@ export function SessionHistory() {
           </div>
 
           {/* Summary Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
             {summaryCards.map((card, i) => (
               <div key={card.label} className={`rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 px-4 py-3 text-center animate-scale-in stagger-${i + 1}`}>
                 <span className="text-lg block">{card.icon}</span>
