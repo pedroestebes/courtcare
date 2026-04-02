@@ -53,6 +53,10 @@ export function Session() {
 
   const timerRef = useRef<ReturnType<typeof setInterval>>(null);
 
+  // Cycle through instructions every 8 seconds
+  const instructionIndex = drill ? Math.floor(elapsedSeconds / 8) % drill.instructions.length : 0;
+  const currentPhase = drill ? drill.phases[Math.min(Math.floor(elapsedSeconds / 30), drill.phases.length - 1)] : null;
+
   // Start the session on mount
   useEffect(() => {
     if (!drill) return;
@@ -287,6 +291,33 @@ export function Session() {
           score={formAnalysis.smoothedScore}
         />
 
+        {/* Live instruction guide — top left */}
+        {status === "active" && drill && (
+          <div className="absolute top-3 left-3 z-10 max-w-[55vw] sm:max-w-72">
+            <div className="rounded-xl bg-black/50 backdrop-blur-sm border border-white/10 px-3 py-2.5">
+              {currentPhase && (
+                <p className="text-xs font-semibold text-brand-400 uppercase tracking-wider mb-1">
+                  {currentPhase.name}
+                </p>
+              )}
+              <p className="text-sm text-white/90 leading-snug">
+                {drill.instructions[instructionIndex]}
+              </p>
+              <div className="flex gap-1 mt-2">
+                {drill.instructions.map((_, i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      "h-0.5 flex-1 rounded-full transition-all duration-500",
+                      i === instructionIndex ? "bg-brand-400" : "bg-white/15"
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Health indicator (primary) + Score gauge (secondary) - top right */}
         {status === "active" && (
           <div className="absolute top-4 right-4 z-10 flex flex-col items-end gap-2 max-w-[55vw] sm:max-w-60">
@@ -330,14 +361,27 @@ export function Session() {
           </div>
         )}
 
-        {/* Countdown overlay */}
-        {status === "countdown" && countdownValue > 0 && (
+        {/* Countdown overlay with instructions */}
+        {status === "countdown" && countdownValue > 0 && drill && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-20">
-            <div className="text-center">
+            <div className="text-center max-w-sm px-4">
               <p className="text-8xl font-bold text-white animate-pulse">
                 {countdownValue}
               </p>
-              <p className="text-lg text-white/60 mt-4">Get ready...</p>
+              <p className="text-lg text-white/60 mt-4 mb-6">Get ready...</p>
+              <div className="rounded-xl bg-white/10 backdrop-blur-md border border-white/20 p-4 text-left">
+                <p className="text-xs text-brand-400 font-semibold uppercase tracking-wider mb-2">
+                  {drill.category === "warmup" ? "Warm-up" : drill.category === "stretching" ? "Stretch" : "Drill"}: {drill.name}
+                </p>
+                <p className="text-sm text-white/80 leading-relaxed">
+                  {drill.instructions[0]}
+                </p>
+                {drill.instructions[1] && (
+                  <p className="text-sm text-white/50 leading-relaxed mt-1.5">
+                    {drill.instructions[1]}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         )}
