@@ -1,35 +1,32 @@
 import type { DrillDefinition } from "./types";
+// Performance — core padel drills
 import { readyPosition } from "./ready-position";
 import { forehandVolley } from "./forehand-volley";
 import { backhandVolley } from "./backhand-volley";
 import { bandeja } from "./bandeja";
-import { vibora } from "./vibora";
-import { smash } from "./smash";
-// Warm-up
+// Prevention — warm-up before playing
 import { warmupLegSwings } from "./warmup-leg-swings";
 import { warmupArmCircles } from "./warmup-arm-circles";
 import { warmupLunges } from "./warmup-lunges";
 import { warmupTorsoRotation } from "./warmup-torso-rotation";
-// Stretching / Cool-down
+// Recovery — cool-down stretches after playing
 import { stretchHamstring } from "./stretch-hamstring";
 import { stretchShoulder } from "./stretch-shoulder";
 import { stretchQuad } from "./stretch-quad";
 import { stretchHipFlexor } from "./stretch-hip-flexor";
 
 export const drillRegistry: Record<string, DrillDefinition> = {
-  // Padel
+  // Performance — padel technique
   "ready-position": readyPosition,
   "forehand-volley": forehandVolley,
   "backhand-volley": backhandVolley,
   bandeja: bandeja,
-  vibora: vibora,
-  smash: smash,
-  // Warm-up
+  // Prevention — warm-up
   "warmup-leg-swings": warmupLegSwings,
   "warmup-arm-circles": warmupArmCircles,
   "warmup-lunges": warmupLunges,
   "warmup-torso-rotation": warmupTorsoRotation,
-  // Stretching / Cool-down
+  // Recovery — cool-down
   "stretch-hamstring": stretchHamstring,
   "stretch-shoulder": stretchShoulder,
   "stretch-quad": stretchQuad,

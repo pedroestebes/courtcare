@@ -154,24 +154,27 @@ const injuryTypes = [
       <line x1="28" y1="28" x2="31" y2="40" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
     </svg>
   )},
-  { name: "Hip", stat: "Impingement monitor", icon: (
+  { name: "Ankle", stat: "Sprain prevention", icon: (
     <svg viewBox="0 0 48 48" fill="none" className="w-8 h-8">
       <circle cx="24" cy="6" r="3.5" stroke="#07c3a6" strokeWidth="1" fill="rgba(7,195,166,0.1)" />
       <line x1="24" y1="9.5" x2="24" y2="12" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
       <line x1="18" y1="12" x2="30" y2="12" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
-      <line x1="24" y1="12" x2="24" y2="24" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
-      {/* Hip line */}
-      <line x1="18" y1="24" x2="30" y2="24" stroke="#07c3a6" strokeWidth="1.2" />
-      {/* Highlighted hips */}
-      <circle cx="18" cy="24" r="3.5" fill="#07c3a6" fillOpacity="0.3" stroke="#07c3a6" strokeWidth="1.5" />
-      <circle cx="30" cy="24" r="3.5" fill="#07c3a6" fillOpacity="0.3" stroke="#07c3a6" strokeWidth="1.5" />
-      <circle cx="18" cy="24" r="5.5" stroke="#07c3a6" strokeWidth="0.6" opacity="0.4" strokeDasharray="2 1.5" />
-      <circle cx="30" cy="24" r="5.5" stroke="#07c3a6" strokeWidth="0.6" opacity="0.4" strokeDasharray="2 1.5" />
+      <line x1="24" y1="12" x2="24" y2="22" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
       {/* Legs */}
-      <line x1="18" y1="24" x2="15" y2="36" stroke="#07c3a6" strokeWidth="1.2" />
-      <line x1="30" y1="24" x2="33" y2="36" stroke="#07c3a6" strokeWidth="1.2" />
-      <line x1="15" y1="36" x2="14" y2="44" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
-      <line x1="33" y1="36" x2="34" y2="44" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
+      <line x1="20" y1="22" x2="28" y2="22" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
+      <line x1="20" y1="22" x2="17" y2="32" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
+      <line x1="28" y1="22" x2="31" y2="32" stroke="#07c3a6" strokeWidth="1" opacity="0.3" />
+      {/* Lower legs to ankles */}
+      <line x1="17" y1="32" x2="15" y2="40" stroke="#07c3a6" strokeWidth="1.2" />
+      <line x1="31" y1="32" x2="33" y2="40" stroke="#07c3a6" strokeWidth="1.2" />
+      {/* Highlighted ankles */}
+      <circle cx="15" cy="40" r="3.5" fill="#07c3a6" fillOpacity="0.3" stroke="#07c3a6" strokeWidth="1.5" />
+      <circle cx="33" cy="40" r="3.5" fill="#07c3a6" fillOpacity="0.3" stroke="#07c3a6" strokeWidth="1.5" />
+      <circle cx="15" cy="40" r="5.5" stroke="#07c3a6" strokeWidth="0.6" opacity="0.4" strokeDasharray="2 1.5" />
+      <circle cx="33" cy="40" r="5.5" stroke="#07c3a6" strokeWidth="0.6" opacity="0.4" strokeDasharray="2 1.5" />
+      {/* Feet */}
+      <line x1="15" y1="40" x2="12" y2="44" stroke="#07c3a6" strokeWidth="1" />
+      <line x1="33" y1="40" x2="36" y2="44" stroke="#07c3a6" strokeWidth="1" />
       {/* Arms faded */}
       <line x1="18" y1="12" x2="13" y2="20" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />
       <line x1="30" y1="12" x2="35" y2="20" stroke="#07c3a6" strokeWidth="1" opacity="0.2" />

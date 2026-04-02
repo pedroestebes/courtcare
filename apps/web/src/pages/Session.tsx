@@ -4,7 +4,7 @@ import { getDrill } from "@/engine/drills/index";
 import { useCamera } from "@/hooks/useCamera";
 import { usePoseDetection } from "@/hooks/usePoseDetection";
 import { useFormAnalysis } from "@/hooks/useFormAnalysis";
-import { useSessionStore } from "@/stores/sessionStore";
+import { useSessionStore, saveSessionToHistory } from "@/stores/sessionStore";
 import { CameraFeed } from "@/components/camera/CameraFeed";
 import { SkeletonOverlay } from "@/components/camera/SkeletonOverlay";
 import { ScoreGauge } from "@/components/pose/ScoreGauge";
@@ -35,6 +35,7 @@ export function Session() {
     reset,
     addFrame,
     tick,
+    markUnsafe,
   } = useSessionStore();
 
   const camera = useCamera();
@@ -167,6 +168,7 @@ export function Session() {
       } else if (performance.now() - dangerStartRef.current >= 3000 && !autoPaused) {
         pause();
         setAutoPaused(true);
+        markUnsafe();
       }
     } else {
       dangerStartRef.current = null;
@@ -190,9 +192,28 @@ export function Session() {
   }, [complete, camera]);
 
   const handleFinish = useCallback(() => {
+    // Persist session result to localStorage before resetting
+    const state = useSessionStore.getState();
+    if (drill && state.elapsedSeconds > 0) {
+      const frames = state.frames;
+      const avgScore = frames.length > 0
+        ? Math.round(frames.reduce((s, f) => s + f.score, 0) / frames.length)
+        : 0;
+      saveSessionToHistory({
+        id: crypto.randomUUID(),
+        drillSlug: drill.slug,
+        drillName: drill.name,
+        startedAt: new Date(Date.now() - state.elapsedSeconds * 1000).toISOString(),
+        durationSeconds: state.elapsedSeconds,
+        averageScore: avgScore,
+        bestScore: state.bestScore,
+        totalReps: state.totalReps,
+        safe: state.sessionSafe,
+      });
+    }
     reset();
     navigate("/drills");
-  }, [reset, navigate]);
+  }, [reset, navigate, drill]);
 
   if (!drill) {
     return <Navigate to="/drills" replace />;

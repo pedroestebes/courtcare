@@ -13,49 +13,81 @@ const difficultyColors: Record<string, string> = {
   advanced: "bg-red-500/15 text-red-400 border-red-500/20",
 };
 
-const categoryLabels: Record<string, string> = {
-  fundamentals: "Fundamentals",
-  volleys: "Volleys",
-  overhead: "Overhead",
-  defense: "Defense",
-  attack: "Attack",
-  warmup: "Warm-up",
-  stretching: "Stretching",
-};
+type Pillar = "all" | "prevention" | "performance" | "recovery";
 
-type DrillFilter = "all" | "padel" | "warmup" | "stretching";
+const warmupDrills = allDrills.filter((d) => d.slug.startsWith("warmup"));
+const padelDrills = allDrills.filter(
+  (d) => !d.slug.startsWith("warmup") && !d.slug.startsWith("stretch")
+);
+const stretchDrills = allDrills.filter((d) => d.slug.startsWith("stretch"));
 
-const sportFilters: { key: DrillFilter; label: string; icon: string; count: number }[] = [
-  { key: "all", label: "All Drills", icon: "\uD83C\uDFAF", count: allDrills.length },
-  { key: "padel", label: "Padel", icon: "\uD83C\uDFD3", count: allDrills.filter((d) => !d.slug.startsWith("warmup") && !d.slug.startsWith("stretch")).length },
-  { key: "warmup", label: "Warm-up", icon: "\uD83D\uDD25", count: allDrills.filter((d) => d.slug.startsWith("warmup")).length },
-  { key: "stretching", label: "Cool-down", icon: "\uD83E\uDDD8", count: allDrills.filter((d) => d.slug.startsWith("stretch")).length },
+const pillars: { key: Pillar; label: string; subtitle: string; icon: string; count: number; color: string }[] = [
+  { key: "all", label: "All", subtitle: "Full library", icon: "\uD83C\uDFAF", count: allDrills.length, color: "brand" },
+  { key: "prevention", label: "Prevention", subtitle: "Warm-up before playing", icon: "\uD83D\uDD25", count: warmupDrills.length, color: "orange" },
+  { key: "performance", label: "Performance", subtitle: "Padel technique drills", icon: "\uD83C\uDFD3", count: padelDrills.length, color: "brand" },
+  { key: "recovery", label: "Recovery", subtitle: "Stretch after playing", icon: "\uD83E\uDDD8", count: stretchDrills.length, color: "cyan" },
 ];
 
+function getPillarGradient(slug: string): string {
+  if (slug.startsWith("warmup")) return "bg-gradient-to-br from-orange-500 to-amber-600";
+  if (slug.startsWith("stretch")) return "bg-gradient-to-br from-cyan-500 to-teal-600";
+  return "bg-gradient-to-br from-brand-500 to-accent-500";
+}
+
+function getPillarLabel(slug: string): string {
+  if (slug.startsWith("warmup")) return "Prevention";
+  if (slug.startsWith("stretch")) return "Recovery";
+  return "Performance";
+}
+
 export function DrillLibrary() {
-  const [filter, setFilter] = useState<DrillFilter>("all");
+  const [pillar, setPillar] = useState<Pillar>("all");
   const [showUpgrade, setShowUpgrade] = useState(false);
   const sessionsUsed = getWeeklySessionCount();
   const nearLimit = sessionsUsed >= FREE_SESSION_LIMIT - 1;
   const atLimit = sessionsUsed >= FREE_SESSION_LIMIT;
 
-  const filteredDrills = allDrills.filter((drill) => {
-    if (filter === "all") return true;
-    if (filter === "warmup") return drill.slug.startsWith("warmup");
-    if (filter === "stretching") return drill.slug.startsWith("stretch");
-    return !drill.slug.startsWith("warmup") && !drill.slug.startsWith("stretch");
-  });
+  const filteredDrills =
+    pillar === "all" ? allDrills
+    : pillar === "prevention" ? warmupDrills
+    : pillar === "performance" ? padelDrills
+    : stretchDrills;
 
   return (
     <AppShell>
       <div className="min-h-screen bg-gradient-to-b from-brand-950 via-gray-900 to-brand-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-white">Drill Library</h1>
+            <h1 className="text-2xl font-bold text-white">Train Smart</h1>
             <p className="text-white/50 mt-1">
-              Warm-up, drills and cool-down stretches with real-time pose monitoring and injury prevention.
+              Prevent injuries, perfect your technique, and recover properly.
             </p>
           </div>
+
+          {/* Quick Action: I Just Played */}
+          <Link to="/recovery" className="block mb-8">
+            <div className="rounded-2xl bg-gradient-to-r from-cyan-500/15 to-teal-500/15 border border-cyan-500/20 p-5 hover:bg-cyan-500/20 transition-all duration-300 group">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-2xl shadow-lg">
+                    {"\uD83E\uDDD8"}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white group-hover:text-cyan-300 transition-colors">
+                      I Just Played
+                    </h3>
+                    <p className="text-sm text-white/50">
+                      Get a personalized cool-down based on how you feel
+                    </p>
+                  </div>
+                </div>
+                <svg className="w-5 h-5 text-white/30 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </div>
+            </div>
+          </Link>
 
           {/* Free tier usage banner */}
           {nearLimit && (
@@ -84,31 +116,41 @@ export function DrillLibrary() {
             </div>
           )}
 
-          {/* Sport Filter Tabs */}
+          {/* 3-Pillar Tabs */}
           <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2 -mb-2 scrollbar-none">
-            {sportFilters.map((sf) => (
+            {pillars.map((p) => (
               <button
-                key={sf.key}
-                onClick={() => setFilter(sf.key)}
+                key={p.key}
+                onClick={() => setPillar(p.key)}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border shrink-0",
-                  filter === sf.key
+                  pillar === p.key
                     ? "bg-brand-500/15 text-brand-400 border-brand-500/30 shadow-lg shadow-brand-500/10"
                     : "bg-white/5 text-white/50 border-white/10 hover:bg-white/10 hover:text-white/70"
                 )}
               >
-                <span>{sf.icon}</span>
-                <span>{sf.label}</span>
+                <span>{p.icon}</span>
+                <span>{p.label}</span>
                 <span className={cn(
                   "text-xs px-1.5 py-0.5 rounded-full",
-                  filter === sf.key ? "bg-brand-500/20 text-brand-300" : "bg-white/10 text-white/30"
+                  pillar === p.key ? "bg-brand-500/20 text-brand-300" : "bg-white/10 text-white/30"
                 )}>
-                  {sf.count}
+                  {p.count}
                 </span>
               </button>
             ))}
           </div>
 
+          {/* Pillar description */}
+          {pillar !== "all" && (
+            <div className="mb-6 text-sm text-white/40">
+              {pillar === "prevention" && "Prepare your body before stepping on court. Camera-guided warm-ups that monitor your form."}
+              {pillar === "performance" && "Master padel technique with real-time pose tracking. AI monitors your form and flags injury risks."}
+              {pillar === "recovery" && "Cool-down stretches after playing. Proper recovery prevents the injuries that build up over time."}
+            </div>
+          )}
+
+          {/* Drill Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredDrills.map((drill) => (
               <div key={drill.slug} className="flex flex-col rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6 hover:bg-white/8 hover:border-white/20 transition-all duration-300 group">
@@ -116,15 +158,13 @@ export function DrillLibrary() {
                   <div className="flex items-start justify-between mb-4">
                     <div className={cn(
                       "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden",
-                      drill.category === "warmup" ? "bg-gradient-to-br from-orange-500 to-amber-600"
-                        : drill.category === "stretching" ? "bg-gradient-to-br from-cyan-500 to-teal-600"
-                        : "bg-gradient-to-br from-brand-500 to-accent-500"
+                      getPillarGradient(drill.slug)
                     )}>
                       <DrillPoseIcon slug={drill.slug} className="w-10 h-10" />
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-white/40 font-medium">
-                        {categoryLabels[drill.category] ?? drill.category}
+                        {getPillarLabel(drill.slug)}
                       </span>
                       <span
                         className={cn(
@@ -151,12 +191,6 @@ export function DrillLibrary() {
                       </svg>
                       {Math.floor(drill.estimatedDuration / 60)} min
                     </span>
-                    <span className="flex items-center gap-1">
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
-                      </svg>
-                      {drill.phases.length} phase{drill.phases.length > 1 ? "s" : ""}
-                    </span>
                   </div>
 
                   <div className="flex items-center gap-1.5 text-xs text-green-400 bg-green-500/10 border border-green-500/15 rounded-lg px-3 py-1.5 mb-4">
@@ -170,6 +204,7 @@ export function DrillLibrary() {
                         if (key.includes("Shoulder") || key.includes("shoulder")) return "shoulder";
                         if (key.includes("Elbow") || key.includes("elbow")) return "elbow";
                         if (key.includes("Knee") || key.includes("knee")) return "knee";
+                        if (key.includes("Ankle") || key.includes("ankle")) return "ankle";
                         if (key.includes("Hip") || key.includes("hip")) return "hip";
                         if (key.includes("Wrist") || key.includes("wrist")) return "wrist";
                         if (key.includes("torso")) return "spine";

@@ -111,6 +111,8 @@ export interface JointAngles {
   rightKnee: number;
   leftHip: number;
   rightHip: number;
+  leftAnkle: number;
+  rightAnkle: number;
   torsoInclination: number;
   shoulderRotation: number;
   hipWidth: number;
@@ -122,7 +124,7 @@ export interface JointAngles {
  * Extract all relevant joint angles from a set of pose landmarks.
  */
 export function extractJointAngles(landmarks: Landmark[]): JointAngles | null {
-  if (landmarks.length < 29) return null;
+  if (landmarks.length < 33) return null;
 
   const lShoulder = landmarks[11];
   const rShoulder = landmarks[12];
@@ -136,9 +138,18 @@ export function extractJointAngles(landmarks: Landmark[]): JointAngles | null {
   const rKnee = landmarks[26];
   const lAnkle = landmarks[27];
   const rAnkle = landmarks[28];
+  const lHeel = landmarks[29];
+  const rHeel = landmarks[30];
+  const lFootTip = landmarks[31];
+  const rFootTip = landmarks[32];
 
   const hipMid = midpoint(lHip, rHip);
   const shoulderMid = midpoint(lShoulder, rShoulder);
+
+  // Ankle angle: knee-ankle-foot_tip — measures dorsiflexion/plantarflexion
+  // Also use heel for inversion risk: large angle difference between heel-ankle and tip-ankle
+  const lAnkleAngle = calculateAngle(lKnee, lAnkle, lFootTip);
+  const rAnkleAngle = calculateAngle(rKnee, rAnkle, rFootTip);
 
   return {
     leftElbow: calculateAngle(lShoulder, lElbow, lWrist),
@@ -149,6 +160,8 @@ export function extractJointAngles(landmarks: Landmark[]): JointAngles | null {
     rightKnee: calculateAngle(rHip, rKnee, rAnkle),
     leftHip: calculateAngle(lShoulder, lHip, lKnee),
     rightHip: calculateAngle(rShoulder, rHip, rKnee),
+    leftAnkle: lAnkleAngle,
+    rightAnkle: rAnkleAngle,
     torsoInclination: calculateInclinationAngle(hipMid, shoulderMid),
     shoulderRotation: calculateRotation(lShoulder, rShoulder),
     hipWidth: landmarkDistance(lHip, rHip),

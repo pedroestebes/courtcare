@@ -14,6 +14,7 @@ const DrillDetail = lazy(() => import("@/pages/DrillDetail").then((m) => ({ defa
 const Session = lazy(() => import("@/pages/Session").then((m) => ({ default: m.Session })));
 const SessionHistory = lazy(() => import("@/pages/SessionHistory").then((m) => ({ default: m.SessionHistory })));
 const SessionReview = lazy(() => import("@/pages/SessionReview").then((m) => ({ default: m.SessionReview })));
+const Recovery = lazy(() => import("@/pages/Recovery").then((m) => ({ default: m.Recovery })));
 
 function LoadingFallback() {
   return (
@@ -90,6 +91,14 @@ export function App() {
             element={
               <ProtectedRoute>
                 <SessionReview />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recovery"
+            element={
+              <ProtectedRoute>
+                <Recovery />
               </ProtectedRoute>
             }
           />

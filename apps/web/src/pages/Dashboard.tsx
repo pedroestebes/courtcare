@@ -8,6 +8,7 @@ import { CoachChat } from "@/components/health/CoachChat";
 import { ProgressCard } from "@/components/health/ProgressCard";
 import { WarmupCard } from "@/components/health/WarmupCard";
 import { formatDate, formatDuration, scoreColor, cn } from "@/lib/utils";
+import { getSessionHistory, type CompletedSession } from "@/stores/sessionStore";
 import {
   Line,
   XAxis,
@@ -20,25 +21,48 @@ import {
   ReferenceLine,
 } from "recharts";
 
-const mockStats = {
-  totalSessions: 14,
-  safeSessions: 8,
-  injuriesPrevented: 9,
-  avgScore: 79,
-  bestScore: 96,
-  streak: 7,
-  injuryFreeStreak: 4,
-  totalTrainingMinutes: 170,
-};
+// Compute real stats from session history, with demo defaults
+const _history = getSessionHistory();
+const _hasReal = _history.length > 0;
+const mockStats = _hasReal
+  ? {
+      totalSessions: _history.length,
+      safeSessions: _history.filter((s) => s.safe).length,
+      injuriesPrevented: _history.filter((s) => !s.safe).length,
+      avgScore: Math.round(_history.reduce((a, s) => a + s.averageScore, 0) / _history.length),
+      bestScore: Math.max(..._history.map((s) => s.bestScore)),
+      streak: _history.length,
+      injuryFreeStreak: _history.findIndex((s) => !s.safe) === -1 ? _history.length : _history.findIndex((s) => !s.safe),
+      totalTrainingMinutes: Math.round(_history.reduce((a, s) => a + s.durationSeconds, 0) / 60),
+    }
+  : {
+      totalSessions: 14,
+      safeSessions: 8,
+      injuriesPrevented: 9,
+      avgScore: 79,
+      bestScore: 96,
+      streak: 7,
+      injuryFreeStreak: 4,
+      totalTrainingMinutes: 170,
+    };
 
-const mockRecent = [
-  { id: "1", drillName: "Forehand Volley", date: "2026-03-29", score: 88, duration: 180, safe: true },
-  { id: "2", drillName: "Bandeja", date: "2026-03-28", score: 82, duration: 240, safe: true },
-  { id: "3", drillName: "Smash", date: "2026-03-27", score: 74, duration: 300, safe: false },
-  { id: "4", drillName: "Ready Position", date: "2026-03-26", score: 93, duration: 120, safe: true },
-  { id: "5", drillName: "Vibora", date: "2026-03-25", score: 71, duration: 260, safe: false },
-  { id: "6", drillName: "Backhand Volley", date: "2026-03-24", score: 85, duration: 200, safe: true },
-];
+// Use real session history, fall back to example data if empty
+const realHistory = getSessionHistory();
+const recentSessions = realHistory.length > 0
+  ? realHistory.slice(0, 6).map((s) => ({
+      id: s.id,
+      drillName: s.drillName,
+      date: s.startedAt.split("T")[0],
+      score: s.averageScore,
+      duration: s.durationSeconds,
+      safe: s.safe,
+    }))
+  : [
+      { id: "1", drillName: "Forehand Volley", date: "2026-03-29", score: 88, duration: 180, safe: true },
+      { id: "2", drillName: "Bandeja", date: "2026-03-28", score: 82, duration: 240, safe: true },
+      { id: "3", drillName: "Ready Position", date: "2026-03-27", score: 93, duration: 120, safe: true },
+      { id: "4", drillName: "Backhand Volley", date: "2026-03-26", score: 85, duration: 200, safe: true },
+    ];
 
 const mockProgress = [
   { date: "Mar 15", score: 52, injuryRisk: 45 },
@@ -288,7 +312,7 @@ export function Dashboard() {
               <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Recent Sessions</h3>
             </div>
             <div className="divide-y divide-white/5">
-              {mockRecent.map((session) => (
+              {recentSessions.map((session) => (
                 <Link
                   key={session.id}
                   to={`/history/${session.id}`}

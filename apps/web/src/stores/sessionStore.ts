@@ -1,6 +1,39 @@
 import { create } from "zustand";
 import type { SessionStatus, FeedbackMessage, SessionFrame } from "@/types/session";
 
+/** Persisted session result for local history */
+export interface CompletedSession {
+  id: string;
+  drillSlug: string;
+  drillName: string;
+  startedAt: string;
+  durationSeconds: number;
+  averageScore: number;
+  bestScore: number;
+  totalReps: number;
+  safe: boolean;
+}
+
+const HISTORY_KEY = "courtcare-session-history";
+
+/** Read completed sessions from localStorage */
+export function getSessionHistory(): CompletedSession[] {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Save a completed session to localStorage */
+export function saveSessionToHistory(session: CompletedSession): void {
+  const history = getSessionHistory();
+  history.unshift(session);
+  // Keep last 100 sessions
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 100)));
+}
+
 interface SessionState {
   status: SessionStatus;
   drillSlug: string | null;
@@ -12,6 +45,7 @@ interface SessionState {
   frames: SessionFrame[];
   elapsedSeconds: number;
   countdownValue: number;
+  sessionSafe: boolean;
 
   startSession: (drillSlug: string) => void;
   setCountdown: (value: number) => void;
@@ -26,6 +60,7 @@ interface SessionState {
   setFeedback: (messages: FeedbackMessage[]) => void;
   addFrame: (frame: SessionFrame) => void;
   tick: () => void;
+  markUnsafe: () => void;
 }
 
 export const useSessionStore = create<SessionState>()((set) => ({
@@ -39,6 +74,7 @@ export const useSessionStore = create<SessionState>()((set) => ({
   frames: [],
   elapsedSeconds: 0,
   countdownValue: 3,
+  sessionSafe: true,
 
   startSession: (drillSlug) =>
     set({
@@ -52,6 +88,7 @@ export const useSessionStore = create<SessionState>()((set) => ({
       frames: [],
       elapsedSeconds: 0,
       countdownValue: 3,
+      sessionSafe: true,
     }),
 
   setCountdown: (value) => set({ countdownValue: value }),
@@ -76,6 +113,7 @@ export const useSessionStore = create<SessionState>()((set) => ({
       frames: [],
       elapsedSeconds: 0,
       countdownValue: 3,
+      sessionSafe: true,
     }),
 
   updateScore: (raw, smoothed) =>
@@ -96,4 +134,6 @@ export const useSessionStore = create<SessionState>()((set) => ({
 
   tick: () =>
     set((state) => ({ elapsedSeconds: state.elapsedSeconds + 1 })),
+
+  markUnsafe: () => set({ sessionSafe: false }),
 }));

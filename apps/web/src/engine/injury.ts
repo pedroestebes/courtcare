@@ -20,12 +20,12 @@ interface InjuryThreshold {
 }
 
 const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
-  // SHOULDER — most common padel injury area
+  // ── SHOULDER — most common padel injury (overhead shots) ──
   {
     joint: "shoulder",
     label: "Shoulder Impingement",
     description:
-      "Arm raised too high behind the body — risk of shoulder impingement and rotator cuff strain",
+      "Arm raised too high behind the body — risk of rotator cuff strain",
     dangerAbove: 170,
     rampDegrees: 15,
     angleKey: "rightShoulder",
@@ -34,13 +34,13 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "shoulder",
     label: "Shoulder Overextension (Left)",
     description:
-      "Non-hitting arm overextended — maintain control to protect the shoulder joint",
+      "Non-hitting arm overextended — protect the shoulder joint",
     dangerAbove: 160,
     rampDegrees: 20,
     angleKey: "leftShoulder",
   },
 
-  // ELBOW — lateral epicondylitis / golfer's elbow
+  // ── ELBOW — lateral epicondylitis from grip & impact ──
   {
     joint: "elbow",
     label: "Elbow Hyperextension",
@@ -54,18 +54,18 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "elbow",
     label: "Elbow Excessive Flexion",
     description:
-      "Elbow too bent on overhead shots — increased stress on the medial elbow ligaments",
+      "Elbow too bent on overhead shots — stress on medial elbow ligaments",
     dangerBelow: 40,
     rampDegrees: 15,
     angleKey: "rightElbow",
   },
 
-  // KNEE — ACL, meniscus, patella
+  // ── KNEE — ACL, meniscus, patella ──
   {
     joint: "knee",
     label: "Right Knee Hyperextension",
     description:
-      "Knee too straight — risk of ligament strain. Keep a slight bend for shock absorption",
+      "Knee too straight — risk of ligament strain. Keep a slight bend",
     dangerAbove: 175,
     rampDegrees: 10,
     angleKey: "rightKnee",
@@ -74,7 +74,7 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "knee",
     label: "Left Knee Hyperextension",
     description:
-      "Knee too straight — risk of ligament strain. Keep a slight bend for shock absorption",
+      "Knee too straight — risk of ligament strain. Keep a slight bend",
     dangerAbove: 175,
     rampDegrees: 10,
     angleKey: "leftKnee",
@@ -83,7 +83,7 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "knee",
     label: "Deep Knee Bend (Right)",
     description:
-      "Excessive knee bend — increased load on the patellar tendon and meniscus",
+      "Excessive knee bend — increased load on patellar tendon and meniscus",
     dangerBelow: 70,
     rampDegrees: 20,
     angleKey: "rightKnee",
@@ -92,50 +92,48 @@ const PADEL_INJURY_THRESHOLDS: InjuryThreshold[] = [
     joint: "knee",
     label: "Deep Knee Bend (Left)",
     description:
-      "Excessive knee bend — increased load on the patellar tendon and meniscus",
+      "Excessive knee bend — increased load on patellar tendon and meniscus",
     dangerBelow: 70,
     rampDegrees: 20,
     angleKey: "leftKnee",
   },
 
-  // SPINE / TORSO — lower back strain
+  // ── ANKLE — sprains from lateral movement on padel court ──
   {
-    joint: "spine",
-    label: "Excessive Back Lean",
+    joint: "ankle",
+    label: "Right Ankle Inversion Risk",
     description:
-      "Leaning back too far — risk of lower back strain and disc compression",
-    dangerBelow: -120,
-    rampDegrees: 15,
-    angleKey: "torsoInclination",
-  },
-  {
-    joint: "spine",
-    label: "Forward Trunk Collapse",
-    description:
-      "Excessive forward lean — strains the lower back and reduces shot power",
-    dangerAbove: -55,
-    rampDegrees: 15,
-    angleKey: "torsoInclination",
-  },
-
-  // HIP — hip impingement, groin strain
-  {
-    joint: "hip",
-    label: "Hip Overflexion (Right)",
-    description:
-      "Excessive hip flexion — risk of hip impingement and groin strain",
+      "Ankle rolling inward — high sprain risk. Keep foot flat during lateral steps",
     dangerBelow: 70,
-    rampDegrees: 20,
-    angleKey: "rightHip",
+    rampDegrees: 15,
+    angleKey: "rightAnkle",
   },
   {
-    joint: "hip",
-    label: "Hip Overflexion (Left)",
+    joint: "ankle",
+    label: "Left Ankle Inversion Risk",
     description:
-      "Excessive hip flexion — risk of hip impingement and groin strain",
+      "Ankle rolling inward — high sprain risk. Keep foot flat during lateral steps",
     dangerBelow: 70,
-    rampDegrees: 20,
-    angleKey: "leftHip",
+    rampDegrees: 15,
+    angleKey: "leftAnkle",
+  },
+  {
+    joint: "ankle",
+    label: "Right Ankle Overextension",
+    description:
+      "Excessive dorsiflexion — risk of Achilles tendon strain during lunges",
+    dangerAbove: 160,
+    rampDegrees: 15,
+    angleKey: "rightAnkle",
+  },
+  {
+    joint: "ankle",
+    label: "Left Ankle Overextension",
+    description:
+      "Excessive dorsiflexion — risk of Achilles tendon strain during lunges",
+    dangerAbove: 160,
+    rampDegrees: 15,
+    angleKey: "leftAnkle",
   },
 ];
 
