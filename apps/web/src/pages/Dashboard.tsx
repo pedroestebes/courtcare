@@ -105,7 +105,7 @@ export function Dashboard() {
 
   const statCards = [
     { label: "Safe Sessions", value: `${mockStats.safeSessions}/${mockStats.totalSessions}`, icon: "\u2764\uFE0F", sub: `${Math.round((mockStats.safeSessions / mockStats.totalSessions) * 100)}% safe rate` },
-    { label: "Injuries Prevented", value: mockStats.injuriesPrevented, icon: "\uD83D\uDEE1\uFE0F", sub: "dangerous form alerts" },
+    { label: "Danger Alerts", value: mockStats.injuriesPrevented, icon: "\uD83D\uDEE1\uFE0F", sub: "risky form detected & flagged" },
     { label: "Injury-Free Streak", value: `${mockStats.injuryFreeStreak} days`, icon: "\uD83D\uDD25", sub: "keep it going!" },
     { label: "Training Time", value: `${Math.round(mockStats.totalTrainingMinutes / 60)}h ${mockStats.totalTrainingMinutes % 60}m`, icon: "\u23F1\uFE0F", sub: `${mockStats.totalSessions} sessions` },
   ];

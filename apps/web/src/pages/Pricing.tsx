@@ -68,7 +68,7 @@ const plans = [
     ],
     notIncluded: [],
     cta: "Contact Us",
-    href: "/register",
+    href: "mailto:hello@courtcare.com",
     highlighted: false,
   },
 ];

@@ -1,7 +1,13 @@
-# CourtCare — Product Roadmap & Backlog
+# CourtCare — Product Roadmap
 
-**AI-Powered Injury Prevention for Court Sports**
-*Last updated: March 2026*
+**AI-Powered Injury Prevention for Padel**
+*Last updated: April 2026*
+
+---
+
+## Vision
+
+CourtCare uses real-time pose detection to help padel players prevent injuries, improve technique, and recover properly — all through a phone camera, no wearables needed. Our protocols are informed by peer-reviewed sports medicine research.
 
 ---
 
@@ -10,220 +16,184 @@
 | Status | Meaning |
 |--------|---------|
 | **DONE** | Built, tested, and deployed |
-| **MUST HAVE** | Critical for fundraising round — blocks investor confidence |
-| **SHOULD HAVE** | Important for product-market fit — needed within 3 months |
-| **NICE TO HAVE** | Enhances the product — can be deferred to post-funding |
+| **IN PROGRESS** | Currently being built |
+| **NEXT** | Planned for next sprint |
+| **FUTURE** | Post-funding roadmap |
 
 ---
 
-## Current State
+## Current Product (v1.0) — DONE
 
-| Metric | Value |
-|--------|-------|
-| Sports supported | 1 (Padel) |
-| Total activities | 14 (6 drills + 4 warm-ups + 4 cool-downs) |
-| Injury risk factors tracked | 12 |
-| Body zones monitored | 9 joints |
-| Platform | Web (Cloudflare Workers + Pages) |
-| Database | Cloudflare D1 |
-| Cost to run | $0 (free tier) |
+### 3-Pillar Architecture
+| Pillar | Activities | Description |
+|--------|-----------|-------------|
+| Prevention | 4 warm-ups | Dynamic warm-ups based on RAMP protocol (Jeffreys 2007) and FIFA 11+ |
+| Performance | 4 padel drills | Ready position, forehand volley, backhand volley, bandeja |
+| Recovery | 4 cool-down stretches | Static stretches per ACSM guidelines (15-30s holds, 2-4 reps) |
 
----
-
-## Phase 1 — DONE (Current MVP)
-
-### Core Platform
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Real-time pose detection (MediaPipe, 33 landmarks) | **DONE** | Browser-based, 30fps |
-| Skeleton overlay on camera feed | **DONE** | Live visualization |
-| Joint angle extraction (13 angles) | **DONE** | 3D vector math |
-| Drill scoring engine | **DONE** | Weighted, phase-based |
-| Feedback system (5 types) | **DONE** | correction, encouragement, info, warning, danger |
+### Core Technology
+| Feature | Status | Details |
+|---------|--------|---------|
+| Real-time pose detection | **DONE** | MediaPipe Tasks Vision, 33 landmarks, 30fps, browser-based |
+| Joint angle extraction | **DONE** | 15 angles: shoulders, elbows, knees, hips, ankles, torso, wrists |
+| Drill scoring engine | **DONE** | Weighted, phase-based, constraint matching |
+| Live instruction guidance | **DONE** | 8-second instruction cycling with phase detection during sessions |
+| Countdown overlay | **DONE** | Shows drill type, name, and first instructions before session starts |
 
 ### Injury Prevention Engine
-| Feature | Status | Notes |
-|---------|--------|-------|
-| 12 padel-specific injury thresholds | **DONE** | Shoulder, elbow, knee, spine, hip |
-| Real-time injury risk assessment | **DONE** | Per-frame, 0-100 score |
-| Fatigue detection (form degradation) | **DONE** | Baseline vs recent comparison |
-| Danger alerts (visual + feedback) | **DONE** | Priority over form corrections |
-| Safety margins on all drills | **DONE** | 7-15° from injury thresholds |
+| Feature | Status | Scientific Basis |
+|---------|--------|-----------------|
+| 12 injury thresholds (shoulder, elbow, knee, ankle) | **DONE** | Elliott 2006 (BJSM), Bern Consensus 2022, NATA 2018, Rivera 2017 |
+| Real-time injury risk scoring (0-100 per frame) | **DONE** | Per-threshold ramp functions with sport-specific limits |
+| Fatigue detection (form degradation tracking) | **DONE** | Baseline vs. recent score comparison |
+| Auto-pause on danger (>70% risk) | **DONE** | Pauses session, flags as unsafe |
+| Ankle sprain detection | **DONE** | Inversion angle <70° and dorsiflexion >160° (Rivera 2017, PMC5737043) |
 
-### Health Dashboard
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Body health map (interactive SVG) | **DONE** | 9 clickable joints, dark glassmorphism |
-| Play readiness score (0-100) | **DONE** | Green/amber/red verdict |
-| Play readiness system | **DONE** | "Play" / "Caution 10 days" / "Rest 1 month" |
-| Progress tracker (before/after) | **DONE** | 14-day comparison with % changes |
-| AI Coaching Chat | **DONE** | Pre-built smart responses, 5 topics |
-| Form score vs injury risk chart | **DONE** | 15-day dual-line chart |
+### "I Just Played" Recovery Wizard
+| Feature | Status | Details |
+|---------|--------|---------|
+| 4-step adaptive flow | **DONE** | Intensity → Duration → Pain areas → Personalized plan |
+| Evidence-based recommendations | **DONE** | Maps pain + intensity to ACSM-guided stretches |
+| Skip option for pain-free users | **DONE** | "Skip — I feel fine" advances to recovery plan |
 
-### Multi-Sport
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Padel drills (6) | **DONE** | Ready position, volleys, bandeja, vibora, smash |
-| Warm-up drills (4) | **DONE** | Leg swings, arm circles, lunges, torso rotation |
-| Cool-down stretches (4) | **DONE** | Hamstring, shoulder, quad, hip flexor |
+### Science & Transparency Page
+| Feature | Status | Details |
+|---------|--------|---------|
+| /science page | **DONE** | Full research backing with 15 peer-reviewed citations |
+| "What we say vs. don't claim" | **DONE** | Transparent honesty section (unique differentiator) |
+| Medical disclaimer | **DONE** | "Not a medical device" — clear and prominent |
+| Evidence badges in UI | **DONE** | DrillLibrary, Recovery, Landing all cite research |
+| Hero credibility signal | **DONE** | "Informed by 15+ peer-reviewed studies" above the fold |
 
-### Auth & Infrastructure
-| Feature | Status | Notes |
-|---------|--------|-------|
-| User registration & login (JWT) | **DONE** | PBKDF2 password hashing |
-| Cloudflare Workers API | **DONE** | D1 database, edge deployment |
-| Cloudflare Pages frontend | **DONE** | Vite + React + Tailwind |
-| Demo mode (investor preview) | **DONE** | One-click login, 14 sessions of data |
+### Session Persistence
+| Feature | Status | Details |
+|---------|--------|---------|
+| localStorage session history | **DONE** | Saves drill, score, duration, reps, safety status |
+| Real data on Dashboard | **DONE** | Stats computed from actual sessions, demo fallback |
+| Real data on SessionHistory | **DONE** | Empty state when no sessions; refreshes on navigation |
 
-### Design
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Dark glassmorphism UI (all pages) | **DONE** | WHOOP-inspired premium feel |
-| Animated phone mockup (landing) | **DONE** | Skeleton + coaching cues |
-| Custom favicon (shield + checkmark) | **DONE** | Brand icon |
-| Quick start guide page | **DONE** | Journey timeline format |
+### Pages & UX
+| Feature | Status | Details |
+|---------|--------|---------|
+| Landing page (dark glassmorphism) | **DONE** | Hero, features, injury cards, science stats, testimonials, CTA |
+| Drill Library (3-pillar tabs) | **DONE** | Prevention / Performance / Recovery with evidence badge |
+| Drill Detail page | **DONE** | Instructions, joint monitoring, constraints |
+| Live Session page | **DONE** | Camera feed, skeleton overlay, scoring, danger alerts, instructions |
+| Session Review | **DONE** | Score summary, form analysis, AI insights |
+| Dashboard (health overview) | **DONE** | Body map, readiness score, stats, progress chart, coach chat |
+| Session History | **DONE** | All past sessions with safe/risk status |
+| Pricing page | **DONE** | Free / Premium / Club tiers |
+| Science page | **DONE** | Full research transparency |
+| Recovery wizard | **DONE** | Post-match adaptive cool-down |
+| Demo mode | **DONE** | One-click "Try Demo" login for investors |
+
+### Infrastructure
+| Feature | Status | Details |
+|---------|--------|---------|
+| Cloudflare Pages (frontend) | **DONE** | courtcare-web.pages.dev |
+| Cloudflare Workers (API) | **DONE** | D1 database, edge deployment |
+| Vite 6 + React 19 + TypeScript 5.7 | **DONE** | Modern stack, fast builds |
+| Tailwind CSS 4 | **DONE** | Dark theme throughout |
+| Cost to run | **$0** | Cloudflare free tier |
 
 ---
 
-## Phase 2 — MUST HAVE (Pre-Funding, Next 4 Weeks)
+## Phase 2 — NEXT (Pre-Funding, Weeks 1-4)
 
-> These are the items that will make or break investor confidence. Build before fundraising meetings.
+> Items that will make or break investor confidence. Build before fundraising meetings.
 
 ### Validation & Proof
 | Feature | Priority | Notes |
 |---------|----------|-------|
-| Accuracy measurement system | **MUST HAVE** | Show "CourtCare detected X with Y% accuracy" — investors need proof |
-| 10 real beta users with data | **MUST HAVE** | Real user testimonials, not just demo data |
-| Side-by-side comparison video | **MUST HAVE** | Record a before/after of a real player using CourtCare |
-| Landing page testimonials section | **MUST HAVE** | Even 3-5 quotes from beta users |
-| Session recording & video replay | **MUST HAVE** | Store short clips, replay in session review |
+| 10 real beta users with data | **NEXT** | Real testimonials replace demo data |
+| Session recording & video replay | **NEXT** | Store short clips for session review |
+| Accuracy measurement system | **NEXT** | "CourtCare detected X with Y% accuracy" |
+| Before/after comparison video | **NEXT** | Real player improvement showcased |
 
 ### Product Depth
 | Feature | Priority | Notes |
 |---------|----------|-------|
-| Pickleball drills (3-4) | **MUST HAVE** | Fastest growing sport globally — investors love TAM expansion |
-| Wearable data integration (Apple Health / Google Fit) | **MUST HAVE** | Read steps, HR, sleep — combine with pose data for holistic readiness |
-| AI Coach powered by Claude API | **MUST HAVE** | Replace pre-built responses with real AI using session data context |
-| Push to stop (auto-pause on danger) | **MUST HAVE** | If injury risk > 70%, auto-pause session and recommend stopping |
-| Personalized warm-up generator | **MUST HAVE** | Based on body map, suggest specific stretches before training |
+| AI Coach powered by Claude API | **NEXT** | Replace pre-built chat responses with real AI using session context |
+| Audio coaching cues | **NEXT** | Spoken instructions during sessions ("Bend your knees more") |
+| Personalized warm-up generator | **NEXT** | Based on body map data, suggest pre-session exercises |
+| Proprioceptive balance drill | **NEXT** | Single-leg stance exercise (Rivera 2017: 43% ankle sprain reduction) |
 
 ### Business Model
 | Feature | Priority | Notes |
 |---------|----------|-------|
-| Subscription paywall design | **MUST HAVE** | Free: 3 sessions/week. Premium: unlimited + AI coach + history |
-| Stripe payment integration | **MUST HAVE** | Monthly ($9.99) and annual ($79.99) plans |
-| Pricing page | **MUST HAVE** | Free vs Premium comparison |
+| Stripe payment integration | **NEXT** | Monthly ($9.99) and annual ($79.99) plans |
+| Free tier enforcement | **NEXT** | 3 sessions/week free, paywall for more |
 
 ---
 
-## Phase 3 — SHOULD HAVE (Post-Funding, Months 2-4)
-
-> Important for product-market fit and retention. Build once you have initial funding.
+## Phase 3 — Post-Funding (Months 2-4)
 
 ### Distribution & Growth
 | Feature | Priority | Notes |
 |---------|----------|-------|
-| Club partnership portal | **SHOULD HAVE** | Clubs install CourtCare for their members — B2B2C model |
-| Coach dashboard | **SHOULD HAVE** | Coaches see all their athletes' body maps and session data |
-| Federation integration (FPP/FIP) | **SHOULD HAVE** | Partnership with padel federations for credibility |
-| Referral system | **SHOULD HAVE** | "Invite a friend, get 1 month free" |
-| Social sharing (session results) | **SHOULD HAVE** | Share body status and scores on Instagram/WhatsApp |
+| React Native mobile app (iOS + Android) | **FUTURE** | Better camera, push notifications, native performance |
+| Club partnership portal | **FUTURE** | B2B2C: clubs install CourtCare for members |
+| Coach dashboard | **FUTURE** | Coaches see all athletes' body maps and sessions |
+| Multi-language (PT, EN, ES) | **FUTURE** | Key markets: Portugal, Spain, Latin America |
+| Referral system | **FUTURE** | "Invite a friend, get 1 month free" |
 
 ### Product Enhancement
 | Feature | Priority | Notes |
 |---------|----------|-------|
-| Video reference overlay | **SHOULD HAVE** | Show ideal form side-by-side during training |
-| Historical body map timeline | **SHOULD HAVE** | Slider showing body status evolution over weeks/months |
-| Injury risk prediction (7-day) | **SHOULD HAVE** | "Based on your pattern, knee risk will increase by Thursday" |
-| Custom drill creator | **SHOULD HAVE** | Coaches create their own drills with angle constraints |
-| Multi-language (PT, EN, ES) | **SHOULD HAVE** | Key markets: Portugal, Spain, Latin America |
-| Offline mode | **SHOULD HAVE** | Download drills, work without internet (pose detection is client-side) |
-| Recovery plan generator | **SHOULD HAVE** | When body zone is amber/red, generate daily recovery exercises |
+| Video reference overlay | **FUTURE** | Show ideal form side-by-side during training |
+| Historical body map timeline | **FUTURE** | Slider showing body status evolution over weeks |
+| Injury risk prediction (7-day) | **FUTURE** | "Based on your pattern, knee risk will increase by Thursday" |
+| Custom drill creator | **FUTURE** | Coaches create drills with custom angle constraints |
+| Offline mode | **FUTURE** | Download drills, work without internet (pose detection is client-side) |
+| Wearable integration (Apple Health/Google Fit) | **FUTURE** | HR, sleep, steps → combine with pose data for holistic readiness |
 
 ### Data & Analytics
 | Feature | Priority | Notes |
 |---------|----------|-------|
-| Weekly health report (email) | **SHOULD HAVE** | "Your body this week" — engagement driver |
-| Aggregate anonymized data dashboard | **SHOULD HAVE** | "85% of CourtCare users have safer shoulders" — marketing gold |
-| Export health data (PDF) | **SHOULD HAVE** | For physiotherapists and doctors |
-| Integration with PT/physio platforms | **SHOULD HAVE** | Send body map to your physiotherapist |
-
-### Technical
-| Feature | Priority | Notes |
-|---------|----------|-------|
-| React Native mobile app (iOS + Android) | **SHOULD HAVE** | Better camera access, push notifications, native performance |
-| 3D body visualization | **SHOULD HAVE** | Three.js or Rive — premium feel, interactive rotation |
-| Audio coaching cues | **SHOULD HAVE** | "Bend your knees more" spoken aloud during training |
-| Haptic feedback (phone vibration) | **SHOULD HAVE** | Vibrate on danger alerts |
+| Weekly health report (email) | **FUTURE** | "Your body this week" engagement driver |
+| Export health data (PDF) | **FUTURE** | For physiotherapists and doctors |
+| Aggregate anonymized analytics | **FUTURE** | "85% of CourtCare users have safer shoulders" — marketing |
 
 ---
 
-## Phase 4 — NICE TO HAVE (Months 5-12)
+## Phase 4 — Scale (Months 5-12)
 
-> Features that differentiate and delight. Build when you have traction.
-
-### Advanced Sports
-| Feature | Priority | Notes |
-|---------|----------|-------|
-| Golf swing analysis | **NICE TO HAVE** | Huge market, high willingness to pay |
-| Basketball shooting form | **NICE TO HAVE** | HomeCourt competitor |
-| Yoga pose correctness | **NICE TO HAVE** | Wellness market, injury prevention angle |
-| Running gait analysis | **NICE TO HAVE** | Runner's knee, shin splints prevention |
-| Boxing stance and technique | **NICE TO HAVE** | Connects to JabToJab ecosystem |
+### Sports Expansion
+| Feature | Notes |
+|---------|-------|
+| Pickleball drills | Fastest growing sport globally — TAM expansion |
+| Golf swing analysis | Huge market, high willingness to pay |
+| Running gait analysis | Runner's knee, shin splints prevention |
 
 ### AI & Machine Learning
-| Feature | Priority | Notes |
-|---------|----------|-------|
-| Custom ML model (beyond MediaPipe) | **NICE TO HAVE** | Sport-specific pose refinement |
-| Injury prediction from historical patterns | **NICE TO HAVE** | "Players with your profile have 3x ACL risk" |
-| AI-generated training programs | **NICE TO HAVE** | Full periodization based on body data |
-| Computer vision ball tracking | **NICE TO HAVE** | Track ball + body for complete analysis |
-| Voice-first coaching (no screen needed) | **NICE TO HAVE** | "How was that shot?" → AI responds with audio |
+| Feature | Notes |
+|---------|-------|
+| Custom ML model (beyond MediaPipe) | Sport-specific pose refinement |
+| AI-generated training programs | Full periodization based on body data |
+| Voice-first coaching | "How was that shot?" → AI responds with audio |
 
-### Platform
-| Feature | Priority | Notes |
-|---------|----------|-------|
-| Wearable integration (WHOOP, Oura, Garmin) | **NICE TO HAVE** | HRV + pose = complete athlete picture |
-| Apple Watch companion app | **NICE TO HAVE** | Quick glance at readiness |
-| Team/club analytics dashboard | **NICE TO HAVE** | Aggregate injury risk across a whole team |
-| API for third-party integrations | **NICE TO HAVE** | Let other apps read CourtCare health data |
-| White-label for sports brands | **NICE TO HAVE** | License the engine to racket brands |
-| Clinical validation study | **NICE TO HAVE** | Partner with university sports science dept |
-
-### Monetization
-| Feature | Priority | Notes |
-|---------|----------|-------|
-| Enterprise/club pricing tier | **NICE TO HAVE** | $99-499/month for clubs with unlimited athletes |
-| Insurance partnership (B2B2C) | **NICE TO HAVE** | Sword Health's model — insurers pay for prevention |
-| Equipment recommendations | **NICE TO HAVE** | "Based on your shoulder data, this racket reduces strain" |
-| Sponsored challenges / tournaments | **NICE TO HAVE** | Brands sponsor in-app training challenges |
+### Platform & Partnerships
+| Feature | Notes |
+|---------|-------|
+| Federation integration (FPP/FIP) | Partnership with padel federations |
+| Insurance B2B2C (Sword Health model) | Insurers pay for injury prevention |
+| Clinical validation study | Partner with university sports science department |
+| White-label for sports brands | License the engine to racket manufacturers |
+| API for third-party integrations | Let other apps read CourtCare health data |
 
 ---
 
-## Backlog Summary
-
-| Phase | Items | Status |
-|-------|-------|--------|
-| Phase 1 — MVP | 32 features | **100% DONE** |
-| Phase 2 — Must Have | 10 features | **0% — Build before funding** |
-| Phase 3 — Should Have | 15 features | **0% — Build with funding** |
-| Phase 4 — Nice to Have | 16 features | **0% — Build with traction** |
-| **Total** | **73 features** | |
-
----
-
-## Key Metrics to Track
+## Key Metrics
 
 | Metric | Current | Target (3 months) | Target (12 months) |
 |--------|---------|-------------------|---------------------|
-| Sports supported | 2 | 4 (+ pickleball, golf) | 8+ |
-| Total drills | 9 | 20 | 50+ |
+| Sports supported | 1 (Padel) | 1 (focused) | 3 (+ pickleball, golf) |
+| Total activities | 12 | 16 | 40+ |
 | Beta users | 0 | 100 | 10,000 |
 | Monthly active users | 0 | 500 | 50,000 |
-| Injuries prevented (tracked) | Demo only | 500+ real | 100,000+ |
 | Revenue | $0 | $0 (free beta) | $50K MRR |
 | Club partnerships | 0 | 5 | 50+ |
-| App Store rating | N/A | N/A | 4.7+ |
+| Scientific citations backing | 15 | 20+ | 30+ (with own clinical study) |
 
 ---
 
@@ -232,7 +202,17 @@
 | Round | Amount | Use of Funds |
 |-------|--------|-------------|
 | Pre-seed | €150-250K | Beta launch, 3 hires (iOS dev, sports scientist, BD), 6 months runway |
-| Seed | €1-2M | Native app, clinical validation, 10 sports, 50 club partnerships |
+| Seed | €1-2M | Native app, clinical validation, sport expansion, 50 club partnerships |
+
+---
+
+## Competitive Advantage
+
+1. **Evidence-based**: 15+ peer-reviewed citations backing our protocols (FIFA 11+, ACSM, Bern Consensus)
+2. **Transparent**: Public "What we say vs. what we don't claim" page — builds trust
+3. **Zero hardware**: Camera-only, no wearables needed (MediaPipe validated at r=0.91 vs. gold-standard)
+4. **Padel-first**: Purpose-built for the fastest-growing racket sport (85% injury prevalence, Jansen 2023)
+5. **Free to run**: Cloudflare free tier — $0 infrastructure cost during beta
 
 ---
 
