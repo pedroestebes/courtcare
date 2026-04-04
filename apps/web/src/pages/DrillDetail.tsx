@@ -150,7 +150,7 @@ export function DrillDetail() {
                 <h3 className="text-sm font-semibold text-green-300 mb-1">Health Protection Active</h3>
                 <p className="text-sm text-green-400/70">
                   During this drill, CourtCare will monitor your joints for injury risk including
-                  shoulder impingement, elbow strain, knee stress, and spinal compression.
+                  shoulder impingement, elbow strain, knee stress, and ankle instability.
                   You will receive real-time alerts if your form enters a danger zone.
                 </p>
               </div>

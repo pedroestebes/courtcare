@@ -47,8 +47,16 @@ function getRecommendedDrills(pain: PainArea[], intensity: Intensity, duration: 
     drills.push({ slug: "stretch-hip-flexor", reason: "García-González 2020: padel's ready position shortens hip flexors" });
   }
 
-  // Quad stretch + proprioceptive balance — Rivera et al. 2017
-  drills.push({ slug: "stretch-quad", reason: "ACSM stretch + balance training (Rivera 2017: 43% ankle sprain reduction)" });
+  // Ankle focus — Rivera et al. 2017: proprioceptive training reduces ankle sprains by 43%
+  if (pain.includes("ankle")) {
+    drills.push({ slug: "stretch-quad", reason: "Rivera 2017: single-leg balance training reduces ankle sprain risk by 43% — quad stretch doubles as proprioceptive exercise" });
+    if (!drills.some(d => d.slug === "stretch-hip-flexor")) {
+      drills.push({ slug: "stretch-hip-flexor", reason: "Hip flexor mobility improves ankle dorsiflexion and lateral movement mechanics" });
+    }
+  } else {
+    // Quad stretch + proprioceptive balance — Rivera et al. 2017
+    drills.push({ slug: "stretch-quad", reason: "ACSM stretch + balance training (Rivera 2017: 43% ankle sprain reduction)" });
+  }
 
   return drills;
 }

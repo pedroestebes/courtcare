@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
+import { useAuthStore } from "@/stores/authStore";
 
 interface Message {
   role: "user" | "coach";
@@ -11,15 +12,15 @@ interface Message {
 // Pre-built AI responses for demo mode (when API isn't available)
 const coachResponses: Record<string, string> = {
   "shoulder": "Based on your session data, your right shoulder has been safe across 12 sessions. However, I noticed slight overextension during your last Smash session. I recommend:\n\n1. Warm up your rotator cuff before overhead shots (band pull-aparts, 2x15)\n2. Limit smash sessions to 3 minutes until shoulder mobility improves\n3. Focus on Bandeja technique — it achieves similar results with less shoulder stress\n\nYour shoulder impingement risk has dropped 75% since you started with CourtCare.",
-  "back": "Your lower back is currently flagged as 'Watch'. Here's what the data shows:\n\n- Excessive backward lean detected during overhead shots (bandeja & smash)\n- This puts compression stress on your lumbar discs\n\nMy recommendation:\n1. Strengthen your core — planks and dead bugs, 3x/week\n2. Focus on staying more upright during overheads\n3. Limit overhead drill sessions to 2 minutes for the next 10 days\n4. Your back should be cleared to 'Healthy' within 2 weeks if you follow this plan.",
-  "play": "Based on your current body status:\n\n\uD83D\uDFE2 8 out of 9 areas are healthy\n\uD83D\uDFE1 Lower back needs monitoring\n\nVerdict: You can play, but I recommend:\n- Avoid aggressive smashes for the next week\n- Focus on volleys and ready position drills\n- Warm up your lower back thoroughly before matches\n- If you feel any discomfort, stop immediately\n\nYour readiness score is 89/100 — almost fully cleared.",
-  "improve": "Looking at your 14-session history, here's your personalized plan:\n\n\uD83D\uDCC8 **Getting Better:**\n- Forehand Volley: 72 \u2192 88 (+22% in 10 days)\n- Ready Position: consistently 90+ (excellent)\n\n\u26A0\uFE0F **Needs Work:**\n- Smash: score dropping when fatigued (session #3 and #10)\n- Vibora: elbow hyperextension on wrist snap\n\n\uD83C\uDFAF **This Week's Focus:**\n1. Monday: Ready Position + Forehand Volley (safe, build confidence)\n2. Wednesday: Bandeja only (controlled overhead practice)\n3. Friday: Backhand Volley (focus on elbow health)\n\nAvoid Smash until your back clears. Your form score has improved 69% overall!",
-  "injury": "In 14 sessions, CourtCare detected and prevented 9 potential injuries:\n\n\uD83D\uDD34 Session #10 (Smash): Knee hyperextension on landing — could have caused ACL damage\n\uD83D\uDD34 Session #3 (Smash): Shoulder impingement — rotator cuff strain risk\n\uD83D\uDFE1 Session #5 (Vibora): Elbow hyperextension — elbow strain risk\n\uD83D\uDFE1 Session #8 (Bandeja): Shoulder overextension during fatigue\n\uD83D\uDFE1 Session #12 (Backhand): Left elbow excessive flexion\n\uD83D\uDFE1 Session #14 (Bandeja): Deep knee bend + shoulder risk\n\nWithout CourtCare, any of these could have meant 2-6 weeks off court. The data shows your injury risk has dropped from 45% to 8% over 14 days.",
+  "back": "Your lower back is currently flagged as 'Watch'. Here's what the data shows:\n\n- Excessive backward lean detected during overhead shots (bandeja)\n- This puts strain on your lower back muscles\n\nMy recommendation:\n1. Strengthen your core — planks and dead bugs, 3x/week\n2. Focus on staying more upright during overheads\n3. Limit overhead drill sessions to 2 minutes for the next 10 days\n4. Your back should be cleared to 'Healthy' within 2 weeks if you follow this plan.",
+  "play": "Based on your current body status:\n\n\uD83D\uDFE2 8 out of 9 areas are healthy\n\uD83D\uDFE1 Lower back needs monitoring\n\nVerdict: You can play, but I recommend:\n- Control overhead shot form for the next week\n- Focus on volleys and ready position drills\n- Warm up your lower back thoroughly before matches\n- If you feel any discomfort, stop immediately\n\nYour readiness score is 89/100 — almost fully cleared.",
+  "improve": "Looking at your session history, here's your personalized plan:\n\n\uD83D\uDCC8 **Getting Better:**\n- Forehand Volley: 72 \u2192 88 (+22% improvement)\n- Ready Position: consistently 90+ (excellent)\n\n\u26A0\uFE0F **Needs Work:**\n- Bandeja: score dropping when fatigued\n- Backhand Volley: elbow angle needs attention\n\n\uD83C\uDFAF **This Week's Focus:**\n1. Monday: Ready Position + Forehand Volley (safe, build confidence)\n2. Wednesday: Bandeja only (controlled overhead practice)\n3. Friday: Backhand Volley (focus on elbow health)\n\nYour form score has been improving steadily!",
+  "injury": "CourtCare has detected and flagged several injury risk moments:\n\n\uD83D\uDD34 Bandeja session: Knee hyperextension on landing — could have caused ACL damage\n\uD83D\uDD34 Bandeja session: Shoulder impingement — rotator cuff strain risk\n\uD83D\uDFE1 Forehand Volley: Elbow hyperextension — strain risk\n\uD83D\uDFE1 Backhand Volley: Left elbow excessive flexion\n\uD83D\uDFE1 Ready Position: Deep knee bend beyond safe threshold\n\nWithout CourtCare, any of these could have meant 2-6 weeks off court. Auto-pause activates when risk exceeds 70%.",
   "knee": "Your knees are in great shape! Both scored 'Healthy' across all 14 sessions.\n\nHowever, I flagged knee hyperextension in session #10 (Smash) — you landed with locked knees after a jump. This is the #1 cause of ACL injuries in court sports.\n\nPrevention tips:\n1. Always land with soft, bent knees\n2. Practice the Ready Position drill to build muscle memory\n3. Strengthen your quads and hamstrings (wall sits, 3x30s)\n\nYour knee protection score: 92% (up from 58% two weeks ago).",
   "elbow": "Your elbows are currently healthy, but we flagged issues in 2 sessions:\n\n- Session #5 (Vibora): Right elbow hyperextension during wrist snap\n- Session #12 (Backhand): Left elbow excessive flexion\n\nLateral epicondylitis (elbow strain) is the most common padel injury. To prevent it:\n1. Never fully lock your elbow on contact\n2. Use hip rotation for power, not your arm\n3. Eccentric wrist exercises: 2x15 with light dumbbell\n\nYour elbow safety trend is improving — 62% \u2192 95% in 14 days.",
   "warmup": "Based on your body map, here's your personalized warm-up for today:\n\n\uD83D\uDD25 General (2 min):\n- Light jog / high knees\n- Dynamic lunges (10 each leg)\n\n\uD83D\uDFE1 Lower Back (focus area):\n- Cat-Cow stretch (10 reps)\n- Dead Bug (2\xD710 each side)\n- Bird Dog (2\xD78 each side)\n\n\uD83D\uDFE2 Maintenance:\n- Arm circles (30s each direction)\n- Bodyweight squats (2\xD712)\n\nTotal: ~8 minutes. Do this before every session and your back should clear to 'Healthy' within a week.",
-  "drills": "You have access to 14 padel-focused activities:\n\n\uD83C\uDFD3 **6 Padel Drills:** Ready Position, Forehand Volley, Backhand Volley, Bandeja, Vibora, Smash\n\uD83D\uDD25 **4 Warm-ups:** Leg Swings, Arm Circles, Lunges, Torso Rotation\n\uD83E\uDDD8 **4 Cool-downs:** Hamstring Stretch, Shoulder Stretch, Quad Stretch, Hip Flexor Stretch\n\nAll activities monitor injury risk factors in real time. I recommend starting each session with a warm-up and finishing with a cool-down stretch to protect your joints.",
-  "default": "I'm your AI Coach. Based on Pedro's 14 sessions of training data, I can advise on:\n\n\u2022 \uD83E\uDDB4 **Joint health** — ask about shoulder, knee, elbow, or back\n\u2022 \uD83C\uDFD3 **Play readiness** — should you play today?\n\u2022 \uD83D\uDCC8 **Training plan** — what to work on next\n\u2022 \u26A0\uFE0F **Injury history** — what CourtCare has prevented\n\u2022 \uD83C\uDFAF **Drills** — available padel drills & warm-ups\n\u2022 \uD83D\uDD25 **Warm-up** — personalized pre-session routine\n\nTry asking: \"Should I play today?\" or \"How's my shoulder?\" or \"Give me a warm-up\""
+  "drills": "You have access to 12 padel-focused activities:\n\n\uD83C\uDFD3 **4 Padel Drills:** Ready Position, Forehand Volley, Backhand Volley, Bandeja\n\uD83D\uDD25 **4 Warm-ups:** Leg Swings, Arm Circles, Lunges, Torso Rotation\n\uD83E\uDDD8 **4 Cool-downs:** Hamstring Stretch, Shoulder Stretch, Quad Stretch, Hip Flexor Stretch\n\nAll activities monitor injury risk factors in real time. I recommend starting each session with a warm-up and finishing with a cool-down stretch to protect your joints.",
+  "default": "I'm your AI Coach. Based on your training data, I can advise on:\n\n\u2022 \uD83E\uDDB4 **Joint health** — ask about shoulder, knee, elbow, or back\n\u2022 \uD83C\uDFD3 **Play readiness** — should you play today?\n\u2022 \uD83D\uDCC8 **Training plan** — what to work on next\n\u2022 \u26A0\uFE0F **Injury history** — what CourtCare has prevented\n\u2022 \uD83C\uDFAF **Drills** — available padel drills & warm-ups\n\u2022 \uD83D\uDD25 **Warm-up** — personalized pre-session routine\n\nTry asking: \"Should I play today?\" or \"How's my shoulder?\" or \"Give me a warm-up\""
 };
 
 function getLocalResponse(input: string): string {
@@ -38,7 +39,7 @@ function getLocalResponse(input: string): string {
 
 // Context data to send with AI requests
 const coachContext = {
-  userName: "Pedro",
+  userName: "Player",
   readinessScore: 89,
   bodyZones: [
     { area: "Right Shoulder", status: "healthy", healthScore: 96, trend: "improving" },
@@ -54,10 +55,10 @@ const coachContext = {
   recentSessions: [
     { drillName: "Forehand Volley", score: 88, safe: true },
     { drillName: "Bandeja", score: 82, safe: true },
-    { drillName: "Smash", score: 74, safe: false },
     { drillName: "Ready Position", score: 93, safe: true },
-    { drillName: "Vibora", score: 71, safe: false },
     { drillName: "Backhand Volley", score: 85, safe: true },
+    { drillName: "Arm Circles", score: 91, safe: true },
+    { drillName: "Lunges", score: 87, safe: true },
   ],
 };
 
@@ -71,8 +72,10 @@ const quickQuestions = [
 ];
 
 export function CoachChat({ className }: { className?: string }) {
+  const user = useAuthStore((s) => s.user);
+  const firstName = user?.name?.split(" ")[0] ?? "Player";
   const [messages, setMessages] = useState<Message[]>([
-    { role: "coach", text: "Hey Pedro! \uD83D\uDC4B I'm your AI Coach, powered by Claude. I've analyzed all 14 of your sessions and your body map data. Ask me anything about your health, training, or when you should play.", isAI: true },
+    { role: "coach", text: `Hey ${firstName}! \uD83D\uDC4B I'm your AI Coach, powered by Claude. I've analyzed your sessions and body map data. Ask me anything about your health, training, or when you should play.`, isAI: true },
   ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
