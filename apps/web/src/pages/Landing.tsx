@@ -330,6 +330,140 @@ export function Landing() {
         </div>
       </section>
 
+      {/* The Problem — Market Data */}
+      <section className="py-24 bg-gradient-to-b from-gray-900 via-brand-950 to-gray-900 relative">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full opacity-8" style={{ background: "radial-gradient(circle, rgba(239,68,68,0.12), transparent 60%)" }} />
+          <div className="absolute bottom-1/4 right-1/3 w-80 h-80 rounded-full opacity-8" style={{ background: "radial-gradient(circle, rgba(7,195,166,0.12), transparent 60%)" }} />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-full px-4 py-1.5 mb-6">
+              <span className="w-2 h-2 rounded-full bg-red-400" />
+              <span className="text-sm text-red-400 font-medium">The Problem</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Padel is booming.{" "}
+              <span className="text-red-400">So are the injuries.</span>
+            </h2>
+            <p className="text-lg text-white/50 max-w-2xl mx-auto">
+              Real data from peer-reviewed studies and official federation reports.
+            </p>
+          </div>
+
+          {/* Injury stats row */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            {[
+              {
+                stat: "69.2%",
+                label: "of padel players have been injured",
+                source: "Medicina, Sept 2025 — Portuguese practitioners study",
+                highlight: true,
+              },
+              {
+                stat: "53.8%",
+                label: "injured in the last 6 months alone",
+                source: "BMC Sports Science, 2025 — 364 Chilean amateur players",
+                highlight: true,
+              },
+              {
+                stat: "Up to 85%",
+                label: "injury prevalence across studies",
+                source: "Systematic review, ResearchGate 2024 — padel vs. tennis vs. squash",
+                highlight: true,
+              },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl bg-red-500/5 border border-red-500/15 p-6 text-center hover:bg-red-500/8 transition-all duration-300">
+                <p className="text-4xl font-black text-red-400 mb-2">{item.stat}</p>
+                <p className="text-sm text-white/70 mb-3 leading-relaxed">{item.label}</p>
+                <p className="text-xs text-white/30 leading-relaxed">{item.source}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Most injured areas */}
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-6 mb-8">
+            <p className="text-sm text-white/40 text-center mb-4 uppercase tracking-wider font-medium">Most injured body areas in padel</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {[
+                { area: "Elbow", pct: "18.0%", detail: "Tennis elbow from repetitive shots" },
+                { area: "Ankle", pct: "16.6%", detail: "Sprains from lateral movement" },
+                { area: "Knee", pct: "12.5%", detail: "ACL/meniscus from direction changes" },
+                { area: "Shoulder", pct: "10.5%", detail: "Rotator cuff from overhead shots" },
+              ].map((item) => (
+                <div key={item.area} className="text-center p-3">
+                  <p className="text-2xl font-bold text-white">{item.pct}</p>
+                  <p className="text-sm font-semibold text-brand-400">{item.area}</p>
+                  <p className="text-xs text-white/30 mt-1">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-white/20 text-center mt-4">Source: Medicina Vol. 61, 2025 — MDPI peer-reviewed journal</p>
+          </div>
+
+          {/* Market growth row */}
+          <div className="text-center mb-6">
+            <p className="text-sm text-white/40 uppercase tracking-wider font-medium mb-4">The market opportunity</p>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            {[
+              {
+                stat: "35M+",
+                label: "Padel players worldwide",
+                source: "FIP World Padel Report 2025",
+              },
+              {
+                stat: "77,300",
+                label: "Courts globally (+15.2% YoY)",
+                source: "FIP Report 2025",
+              },
+              {
+                stat: "92%",
+                label: "Return rate after first session",
+                source: "Playtomic & PwC Global Padel Report 2025",
+              },
+              {
+                stat: "~40%",
+                label: "Female participation rate",
+                source: "Playtomic & PwC 2025",
+              },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl bg-white/5 border border-white/10 p-5 text-center hover:bg-white/8 transition-all duration-300">
+                <p className="text-3xl font-black text-white mb-2">{item.stat}</p>
+                <p className="text-sm text-white/60 mb-2 leading-relaxed">{item.label}</p>
+                <p className="text-xs text-white/25">{item.source}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                stat: "$34B → $69B",
+                label: "Sports tech market by 2030",
+                source: "MarketsandMarkets, 2025",
+              },
+              {
+                stat: "35% CAGR",
+                label: "AI injury prevention solutions growth",
+                source: "Mordor Intelligence, 2025",
+              },
+              {
+                stat: "$3.25B",
+                label: "Sports injury prediction market by 2030",
+                source: "FutureDataStats, 2025",
+              },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl bg-brand-500/5 border border-brand-500/15 p-5 text-center hover:bg-brand-500/8 transition-all duration-300">
+                <p className="text-2xl font-black text-brand-400 mb-2">{item.stat}</p>
+                <p className="text-sm text-white/60 mb-2 leading-relaxed">{item.label}</p>
+                <p className="text-xs text-white/25">{item.source}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Evidence-Based Section */}
       <section className="py-24 bg-gradient-to-b from-gray-900 to-brand-950 relative">
         <div className="absolute inset-0 pointer-events-none">
@@ -390,7 +524,7 @@ export function Landing() {
               Your body is your most important equipment
             </h2>
             <p className="text-lg text-white/50 mb-8 max-w-lg mx-auto">
-              69% of padel players get injured. CourtCare uses AI to keep you in the other 31%.
+              69% of padel players get injured. 35 million play worldwide. CourtCare uses AI to keep them safe.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
