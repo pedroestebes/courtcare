@@ -59,14 +59,6 @@ const techMarket = [
   { stat: "$248M → $662M", label: "Global padel sports market (2025 → 2035)", source: "Global Growth Insights, 2025", cagr: "10.3% CAGR" },
 ];
 
-const competitorGaps = [
-  { name: "Playtomic", users: "3.5M+", does: "Court booking & matchmaking", missing: "No injury prevention, no pose tracking" },
-  { name: "Padelio", users: "45K+", does: "Apple Watch stroke tracking", missing: "Requires wearable, no injury detection" },
-  { name: "PADEL'EM", users: "New", does: "AI coach via smartwatch", missing: "Requires Apple Watch, no real-time form analysis" },
-  { name: "SwingVision", users: "Large", does: "AI tennis/pickleball analytics", missing: "Does NOT support padel at all" },
-  { name: "OnForm", users: "Coaches", does: "Video replay & annotation ($30/mo)", missing: "No real-time tracking, no injury detection" },
-  { name: "ATHLFT", users: "New", does: "S&C programs for padel (£19.99/mo)", missing: "No live pose tracking, no auto-pause" },
-];
 
 export function Market() {
   return (
@@ -220,44 +212,7 @@ export function Market() {
           </div>
         </section>
 
-        {/* Section 4: Competitive Landscape */}
-        <section>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-              <svg className="w-5 h-5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" />
-              </svg>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-white">Competitive Landscape</h2>
-              <p className="text-sm text-white/40">No app combines real-time pose tracking + injury prevention for padel</p>
-            </div>
-          </div>
-
-          <div className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden">
-            <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-white/10 text-xs text-white/40 font-medium uppercase tracking-wider">
-              <div className="col-span-2">App</div>
-              <div className="col-span-1">Users</div>
-              <div className="col-span-4">What it does</div>
-              <div className="col-span-5">What it doesn't do</div>
-            </div>
-            {competitorGaps.map((c) => (
-              <div key={c.name} className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-white/5 last:border-b-0 items-start">
-                <div className="col-span-2 text-sm font-semibold text-white">{c.name}</div>
-                <div className="col-span-1 text-xs text-white/40">{c.users}</div>
-                <div className="col-span-4 text-sm text-white/50">{c.does}</div>
-                <div className="col-span-5 text-sm text-red-400/70">{c.missing}</div>
-              </div>
-            ))}
-            <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-brand-500/5">
-              <div className="col-span-2 text-sm font-bold text-brand-400">CourtCare</div>
-              <div className="col-span-1 text-xs text-brand-400/60">Beta</div>
-              <div className="col-span-9 text-sm text-brand-400">Real-time pose tracking + 12 injury thresholds + auto-pause + fatigue detection. Camera only, no wearables.</div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section 5: Key Takeaway */}
+        {/* Section 4: Key Takeaway */}
         <section>
           <div className="rounded-3xl bg-gradient-to-r from-brand-500/10 to-accent-500/10 border border-brand-500/20 p-10 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">The gap</h3>
