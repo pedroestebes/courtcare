@@ -16,6 +16,7 @@ const SessionHistory = lazy(() => import("@/pages/SessionHistory").then((m) => (
 const SessionReview = lazy(() => import("@/pages/SessionReview").then((m) => ({ default: m.SessionReview })));
 const Recovery = lazy(() => import("@/pages/Recovery").then((m) => ({ default: m.Recovery })));
 const Science = lazy(() => import("@/pages/Science").then((m) => ({ default: m.Science })));
+const Market = lazy(() => import("@/pages/Market").then((m) => ({ default: m.Market })));
 
 function LoadingFallback() {
   return (
@@ -48,6 +49,7 @@ export function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/science" element={<Science />} />
+          <Route path="/market" element={<Market />} />
           <Route
             path="/dashboard"
             element={

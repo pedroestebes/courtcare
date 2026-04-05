@@ -330,14 +330,15 @@ export function Landing() {
         </div>
       </section>
 
-      {/* The Problem — Market Data */}
+      {/* The Problem — Condensed */}
       <section className="py-24 bg-gradient-to-b from-gray-900 via-brand-950 to-gray-900 relative">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full opacity-8" style={{ background: "radial-gradient(circle, rgba(239,68,68,0.12), transparent 60%)" }} />
           <div className="absolute bottom-1/4 right-1/3 w-80 h-80 rounded-full opacity-8" style={{ background: "radial-gradient(circle, rgba(7,195,166,0.12), transparent 60%)" }} />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
+          {/* Anchor stat */}
+          <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-full px-4 py-1.5 mb-6">
               <span className="w-2 h-2 rounded-full bg-red-400" />
               <span className="text-sm text-red-400 font-medium">The Problem</span>
@@ -346,164 +347,62 @@ export function Landing() {
               Padel is booming.{" "}
               <span className="text-red-400">So are the injuries.</span>
             </h2>
-            <p className="text-lg text-white/50 max-w-2xl mx-auto">
-              Real data from peer-reviewed studies and official federation reports.
+            <p className="text-6xl sm:text-7xl font-black text-red-400 mb-3">69%</p>
+            <p className="text-lg text-white/60 max-w-lg mx-auto mb-2">
+              of padel players have been injured at least once
+            </p>
+            <p className="text-xs text-white/25">Medicina Vol. 61, 2025 — peer-reviewed study of Portuguese practitioners</p>
+          </div>
+
+          {/* Body areas strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10 max-w-3xl mx-auto">
+            {[
+              { area: "Elbow", pct: "18%", detail: "Tennis elbow" },
+              { area: "Ankle", pct: "17%", detail: "Lateral sprains" },
+              { area: "Knee", pct: "13%", detail: "ACL / meniscus" },
+              { area: "Shoulder", pct: "11%", detail: "Rotator cuff" },
+            ].map((item) => (
+              <div key={item.area} className="rounded-xl bg-white/5 border border-white/10 p-4 text-center">
+                <p className="text-2xl font-bold text-white">{item.pct}</p>
+                <p className="text-sm font-semibold text-brand-400">{item.area}</p>
+                <p className="text-xs text-white/30 mt-0.5">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Bridge — from problem to solution */}
+          <div className="max-w-2xl mx-auto text-center mb-10">
+            <p className="text-lg text-white/50 leading-relaxed">
+              35 million players. 77,000 courts. The fastest-growing sport in the world — with{" "}
+              <span className="text-white font-medium">zero apps</span> that detect injury risk in real time.
             </p>
           </div>
 
-          {/* Injury stats row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          {/* Solution proof strip */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 max-w-4xl mx-auto">
             {[
-              {
-                stat: "69.2%",
-                label: "of padel players have been injured",
-                source: "Medicina, Sept 2025 — Portuguese practitioners study",
-                highlight: true,
-              },
-              {
-                stat: "53.8%",
-                label: "injured in the last 6 months alone",
-                source: "BMC Sports Science, 2025 — 364 Chilean amateur players",
-                highlight: true,
-              },
-              {
-                stat: "Up to 85%",
-                label: "injury prevalence across studies",
-                source: "Systematic review, ResearchGate 2024 — padel vs. tennis vs. squash",
-                highlight: true,
-              },
+              { stat: "33", label: "Body landmarks tracked at 30fps", color: "text-brand-400" },
+              { stat: "12", label: "Injury thresholds monitored live", color: "text-brand-400" },
+              { stat: "0.91", label: "Correlation vs. motion capture", color: "text-brand-400" },
+              { stat: "15+", label: "Peer-reviewed studies behind it", color: "text-brand-400" },
             ].map((item) => (
-              <div key={item.label} className="rounded-2xl bg-red-500/5 border border-red-500/15 p-6 text-center hover:bg-red-500/8 transition-all duration-300">
-                <p className="text-4xl font-black text-red-400 mb-2">{item.stat}</p>
-                <p className="text-sm text-white/70 mb-3 leading-relaxed">{item.label}</p>
-                <p className="text-xs text-white/30 leading-relaxed">{item.source}</p>
+              <div key={item.label} className="rounded-xl bg-white/5 border border-white/10 p-4 text-center">
+                <p className={`text-2xl font-black ${item.color} mb-1`}>{item.stat}</p>
+                <p className="text-xs text-white/50 leading-snug">{item.label}</p>
               </div>
             ))}
           </div>
 
-          {/* Most injured areas */}
-          <div className="rounded-2xl bg-white/5 border border-white/10 p-6 mb-8">
-            <p className="text-sm text-white/40 text-center mb-4 uppercase tracking-wider font-medium">Most injured body areas in padel</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {[
-                { area: "Elbow", pct: "18.0%", detail: "Tennis elbow from repetitive shots" },
-                { area: "Ankle", pct: "16.6%", detail: "Sprains from lateral movement" },
-                { area: "Knee", pct: "12.5%", detail: "ACL/meniscus from direction changes" },
-                { area: "Shoulder", pct: "10.5%", detail: "Rotator cuff from overhead shots" },
-              ].map((item) => (
-                <div key={item.area} className="text-center p-3">
-                  <p className="text-2xl font-bold text-white">{item.pct}</p>
-                  <p className="text-sm font-semibold text-brand-400">{item.area}</p>
-                  <p className="text-xs text-white/30 mt-1">{item.detail}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-white/20 text-center mt-4">Source: Medicina Vol. 61, 2025 — MDPI peer-reviewed journal</p>
-          </div>
-
-          {/* Market growth row */}
-          <div className="text-center mb-6">
-            <p className="text-sm text-white/40 uppercase tracking-wider font-medium mb-4">The market opportunity</p>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {[
-              {
-                stat: "35M+",
-                label: "Padel players worldwide",
-                source: "FIP World Padel Report 2025",
-              },
-              {
-                stat: "77,300",
-                label: "Courts globally (+15.2% YoY)",
-                source: "FIP Report 2025",
-              },
-              {
-                stat: "92%",
-                label: "Return rate after first session",
-                source: "Playtomic & PwC Global Padel Report 2025",
-              },
-              {
-                stat: "~40%",
-                label: "Female participation rate",
-                source: "Playtomic & PwC 2025",
-              },
-            ].map((item) => (
-              <div key={item.label} className="rounded-2xl bg-white/5 border border-white/10 p-5 text-center hover:bg-white/8 transition-all duration-300">
-                <p className="text-3xl font-black text-white mb-2">{item.stat}</p>
-                <p className="text-sm text-white/60 mb-2 leading-relaxed">{item.label}</p>
-                <p className="text-xs text-white/25">{item.source}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              {
-                stat: "$34B → $69B",
-                label: "Sports tech market by 2030",
-                source: "MarketsandMarkets, 2025",
-              },
-              {
-                stat: "35% CAGR",
-                label: "AI injury prevention solutions growth",
-                source: "Mordor Intelligence, 2025",
-              },
-              {
-                stat: "$3.25B",
-                label: "Sports injury prediction market by 2030",
-                source: "FutureDataStats, 2025",
-              },
-            ].map((item) => (
-              <div key={item.label} className="rounded-2xl bg-brand-500/5 border border-brand-500/15 p-5 text-center hover:bg-brand-500/8 transition-all duration-300">
-                <p className="text-2xl font-black text-brand-400 mb-2">{item.stat}</p>
-                <p className="text-sm text-white/60 mb-2 leading-relaxed">{item.label}</p>
-                <p className="text-xs text-white/25">{item.source}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Evidence-Based Section */}
-      <section className="py-24 bg-gradient-to-b from-gray-900 to-brand-950 relative">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/3 right-1/4 w-80 h-80 rounded-full opacity-8" style={{ background: "radial-gradient(circle, rgba(34,197,94,0.15), transparent 60%)" }} />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-full px-4 py-1.5 mb-6">
-              <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+          {/* Links to deep pages */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+            <Link to="/market" className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-white/80 font-medium transition-colors group">
+              Full market data & research
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
-              <span className="text-sm text-green-400 font-medium">Evidence-Based</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Backed by{" "}
-              <span className="gradient-brand-text">sports medicine research</span>
-            </h2>
-            <p className="text-lg text-white/50 max-w-2xl mx-auto">
-              Our protocols are informed by peer-reviewed studies — not guesswork.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-            {[
-              { stat: "33", label: "Body landmarks tracked at 30fps via camera", source: "Google MediaPipe Tasks Vision" },
-              { stat: "12", label: "Injury thresholds across 4 joint areas", source: "Elliott 2006, Rivera 2017, NATA 2018" },
-              { stat: "15+", label: "Peer-reviewed studies informing our protocols", source: "FIFA 11+, ACSM, Bern Consensus" },
-              { stat: "0.91", label: "Correlation vs. gold-standard motion capture", source: "Cabarkapa et al. 2024, Heliyon" },
-            ].map((item) => (
-              <div key={item.label} className="rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-5 hover:bg-white/8 transition-all duration-300">
-                <p className="text-3xl font-black text-white mb-2">{item.stat}</p>
-                <p className="text-sm text-white/60 mb-3 leading-relaxed">{item.label}</p>
-                <p className="text-xs text-white/30">{item.source}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center">
+            </Link>
             <Link to="/science" className="inline-flex items-center gap-2 text-sm text-brand-400 hover:text-brand-300 font-medium transition-colors group">
-              Read the full research
+              Our science & methodology
               <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
@@ -558,6 +457,7 @@ export function Landing() {
             </div>
             <div className="flex items-center gap-6">
               <Link to="/science" className="text-sm text-white/40 hover:text-white/60 transition-colors">Science</Link>
+              <Link to="/market" className="text-sm text-white/40 hover:text-white/60 transition-colors">Market Data</Link>
               <Link to="/pricing" className="text-sm text-white/40 hover:text-white/60 transition-colors">Pricing</Link>
             </div>
             <p className="text-sm text-white/40">
